@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "kawaii-font";
+    src: url('./JiZiJingDianJiHeiJian-Shan\(GEETYPE-JiHeiGB-Flash\)-2.ttf');
+}
+
+* {
+    color: white;
+    font-family: 'kawaii-font' !important;
+}
