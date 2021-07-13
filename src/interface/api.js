@@ -7,7 +7,7 @@ const api_base = (url, method, args) => new Promise( resolve => {
             case 'post':
                 try{
                     const data = await axios.post(url, args)
-                    resolve(data)
+                    resolve(typeof data === 'string' ? false : data)
                 }catch(e){
                     resolve(false)
                 }
@@ -15,7 +15,7 @@ const api_base = (url, method, args) => new Promise( resolve => {
             case 'get':
                 try{
                     const data = await axios.get(url + '?' + args)
-                    resolve(data)
+                    resolve(typeof data === 'string' ? false : data)
                 }catch(e){
                     resolve(false)
                 }
@@ -25,6 +25,8 @@ const api_base = (url, method, args) => new Promise( resolve => {
 })
 
 export const api_register = (username, password, emailcode) => api_base('auth/register', 'post', stringify({username, password, emailcode}))
+
+export const api_login = (email, password, captcha) => api_base('auth/login', 'post', stringify({email, password, captcha}))
 
 export const api_get_math_captcha = method => api_base('captcha/math', 'get', stringify({ method }))
 
