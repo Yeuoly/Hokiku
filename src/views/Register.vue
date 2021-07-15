@@ -1,9 +1,9 @@
 <template>
-    <v-container>
+    <v-container fill-height>
         <v-flex>
             <v-row>
-                <v-col cols="1" sm="1" md="2" lg="3" xl="4"></v-col>
-                <v-col cols="10" sm="10" md="8" lg="6" xl="4">
+                <v-col cols="1" sm="1" md="8" lg="8" xl="8"></v-col>
+                <v-col cols="10" sm="10" md="4" lg="4" xl="4">
                     <v-card>
                         <v-card color="primary">
                         <v-card-title>注册</v-card-title>
@@ -88,7 +88,6 @@
                         </v-form>
                     </v-card>
                 </v-col>
-                <v-col cols="1" sm="1" md="2" lg="3" xl="4"></v-col>
             </v-row>
         </v-flex>
     </v-container>
@@ -96,7 +95,7 @@
 
 <script>
 import { openErrorMessageBox, openInfoMessageBox } from '../concat/bus'
-import { api_get_email_captcha, api_get_math_captcha, api_register } from '../interface/api'
+import { api_get_email_captcha, api_get_math_captcha, api_auth_register } from '../interface/api'
 import md5 from 'md5'
 
 export default {
@@ -171,18 +170,18 @@ export default {
             }
         },
         async register(){
-            const { data } = await api_register(this.user.username, md5(this.user.password), this.emailcode)
+            const { data } = await api_auth_register(this.user.username, md5(this.user.password), this.emailcode)
             if(!data){
                 openErrorMessageBox('错误', '网络连接出现问题')
             }else if(data['res'] < 0){
                 openErrorMessageBox('错误', data['err'])
             }else{
-                openInfoMessageBox('成功', '恭喜您注册成功')
+                await openInfoMessageBox('成功', '恭喜您注册成功')
+                this.toLogin()
             }
         }
     },
     created(){
-        console.log(this.$vuetify)
         this.refreshCaptcha()
     }
 }

@@ -12,16 +12,18 @@
                 <v-list>
                     <v-list-item class="px-2">
                         <v-list-item-avatar>
-                        <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
+                        <v-img src="https://yeuoly.oss-cn-beijing.aliyuncs.com/irina/static/default_avatar.jpg"></v-img>
                         </v-list-item-avatar>
                     </v-list-item>
 
                     <v-list-item link>
                         <v-list-item-content>
                         <v-list-item-title class="text-h7" style="color: white;">
-                            未登录
+                            {{ $store.getters.getUserName }}
                         </v-list-item-title>
-                        <v-list-item-subtitle style="color: white;">qwq@gmail.com</v-list-item-subtitle>
+                        <v-list-item-subtitle style="color: white;">
+                            {{ $store.getters.getUserEmail }}
+                        </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
@@ -29,9 +31,10 @@
             
             <v-list-item
                 v-for="item in routes"
-                v-show="item.meta.inNav"
+                v-show="avaliable(item)"
                 :key="item.name"
                 link
+                @click="router(item.path)"
             >
             <v-list-item-icon>
                 <v-icon>{{ item.meta.icon }}</v-icon>
@@ -55,6 +58,16 @@ export default {
         open : false,
         routes : routes
     }),
+    methods : {
+        router(to){
+            this.$router.push(to)
+        },
+        avaliable(item){
+            return item.meta.inNav 
+                && ( !item.meta.required.online || this.$store.getters.getUserOnlineState )
+                && ( !item.meta.required.offline || !this.$store.getters.getUserOnlineState )
+        }
+    },
     mounted(){
         ui_trans_bus.$on('change-navigation-status', () => {
             this.open = !this.open

@@ -1,18 +1,17 @@
 <template>
-    <v-container>
+    <v-container fill-height>
         <v-flex>
             <v-row>
-                <v-col cols="1" sm="1" md="2" lg="3" xl="4"></v-col>
-                <v-col cols="10" sm="10" md="8" lg="6" xl="4">
+                <v-col cols="1" sm="1" md="8" lg="8" xl="8"></v-col>
+                <v-col cols="10" sm="10" md="4" lg="4" xl="4">
                     <v-card>
                         <v-card color="primary">
-                        <v-card-title>注册</v-card-title>
+                        <v-card-title>登录</v-card-title>
                         </v-card>
                         <v-form 
                             v-model="valid"
                         >
                             <v-container>
-
                                 <v-text-field
                                     v-model="user.email"
                                     :counter="64"
@@ -59,7 +58,6 @@
                         </v-form>
                     </v-card>
                 </v-col>
-                <v-col cols="1" sm="1" md="2" lg="3" xl="4"></v-col>
             </v-row>
         </v-flex>
     </v-container>
@@ -67,7 +65,7 @@
 
 <script>
 import { openErrorMessageBox, openInfoMessageBox } from '../concat/bus'
-import { api_get_math_captcha, api_login } from '../interface/api'
+import { api_get_math_captcha, api_auth_login } from '../interface/api'
 import md5 from 'md5'
 
 export default {
@@ -110,7 +108,7 @@ export default {
             }
         },
         async login(){
-            const { data } = await api_login(this.user.email, md5(this.user.password), this.captcha)
+            const { data } = await api_auth_login(this.user.email, md5(this.user.password), this.captcha)
             if(!data){
                 openErrorMessageBox('错误', '网络连接出现问题')
             }else if(data['res'] < 0){
@@ -118,10 +116,10 @@ export default {
             }else{
                 openInfoMessageBox('成功', '登录成功')
             }
+            this.refreshCaptcha();
         }
     },
     created(){
-        console.log(this.$vuetify)
         this.refreshCaptcha()
     }
 }

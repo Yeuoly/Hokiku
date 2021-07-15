@@ -8,6 +8,8 @@ import VueAxios from 'vue-axios'
 
 import './style/font.css'
 import route from './router/router'
+import { api_auth_check } from './interface/api'
+import store from './store'
 
 (async function(){
   Vue.config.productionTip = false
@@ -22,8 +24,8 @@ import route from './router/router'
       if (onResolve || onReject) return originalReplace.call(this, location, onResolve, onReject)
       return originalReplace.call(this, location).catch(err => err)
   }
+
   Vue.use(VueRouter)
-  
   Vue.use(VueCookie)
   
   //初始化axios
@@ -35,12 +37,26 @@ import route from './router/router'
   axios.defaults.withCredentials = true
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   Vue.use(VueAxios, axios)
-  
+
   //初始化用户认证
-  
+  try{
+    const { data } = await api_auth_check()
+    if (data['res'] > 0) {
+      store.commit('setOnlineState', true)
+      store.commit('setUsername', data['data']['nickname'])
+      store.commit('setUserUid', data['data']['uid'])
+      store.commit('setUserPowers', data['data']['powers'])
+      store.commit('setUserStatus', data['data']['status'])
+      store.commit('setUserEmail', data['data']['email'])
+    }
+  }catch(e){
+    store.commit('setOnlineState', false)
+  }
+
   const router = new VueRouter(route)
 
   new Vue({
+    store,
     vuetify,
     router,
     render: h => h(App)
