@@ -34,3 +34,12 @@ export const api_get_math_captcha = method => api_base('captcha/math', 'get', st
 export const api_get_email_captcha = (captcha, method, email) => api_base('captcha/email', 'post', stringify({captcha, method, email}))
 
 export const api_auth_check = () => api_base('auth/check', 'post')
+
+export const api_get_homework_record = (page) => new Promise(resolve => {
+    console.log(page)
+    setTimeout(() => {
+        resolve([{
+            hid : 0, title : '测试', desc : 'PHP反序列化', time : '2021-7-16 16:00', end_at : '2022-7-16'
+        }])
+    }, 1000)
+})

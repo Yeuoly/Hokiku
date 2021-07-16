@@ -7,9 +7,14 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 import './style/font.css'
+import './style/common.css'
 import route from './router/router'
 import { api_auth_check } from './interface/api'
 import store from './store'
+
+import EchartsTheme from './style/echarts_theme.json'
+
+import VueEcharts from 'vue-echarts'
 
 (async function(){
   Vue.config.productionTip = false
@@ -28,6 +33,11 @@ import store from './store'
   Vue.use(VueRouter)
   Vue.use(VueCookie)
   
+  //初始化echarts并注册主题
+
+  VueEcharts.registerTheme('theme', EchartsTheme)
+  Vue.component('v-chart', VueEcharts)
+
   //初始化axios
   if(process.env.NODE_ENV == "development"){
     axios.defaults.baseURL = "http://127.0.0.1:8010"
@@ -62,5 +72,4 @@ import store from './store'
     render: h => h(App)
   }).$mount('#app')
   
-  router.push('reg')
 })()

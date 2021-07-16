@@ -6,7 +6,7 @@
                 <v-col cols="10" sm="10" md="4" lg="4" xl="4">
                     <v-card>
                         <v-card color="primary">
-                        <v-card-title>登录</v-card-title>
+                            <v-card-title class="text-white">登录</v-card-title>
                         </v-card>
                         <v-form 
                             v-model="valid"
