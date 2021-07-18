@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios'
 
 import './style/font.css'
 import './style/common.css'
+import './util'
 import route from './router/router'
 import { api_auth_check } from './interface/api'
 import store from './store'

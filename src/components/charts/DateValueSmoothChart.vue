@@ -2,6 +2,7 @@
     <ECharts class="charts-items__fl"
              :options="polar"
              theme="theme"
+             autoresize
     />
 </template>
 
@@ -31,7 +32,15 @@
         },
         methods : {
             refreshData(){
-                this.polar.series[0].data = this.model.value;
+                this.model.value.forEach((e, i) => {
+                    this.$set(this.polar.series, i, {
+                        type : 'line',
+                        smooth : true,
+                        markLine : {data : [{ type : 'average' , name : '平均值' }]},
+                        markPoint : {data : [{ type : 'max', name : '峰值' }]},
+                        data : e
+                    });
+                });
                 this.polar.xAxis.data = this.model.date;
             }
         },
@@ -70,15 +79,7 @@
                         left : 73,
                         right : 73
                     },
-                    series : [
-                        {
-                            type : 'line',
-                            smooth : true,
-                            markLine : {data : [{ type : 'average' , name : '平均值' }]},
-                            markPoint : {data : [{ type : 'max', name: '峰值' }]},
-                            data : []
-                        }
-                    ],
+                    series : [],
                     title : {
                         text : '',
                         subtext : '',

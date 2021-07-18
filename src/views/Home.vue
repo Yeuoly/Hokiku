@@ -34,13 +34,18 @@
                 <v-col cols="12">
                     <v-card-text style="color:rgba(0, 0, 0, 0.6)">作业提交记录</v-card-text>
                     <v-data-table
-                        
                         :options.sync="table_options"
                         :headers="records_headers"
                         :items="records"
+                        :loading="record_loading"
                         dense
-                    ></v-data-table>
-                    
+                    >
+                        <template v-slot:item.submit="{ item }">
+                            <v-icon small @click="toSubmitHomeWork(item.hid)">
+                                mdi-pencil
+                            </v-icon>
+                        </template>
+                    </v-data-table>
                 </v-col>
             </v-row>
         </v-card>
@@ -85,7 +90,7 @@ export default {
         }],
         score : {
             date : ['1-1', '1-2', '1-3', '1-4', '1-5', '1-6', '1-7'],
-            value : [50, 70, 110, 0, 30, 50, 90]
+            value : [[50, 70, 110, 0, 30, 50, 90], [20, 10, 15, 13, 13, 16, 2]]
         },
         records_headers : [{
             text : '作业ID',
@@ -97,14 +102,18 @@ export default {
             text : '内容',
             value : 'desc'
         }, {
-            text : '发布时间',
+            text : '提交时间',
             value : 'time'
         }, {
             text : '结束时间',
             value : 'end_at'
+        }, {
+            text : '提交',
+            value : 'submit'
         }],
         records : [],
-        table_options : {}
+        table_options : {},
+        record_loading : false
     }),
     watch : {
         table_options : {
@@ -116,12 +125,17 @@ export default {
         }
     },
     computed : {
-
-    },
+        
+        },
     methods : {
         async injectRecords(page){
+            this.record_loading = true
             const data = await api_get_homework_record(page)
             this.records = data
+            this.record_loading = false
+        },
+        toSubmitHomeWork(hid){
+            this.$router.push(`/homework/${hid}`)
         }
     }
 }

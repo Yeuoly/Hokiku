@@ -2,7 +2,8 @@ const Index = () => import('../views/Index.vue')
 const Login = () => import('../views/Login.vue')
 const Register = () => import('../views/Register.vue')
 const Home = () => import('../views/Home.vue')
-
+const Homeworks = () => import('../views/Homeworks.vue')
+const Homework = () => import('../views/Homework.vue')
 
 export default [{
     name : 'home',
@@ -12,6 +13,28 @@ export default [{
         inNav : true,
         icon : 'mdi-heart-settings-outline',
         title : '个人中心',
+        required : {
+            online : true
+        }
+    },
+},{
+    name : 'homeworks',
+    path : '/homeworks',
+    component : Homeworks,
+    meta : {
+        inNav : true,
+        icon : 'mdi-calendar-check-outline',
+        title : '作业',
+        required : {
+            online : true
+        }
+    }
+},{
+    name : 'homework',
+    path : '/homework/:hid',
+    component : Homework,
+    meta : {
+        inNav : false,
         required : {
             online : true
         }

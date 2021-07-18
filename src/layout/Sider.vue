@@ -75,3 +75,12 @@ export default {
     }
 }
 </script>
+
+<style>
+    .v-overlay--absolute{
+        z-index: 10005 !important;
+    }
+    .v-navigation-drawer{
+        z-index: 10006 !important;
+    }
+</style>

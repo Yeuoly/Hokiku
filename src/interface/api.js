@@ -39,7 +39,35 @@ export const api_get_homework_record = (page) => new Promise(resolve => {
     console.log(page)
     setTimeout(() => {
         resolve([{
-            hid : 0, title : '测试', desc : 'PHP反序列化', time : '2021-7-16 16:00', end_at : '2022-7-16'
+            hid : 1, title : '测试', desc : 'PHP反序列化', time : '2021-7-16 16:00', end_at : '2022-7-16'
         }])
+    }, 1000)
+})
+
+export const api_get_homeworks = (page) => new Promise(resolve => {
+    console.log(page)
+    setTimeout(() => {
+        resolve([{
+            hid : 1, title : '测试', publisher : '李林', desc : 'PHP反序列化', time : '2021-7-16 16:00', end_at : '2022-7-16'
+        }])
+    }, 1000)
+})
+
+export const api_get_homework = (hid) => new Promise(resolve => {
+    console.log(hid)
+    setTimeout(() => {
+        resolve({
+            res : 1,
+            err : null,
+            data : {
+                hid : hid,
+                title : '测试作业',
+                publisher : '李林',
+                desc : 'PHP反序列化',
+                time : 1626422400, 
+                end_at : 1657958400,
+                ans : '<div>测试测试测试</div>'
+            }
+        })
     }, 1000)
 })

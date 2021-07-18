@@ -2,6 +2,7 @@
     <ECharts class="charts-items__fl" 
              :options="polar"
              theme="theme"
+             autoresize
     />
 </template>
 
