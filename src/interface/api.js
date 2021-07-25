@@ -1,9 +1,21 @@
 import axios from 'axios'
 import { stringify } from 'querystring'
+import VueCookie from 'vue-cookie'
+
+let csrf_token = VueCookie.get("irina_jct") || ''
+
+export const getCsrftoken = () => {
+    return csrf_token
+}
+
+export const setCsrftoken = token => {
+    csrf_token = token
+}
 
 const api_base = (url, method, args) => new Promise( resolve => {
     (async function(){
         args = args || ''
+        args = ( args == '' ? '' : args + '&' ) + 'csrf_token=' + csrf_token
         switch(method.toLowerCase()){
             case 'post':
                 try{
@@ -71,3 +83,7 @@ export const api_get_homework = (hid) => new Promise(resolve => {
         })
     }, 1000)
 })
+
+export const api_get_csrftoken = () => api_base('auth/csrf', 'post')
+
+export const api_logout = () => api_base('auth/logout', 'post')

@@ -45,12 +45,21 @@
             </v-list-item-content>
             </v-list-item>
         </v-list>
+        <template v-if="$store.getters.getUserOnlineState" v-slot:append>
+            <div class="px2 py2">
+                <v-btn block color="red" class="text-white" @click="logout">
+                    登出
+                </v-btn>
+            </div>
+      </template>
     </v-navigation-drawer>
 </template>
 
 <script>
-import { ui_trans_bus } from '../concat/bus'
+import { ui_trans_bus, openInfoMessageBox } from '../concat/bus'
+import { isTeacher } from '../util/index'
 import routes from '../router/routes'
+import { api_logout } from '../interface/api'
 
 export default {
     name : "Sider",
@@ -66,6 +75,12 @@ export default {
             return item.meta.inNav 
                 && ( !item.meta.required.online || this.$store.getters.getUserOnlineState )
                 && ( !item.meta.required.offline || !this.$store.getters.getUserOnlineState )
+                && ( !item.meta.required.teacher || isTeacher(this.$store.getters.getUserStatus) )
+        },
+        async logout(){
+            await api_logout()
+            await openInfoMessageBox('消息', '登出成功', '确定')
+            window.location.href = '/'
         }
     },
     mounted(){
@@ -77,10 +92,5 @@ export default {
 </script>
 
 <style>
-    .v-overlay--absolute{
-        z-index: 10005 !important;
-    }
-    .v-navigation-drawer{
-        z-index: 10006 !important;
-    }
+
 </style>

@@ -4,6 +4,7 @@ const Register = () => import('../views/Register.vue')
 const Home = () => import('../views/Home.vue')
 const Homeworks = () => import('../views/Homeworks.vue')
 const Homework = () => import('../views/Homework.vue')
+const TeacherTerminal = () => import('../views/TeacherTerminal.vue')
 
 export default [{
     name : 'home',
@@ -37,6 +38,19 @@ export default [{
         inNav : false,
         required : {
             online : true
+        }
+    }
+},{
+    name : 'teacher-terminal',
+    path : '/teacher-terminal',
+    component : TeacherTerminal,
+    meta : {
+        inNav : true,
+        icon : 'mdi-console-line',
+        title : '教师后台',
+        required : {
+            online : true,
+            teacher : true
         }
     }
 },{

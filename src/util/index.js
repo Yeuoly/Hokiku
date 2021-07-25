@@ -20,3 +20,11 @@ Date.prototype.formatDate = function(format){
     });
     return res;
 }
+
+export const isTeacher = status => {
+    return !!(status & ( 0x1 << 1 ))
+}
+
+export const isStudent = status => {
+    return !!(status & ( 0x1 ))
+}

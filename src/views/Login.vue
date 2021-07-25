@@ -114,7 +114,8 @@ export default {
             }else if(data['res'] < 0){
                 openErrorMessageBox('错误', data['err'])
             }else{
-                openInfoMessageBox('成功', '登录成功')
+                await openInfoMessageBox('成功', '登录成功')
+                window.location.href = '/home'
             }
             this.refreshCaptcha();
         }

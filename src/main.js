@@ -10,12 +10,14 @@ import './style/font.css'
 import './style/common.css'
 import './util'
 import route from './router/router'
-import { api_auth_check } from './interface/api'
+import { api_auth_check, api_get_csrftoken } from './interface/api'
 import store from './store'
 
 import EchartsTheme from './style/echarts_theme.json'
 
 import VueEcharts from 'vue-echarts'
+
+import { getCsrftoken, setCsrftoken } from './interface/api'
 
 (async function(){
   Vue.config.productionTip = false
@@ -49,8 +51,13 @@ import VueEcharts from 'vue-echarts'
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   Vue.use(VueAxios, axios)
 
-  //初始化用户认证
+  //初始化用户认证，初始化csrf_token
   try{
+    if(!getCsrftoken()){
+      await api_get_csrftoken()
+      setCsrftoken(VueCookie.get('irina_jct'))
+    }
+
     const { data } = await api_auth_check()
     if (data['res'] > 0) {
       store.commit('setOnlineState', true)
