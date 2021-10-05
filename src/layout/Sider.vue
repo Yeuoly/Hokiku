@@ -1,5 +1,6 @@
 <template>
     <v-navigation-drawer
+        v-if="avaliable_nav"
         temporary
         absolute
         v-model="open"
@@ -64,6 +65,7 @@ import { api_logout } from '../interface/api'
 export default {
     name : "Sider",
     data : () => ({
+        avaliable_nav : true,
         open : false,
         routes : routes
     }),
@@ -86,6 +88,10 @@ export default {
     mounted(){
         ui_trans_bus.$on('change-navigation-status', () => {
             this.open = !this.open
+        })
+
+        ui_trans_bus.$on('disable-navigation', () => {
+            this.avaliable_nav = false
         })
     }
 }

@@ -87,3 +87,5 @@ export const api_get_homework = (hid) => new Promise(resolve => {
 export const api_get_csrftoken = () => api_base('auth/csrf', 'post')
 
 export const api_logout = () => api_base('auth/logout', 'post')
+
+export const api_get_collection = cid => api_base('coll/get', 'post', stringify({ cid }))

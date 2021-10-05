@@ -195,6 +195,7 @@
   .text-green{ color: green !important }
   .text-black{ color: black !important }
   .text-primary{ color: #00a1d6 !important }
+  .text-revert { color: revert }
   
   .text-10{ font-size: 10px; }
   .text-11{ font-size: 11px; }

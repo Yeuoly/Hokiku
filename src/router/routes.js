@@ -5,6 +5,18 @@ const Home = () => import('../views/Home.vue')
 const Homeworks = () => import('../views/Homeworks.vue')
 const Homework = () => import('../views/Homework.vue')
 const TeacherTerminal = () => import('../views/TeacherTerminal.vue')
+const CollectionInfo = () => import('../views/CollectionInfo.vue')
+const CollectionIndex = () => import('../views/CollectionIndex.vue')
+
+const collection_pages = [{
+    name : 'collection-info',
+    path : '/coll/info/:cid',
+    component : CollectionInfo,
+    meta : {
+        disableHeader : true,
+        disableSideMenu : true
+    }
+}]
 
 export default [{
     name : 'home',
@@ -89,4 +101,17 @@ export default [{
             offline : true
         }
     }
+}, {
+    name : 'collection-index',
+    path : 'coll',
+    component : CollectionIndex,
+    meta : {
+        inNav : true,
+        icon : 'mdi-account-plus-outline',
+        title : '事件',
+        required : {
+            offline : true
+        }
+    },
+    children : collection_pages
 }]

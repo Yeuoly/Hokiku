@@ -6,6 +6,22 @@ export const applyChangeNavigationStatus = () => {
     ui_trans_bus.$emit('change-navigation-status')
 }
 
+export const disableSideMenu = () => {
+    ui_trans_bus.$emit('disable-navigation')
+}
+
+export const launchSideMenu = () => {
+    ui_trans_bus.$emit('launch-navigation')
+}
+
+export const disableHeader = () => {
+    ui_trans_bus.$emit('disable-header')
+}
+
+export const launchHeader = () => {
+    ui_trans_bus.$emit('launch-header')
+}
+
 export const openInfoMessageBox = (...args) => new Promise( resolve => {
     ui_trans_bus.$emit('open-message', resolve, 'primary', ...args)
 })

@@ -18,6 +18,7 @@ import EchartsTheme from './style/echarts_theme.json'
 import VueEcharts from 'vue-echarts'
 
 import { getCsrftoken, setCsrftoken } from './interface/api'
+import { disableHeader, disableSideMenu, launchHeader, launchSideMenu } from './concat/bus'
 
 (async function(){
   Vue.config.productionTip = false
@@ -72,6 +73,20 @@ import { getCsrftoken, setCsrftoken } from './interface/api'
   }
 
   const router = new VueRouter(route)
+
+  router.afterEach( e => {
+    if(e.meta.disableSideMenu){
+      disableSideMenu()
+    }else{
+      launchSideMenu()
+    }
+
+    if(e.meta.disableHeader){
+      disableHeader()
+    }else{
+      launchHeader()
+    }
+  })
 
   new Vue({
     store,
