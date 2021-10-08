@@ -14,53 +14,64 @@
                                 {{ title }}
                             </v-card-title>
                         </v-toolbar>
-                    </v-card>
-                    <v-card-text 
-                        class="text-10"
-                        style="color: rgba(0,0,0,0.68)"
-                    >
-                        发布日期 : {{ new Date(time * 1000).formatDate('Y-h-D h:m:s') }} <br>
-                        发布者 : {{ owner_id }}
-                    </v-card-text>
-                    <v-col 
-                        cols="12" 
-                        v-for="i, key in data.struct"
-                        :key="key"
-                    >
-                        <v-card 
-                            class="text-14 px4 pt4"
+                        <v-card-text 
+                            class="text-10"
                             style="color: rgba(0,0,0,0.68)"
-                            v-if="i.type == 1 && !i.multi">
-                            单选：{{ i.title }}
-                            <v-radio-group v-model="i.value" row dense>
-                                <v-radio
-                                    v-for="j, k in i.data.options"
-                                    :key="k"
-                                    :value="k"
-                                    :label="j"
-                                ></v-radio>
-                            </v-radio-group>
-                        </v-card>
-                        <v-card 
-                            class="text-14 px4 pt4"
-                            style="color: rgba(0,0,0,0.68)"
-                            v-else-if="i.type == 1 && i.multi">
-                            多选：{{ i.title }}
-                            <v-radio-group v-model="i.value" row dense>
-                                <v-checkbox
-                                    dense
-                                    v-for="j1, k1 in i.data.options"
+                        >
+                            发布日期 : {{ new Date(time * 1000).formatDate('Y-h-D h:m:s') }} <br>
+                            发布者 : {{ owner_id }}
+                        </v-card-text>
+                        <v-col 
+                            cols="12" 
+                            v-for="i, key in data.struct"
+                            :key="key"
+                        >
+                            <v-card 
+                                class="text-14 px4 pt4"
+                                style="color: rgba(0,0,0,0.68)"
+                                v-if="i.type == 1 && !i.multi">
+                                单选：{{ i.title }}
+                                <v-radio-group v-model="i.value" row dense>
+                                    <v-radio
+                                        v-for="j, k in i.data.options"
+                                        :key="k"
+                                        :value="k"
+                                        :label="j"
+                                    ></v-radio>
+                                </v-radio-group>
+                            </v-card>
+                            <v-card 
+                                class="text-14 px4 pt4"
+                                style="color: rgba(0,0,0,0.68)"
+                                v-else-if="i.type == 1 && i.multi"
+                            >
+                                多选：{{ i.title }}
+                                <v-radio-group v-model="i.value" row dense>
+                                    <v-checkbox
+                                        dense
+                                        v-for="j1, k1 in i.data.options"
+                                        v-model="i.value"
+                                        :key="k1"
+                                        :label="j1"
+                                        :value="k1"
+                                    ></v-checkbox>
+                                </v-radio-group>
+                            </v-card>
+                            <v-card
+                                class="text-14 px4 pt4"
+                                style="color: rgba(0,0,0,0.68)"
+                                v-else-if="i.type == 5"
+                            >
+                                <v-textarea
+                                    :label="i.title"
                                     v-model="i.value"
-                                    :key="k1"
-                                    :label="j1"
-                                    :value="k1.toString()"
-                                ></v-checkbox>
-                            </v-radio-group>
-                        </v-card>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-btn block color="primary"> 提交 </v-btn>
-                    </v-col>
+                                ></v-textarea>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-btn block color="primary"> 提交 </v-btn>
+                        </v-col>
+                    </v-card>
                 </v-col>
                 <v-col cols="0" sm="0" md="2" lg="3" xl="4"></v-col>
             </v-row>
@@ -103,8 +114,11 @@ export default {
                             i['value'] = 0
                         }else{
                             //???????
-                            i['value'] = ['0', '1']
+                            i['value'] = { 0 : '', 1 : '' }
                         }
+                        break
+                    case 5:
+                        i['value'] = ''
                 }
             }
         },
@@ -116,7 +130,7 @@ export default {
             }
             const info = data.data
             if(info['res'] != 0){
-                openErrorMessageBox('错误', data.err)
+                openErrorMessageBox('错误', info['err'])
             }else{
                 this.Load(info['data'])
             }
