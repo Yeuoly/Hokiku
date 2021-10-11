@@ -80,9 +80,9 @@
 </template>
 
 <script>
-import { openErrorMessageBox } from '../concat/bus'
-import { api_get_collection } from '../interface/api'
-import { isHash } from '../util/index'
+import { openErrorMessageBox } from '../../concat/bus'
+import { api_get_collection } from '../../interface/api'
+import { isHash } from '../../util/index'
 
 export default {
     data : () => ({

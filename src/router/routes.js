@@ -5,8 +5,9 @@ const Home = () => import('../views/Home.vue')
 const Homeworks = () => import('../views/Homeworks.vue')
 const Homework = () => import('../views/Homework.vue')
 const TeacherTerminal = () => import('../views/TeacherTerminal.vue')
-const CollectionInfo = () => import('../views/CollectionInfo.vue')
-const CollectionIndex = () => import('../views/CollectionIndex.vue')
+const CollectionInfo = () => import('../views/collections/CollectionInfo.vue')
+const CollectionIndex = () => import('../views/collections/CollectionIndex.vue')
+const CollectionPublish = () => import('../views/collections/CollectionPublish.vue')
 
 const collection_pages = [{
     name : 'collection-info',
@@ -16,6 +17,10 @@ const collection_pages = [{
         disableHeader : true,
         disableSideMenu : true
     }
+}, {
+    name :'collection-publish',
+    path : '/coll/publish',
+    component : CollectionPublish,
 }]
 
 export default [{
