@@ -82,6 +82,47 @@
                         456
                     </v-container>
                 </v-tab-item>
+                <v-tab-item :key="3">
+                    <v-container>
+                        <v-btn @click="toCreateCol">
+                            创建收集表
+                        </v-btn>
+                        <v-data-table
+                            :headers="collection_table_headers"
+                            :loading="collection_table_loading"
+                            :items="collection_table_data"
+                            :server-items-length="collection_table_tot_len"
+                            :options.sync="collection_table_option"
+                            :page.sync="collection_table_page"
+                            :items-per-page="10"
+                            hide-default-footer
+                        >
+                            <template v-slot:item.actions="{ item }">
+                                <v-icon
+                                    small
+                                    @click="collectionCharts(item)"
+                                >
+                                    mdi-chart-box-outline
+                                </v-icon>
+                                <v-icon
+                                    small
+                                    @click="collectionDetail(item)"
+                                >
+                                    mdi-details
+                                </v-icon>
+                            </template>
+                            <template v-slot:item.time="{ item }">
+                                {{ new Date(item.time * 1000).formatDate('Y-M-D h:m:s') }}
+                            </template>
+                        </v-data-table>
+                        <div class="text-center pt-2">
+                            <v-pagination
+                                v-model="collection_table_page"
+                                :length="Math.ceil(collection_table_tot_len / 10)"
+                            ></v-pagination>
+                        </div>
+                    </v-container>
+                </v-tab-item>
             </v-tabs-items>
         </v-card>
     </v-container>
@@ -89,26 +130,79 @@
 
 <script>
 import RichEditor from '../components/common/RichEditor.vue'
+import { openErrorMessageBox } from '../concat/bus'
+import { api_list_collection } from '../interface/api'
 
 export default {
     components : { RichEditor },
     data : () => ({
         current_tab : '',
-        tabs : ['发布作业', '作业列表',  '我的班级'],
+        tabs : ['发布作业', '作业列表',  '我的班级', '收集表'],
         classes : ['计通-A', '计通-B', '物电-A'],
         target_class : '',
         homework_desc : 'www',
         end_at : '',
-        date_picker_menu : false
+        date_picker_menu : false,
+        collection_table_headers : [{
+            text : '标题',
+            align : 'start',
+            value : 'title'
+        }, {
+            text : 'cid',
+            value : 'cid'
+        }, {
+            text : '类型',
+            value : 'type'
+        }, {
+            text : '创建时间',
+            value : 'time'
+        }, {
+            text : '操作',
+            value : 'actions'
+        }],
+        collection_table_option : {},
+        collection_table_loading : false,
+        collection_table_data : [],
+        collection_table_tot_len : 0,
+        collection_table_page : 1
     }),
     watch : {
-        
+        collection_table_option : {
+            handler(){
+                this.getCollectionList()
+            },
+            deep: true
+        }        
     },
     computed : {
         
     },
     methods : {
-        
+       toCreateCol(){
+           this.$router.push('/coll/publish')
+       },
+       async getCollectionList(){
+           this.collection_table_loading = true
+           const { page } = this.collection_table_option
+           const { data } = await api_list_collection(page, 10)
+           if(!data){
+               openErrorMessageBox('错误', '网络异常')
+           }else{
+               if(data['res'] != 0){
+                   openErrorMessageBox('错误', data['err'])
+               }else{
+                   this.collection_table_data = data['data']['list']
+                   this.collection_table_tot_len = data['data']['count']
+               }
+           }
+           this.collection_table_loading = false
+       },
+       collectionCharts(item){
+           this.$router.push(`/coll/statistics/${item.cid}`)
+       },
+       collectionDetail(item){
+           this.$router.push(`/coll/info/${item.cid}`)
+       }
     },
     async mounted(){
         

@@ -29,7 +29,7 @@
                             <v-card 
                                 class="text-14 px4 pt4"
                                 style="color: rgba(0,0,0,0.68)"
-                                v-if="i.type == 1 && !i.multi">
+                                v-if="i.type == 1 && !i.data.multi">
                                 单选：{{ i.title }}
                                 <v-radio-group v-model="i.value" row dense>
                                     <v-radio
@@ -43,17 +43,16 @@
                             <v-card 
                                 class="text-14 px4 pt4"
                                 style="color: rgba(0,0,0,0.68)"
-                                v-else-if="i.type == 1 && i.multi"
+                                v-else-if="i.type == 1 && i.data.multi"
                             >
                                 多选：{{ i.title }}
                                 <v-radio-group v-model="i.value" row dense>
                                     <v-checkbox
-                                        dense
                                         v-for="j1, k1 in i.data.options"
-                                        v-model="i.value"
                                         :key="k1"
                                         :label="j1"
-                                        :value="k1"
+                                        @change="multiSelectEvent(i, k1)"
+                                        dense
                                     ></v-checkbox>
                                 </v-radio-group>
                             </v-card>
@@ -69,7 +68,7 @@
                             </v-card>
                         </v-col>
                         <v-col cols="12">
-                            <v-btn block color="primary"> 提交 </v-btn>
+                            <v-btn block color="primary" @click="commit"> 提交 </v-btn>
                         </v-col>
                     </v-card>
                 </v-col>
@@ -80,8 +79,8 @@
 </template>
 
 <script>
-import { openErrorMessageBox } from '../../concat/bus'
-import { api_get_collection } from '../../interface/api'
+import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
+import { api_commit_collection, api_get_collection } from '../../interface/api'
 import { isHash } from '../../util/index'
 
 export default {
@@ -110,11 +109,10 @@ export default {
                 this.data.struct.push(i)
                 switch(i.type){
                     case 1:
-                        if(!i.multi){
+                        if(!i.data.multi){
                             i['value'] = 0
                         }else{
-                            //???????
-                            i['value'] = { 0 : '', 1 : '' }
+                            i['value'] = []
                         }
                         break
                     case 5:
@@ -133,6 +131,45 @@ export default {
                 openErrorMessageBox('错误', info['err'])
             }else{
                 this.Load(info['data'])
+            }
+        },
+        async commit(){
+            const struct = []
+            for(const i of this.data.struct){
+                switch(i.type){
+                    case 1:
+                        if(i.data.multi && i.value.length < 1){
+                            openErrorMessageBox('错误', '多选请至少选择一个')
+                            return
+                        }
+                        break
+                    case 5:
+                        if(i.value.length < 2){
+                            openErrorMessageBox('错误', '文本过短')
+                            return
+                        }
+                        break
+                }
+                struct.push(i.value)
+            }
+            const json = JSON.stringify(struct)
+            const { data } = await api_commit_collection(this.cid, json)
+            if(!data){
+                openErrorMessageBox('错误', '网络连接错误')
+                return
+            }
+            if(data['res'] != 0){
+                openErrorMessageBox('错误', data['err'])
+                return
+            }
+            await openInfoMessageBox('成功', '提交成功')
+        },
+        multiSelectEvent(node, choice){
+            const index = node.value.indexOf(choice)
+            if(index != -1){
+                node.value.splice(index, 1)
+            }else{
+                node.value.push(choice)
             }
         }
     },

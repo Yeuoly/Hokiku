@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar dense dark style="flex: none" v-if="avaliable">
+    <v-app-bar dense dark style="flex: none" v-show="avaliable">
         <v-app-bar-nav-icon @click.stop="changeNavigationStatus"></v-app-bar-nav-icon>
         <v-app-bar-title>Hokiku</v-app-bar-title>
     </v-app-bar>
@@ -26,6 +26,9 @@ export default {
         ui_trans_bus.$on('launch-header', () => {
             this.avaliable = true
         })
+    },
+    destroyed(){
+        ui_trans_bus.$off('launch-header')
     }
 }
 </script>

@@ -14,6 +14,13 @@
                                 创建统计表
                             </v-card-title>
                         </v-toolbar>
+                        <v-col cols="12">
+                            <v-text-field
+                                dense
+                                label="收集表标题"
+                                v-model="title"
+                            ></v-text-field>
+                        </v-col>
                         <v-col 
                             cols="12" 
                             v-for="i, key in struct"
@@ -49,7 +56,20 @@
                                     :key="k"
                                     v-model="i.data.options[k]"
                                     :label="j"
-                                ></v-text-field>
+                                >
+                                    <template v-slot:append-outer>
+                                        <v-btn 
+                                            small 
+                                            icon
+                                            fab
+                                            dark
+                                            color="error" 
+                                            @click="radioDeleteOption(i, k)"
+                                        >
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                    </template>
+                                </v-text-field>
                                 <v-btn small icon fab color="green" title="添加选项" @click="radioAddOption(i)">
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
@@ -76,6 +96,11 @@
                                 style="color: rgba(0,0,0,0.68)"
                                 v-else-if="i.type == 5"
                             >
+                                <v-text-field 
+                                    label="文本框标题"
+                                    dense
+                                    v-model="i.title"
+                                ></v-text-field>
                                 <v-textarea
                                     :label="i.title"
                                     v-model="i.data.default"
@@ -84,7 +109,7 @@
                         </v-col>
                         <v-col cols="12">
                             <v-btn block color="green" class="mb-5 text-white" @click="addOptions"> 添加收集项 </v-btn>
-                            <v-btn block color="primary"> 创建并发布 </v-btn>
+                            <v-btn block color="primary" @click="publish"> 创建并发布 </v-btn>
                         </v-col>
                     </v-card>
                 </v-col>
@@ -95,11 +120,13 @@
 </template>
 
 <script>
+import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
+import { api_publish_collection } from '../../interface/api'
 export default {
     data : () => ({
         type_table : {
-            v : [1, 2, 5],
-            l : ['文本选择框', '图片选择框', '文本框']
+            v : [1, /*2, */5],
+            l : ['文本选择框', /*'图片选择框', */'文本框']
         },
         struct : [{
             type : 1,
@@ -109,7 +136,8 @@ export default {
                 options : ['选项一', '选项二'],
                 multi : false
             }
-        }]
+        }],
+        title : ''
     }),
     methods : {
         addOptions(){
@@ -125,7 +153,12 @@ export default {
         },
         radioAddOption(node){
             if(node.data.options.length < 20){
-                node.data.options.push('选项n')
+                node.data.options.push(`选项${node.data.options.length}`)
+            }
+        },
+        radioDeleteOption(node, index){
+            if(node.data.options.length >= 3){
+                node.data.options.splice(index, 1)
             }
         },
         onSelectType(node, type){
@@ -152,6 +185,23 @@ export default {
                     break
             }
             node.type = type_num
+        },
+        async publish(){
+            const struct = JSON.stringify({
+                length : this.struct.length,
+                struct : this.struct
+            })
+            const title = this.title
+            const { data } = await api_publish_collection(struct, title)
+            if(!data){
+                openErrorMessageBox('错误', '网络连接出现问题')
+            }
+            if(data['res'] != 0){
+                openErrorMessageBox('错误', data['err'])
+            }else{
+                await openInfoMessageBox('成功', '创建成功，点击确定跳转')
+                this.$router.push(`/coll/info/${data['data']}`)
+            }
         }
     }
 }

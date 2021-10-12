@@ -8,6 +8,7 @@ const TeacherTerminal = () => import('../views/TeacherTerminal.vue')
 const CollectionInfo = () => import('../views/collections/CollectionInfo.vue')
 const CollectionIndex = () => import('../views/collections/CollectionIndex.vue')
 const CollectionPublish = () => import('../views/collections/CollectionPublish.vue')
+const CollectionStatistics = () => import('../views/collections/CollectionStatistics.vue')
 
 const collection_pages = [{
     name : 'collection-info',
@@ -18,9 +19,13 @@ const collection_pages = [{
         disableSideMenu : true
     }
 }, {
-    name :'collection-publish',
+    name : 'collection-publish',
     path : '/coll/publish',
     component : CollectionPublish,
+}, {
+    name : 'collection-statistics',
+    path : '/coll/statistics/:cid',
+    component : CollectionStatistics
 }]
 
 export default [{

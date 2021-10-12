@@ -89,3 +89,11 @@ export const api_get_csrftoken = () => api_base('auth/csrf', 'post')
 export const api_logout = () => api_base('auth/logout', 'post')
 
 export const api_get_collection = cid => api_base('coll/get', 'post', stringify({ cid }))
+
+export const api_publish_collection = (struct, title) => api_base('coll/publish', 'post', stringify({ struct, title }))
+
+export const api_commit_collection = (cid, data) => api_base('coll/commit', 'post', stringify({cid, data}))
+
+export const api_list_collection = (page, len) => api_base('coll/list', 'post', stringify({ page, len }))
+
+export const api_collection_statistics = cid => api_base('coll/statistics', 'post', stringify({ cid }))
