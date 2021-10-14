@@ -11,6 +11,9 @@ const CollectionIndex = () => import('../views/collections/CollectionIndex.vue')
 const CollectionPublish = () => import('../views/collections/CollectionPublish.vue')
 const CollectionStatistics = () => import('../views/collections/CollectionStatistics.vue')
 
+const HomeHomework = () => import('../views/home/Homework.vue')
+const HomeCollection = () => import('../views/home/Collection.vue')
+
 const collection_pages = [{
     name : 'collection-info',
     path : '/coll/info/:cid',
@@ -29,6 +32,16 @@ const collection_pages = [{
     component : CollectionStatistics
 }]
 
+const home_pages = [{
+    name : 'home-homework',
+    path : '/home/homework',
+    component : HomeHomework,
+}, {
+    name : 'home-collection',
+    path : '/home/collection',
+    component : HomeCollection
+}]
+
 export default [{
     name : 'home',
     path : '/home',
@@ -41,6 +54,7 @@ export default [{
             online : true
         }
     },
+    children : home_pages
 },{
     name : 'homeworks',
     path : '/homeworks',

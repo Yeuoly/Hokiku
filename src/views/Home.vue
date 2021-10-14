@@ -1,152 +1,75 @@
 <template>
     <v-container style="margin-top: 30px; margin-bottom: 30px">
-        <v-card>
+        <v-flex>
             <v-row>
-                <v-col xl="12" lg="12" md="12" sm="12" cols="12">
-                    <DateValueSmoothChart
-                        title="得分情况"
-                        subtext="七日内的分数情况"
-                        :model="score"
-                        style="width: 100%"
-                     />
+                <v-col v-if="!isMobile" md="2" sm="0">
+                     <v-card>
+                        <v-navigation-drawer
+                            floating
+                            permanent
+                        >
+                            <v-list
+                                dense
+                                rounded
+                            >
+                                <v-list-item
+                                    v-for="(i, k) in navs"
+                                    :key="k" 
+                                    link 
+                                    @click="$router.push(`/home/${i.path}`)"
+                                >
+                                    {{ i.text }}
+                                </v-list-item>
+                            </v-list>
+                        </v-navigation-drawer>
+                    </v-card>
                 </v-col>
-                <v-col xl="4" lg="4" md="6" sm="6" cols="12" style="height : 300px">
-                    <PieCharts 
-                        title="作业完成比例" 
-                        subtext="历史发布的作业中完成作业的占比" 
-                        :model="{ data : rate_of_finished }" 
-                    />
+                <v-col v-else>
+                    <v-bottom-navigation class="home-bottom-nav">
+                        <v-btn
+                           v-for="(i, k) in navs"
+                            :key="k" 
+                            link 
+                            @click="$router.push(`/home/${i.path}`)"
+                        >
+                            <span>{{ i.text }}</span>
+                        </v-btn>
+                    </v-bottom-navigation>
                 </v-col>
-                <v-col xl="4" lg="4" md="6" sm="6" cols="12" style="height : 300px">
-                    <PieCharts 
-                        title="作业类型比例" 
-                        subtext="完成的作业的类型分布" 
-                        :model="{ data : rate_of_type }" 
-                    />
-                </v-col>
-                <v-col xl="4" lg="4" md="6" sm="6" cols="12" style="height : 300px">
-                    <PieCharts 
-                        title="正确率" 
-                        subtext="flag提交正确率" 
-                        :model="{ data : rate_of_correct }" 
-                    />
-                </v-col>
-                <v-col cols="12">
-                    <v-card-text style="color:rgba(0, 0, 0, 0.6)">作业提交记录</v-card-text>
-                    <v-data-table
-                        :options.sync="table_options"
-                        :headers="records_headers"
-                        :items="records"
-                        :loading="record_loading"
-                        dense
-                    >
-                        <template v-slot:item.submit="{ item }">
-                            <v-icon small @click="toSubmitHomeWork(item.hid)">
-                                mdi-pencil
-                            </v-icon>
-                        </template>
-                    </v-data-table>
+                <v-col md="10" sm="12">
+                    <v-card>
+                        <router-view></router-view>
+                        <div class="py5"></div>
+                    </v-card>
                 </v-col>
             </v-row>
-        </v-card>
+        </v-flex>
     </v-container>
 </template>
 
 <script>
 
-import PieCharts from '../components/charts/PieCharts.vue'
-import DateValueSmoothChart from '../components/charts/DateValueSmoothChart.vue'
-import { api_get_homework_record } from '../interface/api'
-
 export default {
-    components : { PieCharts, DateValueSmoothChart },
     data : () => ({
-        rate_of_finished : [{
-            name : '完成',
-            value : 2
-        }, {
-            name : '未完成',
-            value : 1
-        }],
-        rate_of_type : [{
-            name : 'pwn',
-            value : 0
-        }, {
-            name : 'web',
-            value : 0
-        }, {
-            name : 'misc',
-            value : 0
-        }, {
-            name : 'crypto',
-            value : 0
-        }],
-        rate_of_correct : [{
-            name : '正确',
-            value : 32
-        }, {
-            name : '错误',
-            value : 3
-        }],
-        score : {
-            date : ['1-1', '1-2', '1-3', '1-4', '1-5', '1-6', '1-7'],
-            value : [[50, 70, 110, 0, 30, 50, 90], [20, 10, 15, 13, 13, 16, 2]]
-        },
-        records_headers : [{
-            text : '作业ID',
-            value : 'hid'
-        }, {
-            text : '标题',
-            value : 'title'
-        }, {
-            text : '内容',
-            value : 'desc'
-        }, {
-            text : '提交时间',
-            value : 'time'
-        }, {
-            text : '结束时间',
-            value : 'end_at'
-        }, {
-            text : '提交',
-            value : 'submit'
-        }],
-        records : [],
-        table_options : {},
-        record_loading : false
+        navs : [{
+            text : '作业',
+            path : 'homework'
+        },{
+            text : '收集表',
+            path : 'collection'
+        }]
     }),
-    watch : {
-        table_options : {
-            handler(){
-                const { page } = this.table_options
-                this.injectRecords(page)
-            },
-            deep : true
-        }
-    },
     computed : {
-        
-        },
-    methods : {
-        async injectRecords(page){
-            this.record_loading = true
-            const data = await api_get_homework_record(page)
-            this.records = data
-            this.record_loading = false
-        },
-        toSubmitHomeWork(hid){
-            this.$router.push(`/homework/${hid}`)
+        isMobile(){
+            return !this.$vuetify.breakpoint.mdAndUp
         }
     }
 }
 </script>
 
-<style scoped>
-    .theme--light.v-data-table{
-        color: rgba(0, 0, 0, 0.6);
-    }
-
-    .v-data-table > .v-data-table__wrapper > table > tbody > tr > td, .v-data-table > .v-data-table__wrapper > table > thead > tr > td, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td {
-        font-size: 11px;
-    }
+<style>
+.home-bottom-nav{
+    position: fixed;
+    z-index: 5;
+}
 </style>
