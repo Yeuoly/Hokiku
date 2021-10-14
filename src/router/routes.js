@@ -5,6 +5,7 @@ const Home = () => import('../views/Home.vue')
 const Homeworks = () => import('../views/Homeworks.vue')
 const Homework = () => import('../views/Homework.vue')
 const TeacherTerminal = () => import('../views/TeacherTerminal.vue')
+const ResultPage = () => import('../views/Result.vue')
 const CollectionInfo = () => import('../views/collections/CollectionInfo.vue')
 const CollectionIndex = () => import('../views/collections/CollectionIndex.vue')
 const CollectionPublish = () => import('../views/collections/CollectionPublish.vue')
@@ -113,7 +114,7 @@ export default [{
     }
 }, {
     name : 'collection-index',
-    path : 'coll',
+    path : '/coll',
     component : CollectionIndex,
     meta : {
         inNav : true,
@@ -124,4 +125,11 @@ export default [{
         }
     },
     children : collection_pages
+}, {
+    name : 'result',
+    path : '/result/:text',
+    component : ResultPage,
+    meta : {
+        inNav : false
+    }
 }]

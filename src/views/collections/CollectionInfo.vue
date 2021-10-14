@@ -163,6 +163,7 @@ export default {
                 return
             }
             await openInfoMessageBox('成功', '提交成功')
+            this.$router.push(`/result/提交成功`)
         },
         multiSelectEvent(node, choice){
             const index = node.value.indexOf(choice)
