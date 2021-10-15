@@ -96,4 +96,6 @@ export const api_commit_collection = (cid, data) => api_base('coll/commit', 'pos
 
 export const api_list_collection = (page, len) => api_base('coll/list', 'post', stringify({ page, len }))
 
-export const api_collection_statistics = cid => api_base('coll/statistics', 'post', stringify({ cid }))
+export const api_collection_statistics = cid => api_base('coll/result/statistics', 'post', stringify({ cid }))
+
+export const api_collection_reuslt_list = (page, len) => api_base('coll/result/list', 'post', stringify({ page, len }))
