@@ -46,15 +46,13 @@
                                 v-else-if="i.type == 1 && i.data.multi"
                             >
                                 多选：{{ i.title }}
-                                <v-radio-group v-model="i.value" row dense>
-                                    <v-checkbox
-                                        v-for="j1, k1 in i.data.options"
-                                        :key="k1"
-                                        :label="j1"
-                                        @change="multiSelectEvent(i, k1)"
-                                        dense
-                                    ></v-checkbox>
-                                </v-radio-group>
+                                <v-checkbox
+                                    v-for="j1, k1 in i.data.options"
+                                    :key="k1"
+                                    :label="j1"
+                                    :value="k1"
+                                    dense
+                                ></v-checkbox>
                             </v-card>
                             <v-card
                                 class="text-14 px4 pt4"
@@ -164,14 +162,6 @@ export default {
             }
             await openInfoMessageBox('成功', '提交成功')
             this.$router.push(`/result/提交成功`)
-        },
-        multiSelectEvent(node, choice){
-            const index = node.value.indexOf(choice)
-            if(index != -1){
-                node.value.splice(index, 1)
-            }else{
-                node.value.push(choice)
-            }
         }
     },
     mounted(){

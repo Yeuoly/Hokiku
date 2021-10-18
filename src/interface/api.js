@@ -99,3 +99,8 @@ export const api_list_collection = (page, len) => api_base('coll/list', 'post', 
 export const api_collection_statistics = cid => api_base('coll/result/statistics', 'post', stringify({ cid }))
 
 export const api_collection_reuslt_list = (page, len) => api_base('coll/result/list', 'post', stringify({ page, len }))
+
+export const api_collection_result_get = (cid, rid) => api_base('coll/result/get', 'post', stringify({ cid, rid }))
+
+export const api_collection_result_update = (cid, rid, data) => api_base('coll/result/update', 'post', stringify({ cid, rid, data }))
+
