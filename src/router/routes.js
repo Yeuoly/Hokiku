@@ -14,6 +14,11 @@ const CollectionStatistics = () => import('../views/collections/CollectionStatis
 const HomeHomework = () => import('../views/home/Homework.vue')
 const HomeCollection = () => import('../views/home/Collection.vue')
 
+const CompetitionIndex = () => import('../views/competition/Index.vue')
+const CompetitionGame = () => import('../views/competition/Game.vue')
+const CompetitionManager = () => import('../views/competition/Manager.vue')
+const CompetitionTrain = () => import('../views/competition/Train.vue')
+
 const collection_pages = [{
     name : 'collection-info',
     path : '/coll/info/:cid',
@@ -40,6 +45,20 @@ const home_pages = [{
     name : 'home-collection',
     path : '/home/collection',
     component : HomeCollection
+}]
+
+const competition_pages = [{
+    name : 'competition-game',
+    path : '/competition/game',
+    component : CompetitionGame
+}, {
+    name : 'competition-manager',
+    path : '/competition/manager',
+    component : CompetitionManager
+}, {
+    name : 'competition-train',
+    path : '/competition/train',
+    component : CompetitionTrain
 }]
 
 export default [{
@@ -146,4 +165,17 @@ export default [{
     meta : {
         inNav : false
     }
+}, {
+    name : 'competition',
+    path : '/competition',
+    component : CompetitionIndex,
+    meta : {
+        inNav : true,
+        icon : 'mdi-fencing',
+        title : '竞赛中心',
+        required : {
+            online : true
+        }
+    },
+    children : competition_pages
 }]

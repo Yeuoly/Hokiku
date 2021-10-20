@@ -29,6 +29,14 @@ export const isStudent = status => {
     return !!(status & ( 0x1 ))
 }
 
+export const isSA = status => {
+    return !!(status & ( 0x1 << 3 ))
+}
+
 export const isHash = (hash, len) => {
     return new RegExp(`^[a-fA-F0-9]{${len}}$`).test(hash)
+}
+
+export const isFlagDynamic = flag => {
+    return !!(flag & 1)
 }

@@ -52,6 +52,7 @@ export default {
         btn1 : '',
         color : '',
         btncb : null,
+        status : 0
     }),
     computed : {
         style(){
@@ -67,10 +68,20 @@ export default {
             return style
         }
     },
+    watch : {
+        dialog : {
+            handler(v){
+                if(!v){
+                    this.btncb(this.status)
+                    this.status = 0
+                }
+            }
+        }
+    },
     methods : {
         btnclick(){
+            this.status = 1
             this.dialog = false
-            this.btncb(1)
         }
     },
     mounted(){
