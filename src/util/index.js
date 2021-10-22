@@ -40,3 +40,7 @@ export const isHash = (hash, len) => {
 export const isFlagDynamic = flag => {
     return !!(flag & 1)
 }
+
+export const sleep = time => new Promise(resolve => {
+    setTimeout(() => resolve(), time)
+})

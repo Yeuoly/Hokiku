@@ -104,10 +104,16 @@ export const api_collection_result_get = (cid, rid) => api_base('coll/result/get
 
 export const api_collection_result_update = (cid, rid, data) => api_base('coll/result/update', 'post', stringify({ cid, rid, data }))
 
-export const api_competition_docker_start = () => api_base('comp/docker/start', 'post')
-
 export const api_competition_train_list = type => api_base('comp/admin/list-train', 'post', stringify({ class: type }))
 
 export const api_competition_train_add = args => api_base('comp/admin/add-train', 'post', stringify(args))
 
 export const api_competition_train_update = args => api_base('comp/admin/update-train', 'post', stringify(args))
+
+export const api_competition_train_delete = id => api_base('comp/admin/delete-train', 'post', stringify({ id }))
+
+export const api_competition_train_list_user = (page, len, type) => api_base('comp/user/list-train', 'post', stringify({ page, len, type }))
+
+export const api_competition_train_start = id => api_base('comp/train/start', 'post', stringify({ id }))
+
+export const api_competition_train_start_check = request_id => api_base('comp/train/start-check', 'post', stringify({ request_id }))
