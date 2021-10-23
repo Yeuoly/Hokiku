@@ -49,15 +49,33 @@
                 <v-card-text>
                     备注：{{ trains[current_index].comment }}
                 </v-card-text>
-                <v-card-text v-if="tm_info.port">
-                    端口：{{ tm_info.port }}
+                <v-text-field
+                    class="px5"
+                    label="flag"
+                    v-model="flag"
+                >
+                    <template
+                        v-slot:append
+                    >
+                        <v-btn @click="commit" color="primary" small>提交</v-btn>
+                    </template>
+                </v-text-field>
+                <v-divider class="pb2"></v-divider>
+                <v-card-text v-show="launching">
+                    容器近期初次启动可能较慢
+                </v-card-text>
+                <v-card-text v-if="tm_info.port != 0">
+                    当前开启端口：{{ tm_info.port }}
+                </v-card-text>
+                <v-card-text v-if="tm_info.remainder != 0">
+                    当前靶机剩余时间：{{ tm_info.remainder }}秒左右
                 </v-card-text>
                 <v-progress-linear
                     :active="launching"
                     indeterminate
                     color="cyan"
                 ></v-progress-linear>
-                <v-btn @click="run">启动</v-btn>
+                <v-btn @click="run" :disabled="tm_info.port != 0">启动</v-btn>
             </v-card>
         </v-dialog>
     </div>
@@ -65,7 +83,7 @@
 
 <script>
 import { openErrorMessageBox } from '../../concat/bus'
-import { api_competition_train_start, api_competition_train_start_check } from '../../interface/api'
+import { api_competition_train_start, api_competition_train_start_check, api_competition_train_status } from '../../interface/api'
 import { loadCompetitions } from '../../store/index'
 import { sleep } from '../../util'
 export default {
@@ -95,9 +113,13 @@ export default {
         current_index : 0,
         dialog_open : false,
         launching : false,
+        slow : false,
         tm_info : {
-            port : 0
-        }
+            port : 0,
+            remainder : 0
+        },
+        timer : 0,
+        flag : ''
     }),
     methods : {
         select(type){
@@ -107,6 +129,9 @@ export default {
         openDialog(index){
             this.dialog_open = true
             this.current_index = index
+        },
+        async commit(){
+
         },
         async run(){
             const id = this.trains[this.current_index].id
@@ -126,6 +151,7 @@ export default {
                         if(data && data['data'] != 0){
                             finish = true
                             this.tm_info.port = data['data']['port']
+                            this.tm_info.remainder = 3600
                         }
                     }
                 }
@@ -141,6 +167,13 @@ export default {
             }else{
                 this.trains = data['data']
             }
+        },
+        async init(){
+            const { data } = await api_competition_train_status()
+            if(data && data['res'] == 0){
+                this.tm_info.port = data['data']['port']
+                this.tm_info.remainder = data['data']['remainder']
+            }
         }
     },
     watch : {
@@ -150,6 +183,17 @@ export default {
             },
             immediate : true
         }
+    },
+    mounted(){
+        this.init()
+        this.timer = setInterval(() => {
+            if(this.tm_info.remainder > 0){
+                this.tm_info.remainder--
+            }
+        }, 1000)
+    },
+    destroyed(){
+        clearInterval(this.timer)
     }
 }
 </script>

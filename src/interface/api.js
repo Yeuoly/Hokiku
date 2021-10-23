@@ -117,3 +117,5 @@ export const api_competition_train_list_user = (page, len, type) => api_base('co
 export const api_competition_train_start = id => api_base('comp/train/start', 'post', stringify({ id }))
 
 export const api_competition_train_start_check = request_id => api_base('comp/train/start-check', 'post', stringify({ request_id }))
+
+export const api_competition_train_status = () => api_base('comp/train/status', 'post', '')
