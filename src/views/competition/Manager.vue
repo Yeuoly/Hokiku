@@ -173,7 +173,7 @@ export default {
                 comment : this.new_train.comment,
                 ctf_flag : this.new_train.ctf_flag,
                 flag_dynamic : this.new_train.dynamic_flag,
-                port_protocol : this.port_protocol,
+                port_protocol : this.new_train.port_protocol,
                 type : this.new_train.type
             })
             if(!data){

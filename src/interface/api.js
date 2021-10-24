@@ -119,3 +119,5 @@ export const api_competition_train_start = id => api_base('comp/train/start', 'p
 export const api_competition_train_start_check = request_id => api_base('comp/train/start-check', 'post', stringify({ request_id }))
 
 export const api_competition_train_status = () => api_base('comp/train/status', 'post', '')
+
+export const api_competition_train_commit_flag = (id, flag) => api_base('comp/train/commit-flag', 'post', stringify({ train_id: id, flag }))

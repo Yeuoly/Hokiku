@@ -22,14 +22,15 @@
                 xl="3"
             >
                 <v-card class="clickable" height="250" @click="openDialog(k)">
-                    <v-toolbar color="grey">
-                        <v-toolbar-title>
-                            <div style="text-align: center" class="text-20 text-white">
-                                {{ i.title }} - {{ i.grade }}
-                            </div>
-                        </v-toolbar-title>
-                    </v-toolbar>
-                    <div class="text-16 text-grey px5 pb5">
+                    <v-card-title>
+                        <div style="text-align: center" class="text-20 w100">
+                            {{ i.title }}
+                        </div>
+                        <div style="text-align: center" class="text-20 w100">
+                            {{ i.grade }}
+                        </div>
+                    </v-card-title>
+                    <div style="text-align: center" class="text-16 text-grey px5 pb5 w100">
                         {{ i.comment }}
                     </div>
                 </v-card>
@@ -82,8 +83,8 @@
 </template>
 
 <script>
-import { openErrorMessageBox } from '../../concat/bus'
-import { api_competition_train_start, api_competition_train_start_check, api_competition_train_status } from '../../interface/api'
+import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
+import { api_competition_train_commit_flag, api_competition_train_start, api_competition_train_start_check, api_competition_train_status } from '../../interface/api'
 import { loadCompetitions } from '../../store/index'
 import { sleep } from '../../util'
 export default {
@@ -131,7 +132,18 @@ export default {
             this.current_index = index
         },
         async commit(){
-
+            const flag = this.flag
+            const id = this.trains[this.current_index].id
+            const { data } = await api_competition_train_commit_flag(id, flag)
+            if(!data){
+                openErrorMessageBox('错误', '网络错误')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', 'flag错误')
+                }else{
+                    openInfoMessageBox('成功', 'flag正确')
+                }
+            }
         },
         async run(){
             const id = this.trains[this.current_index].id
