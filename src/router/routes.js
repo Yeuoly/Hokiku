@@ -6,6 +6,10 @@ const Homeworks = () => import('../views/Homeworks.vue')
 const Homework = () => import('../views/Homework.vue')
 const TeacherTerminal = () => import('../views/TeacherTerminal.vue')
 const ResultPage = () => import('../views/Result.vue')
+const Message = () => import('../views/Message.vue')
+
+const MessageSystem = () => import('../views/message/System.vue')
+
 const CollectionInfo = () => import('../views/collections/CollectionInfo.vue')
 const CollectionIndex = () => import('../views/collections/CollectionIndex.vue')
 const CollectionPublish = () => import('../views/collections/CollectionPublish.vue')
@@ -13,11 +17,23 @@ const CollectionStatistics = () => import('../views/collections/CollectionStatis
 
 const HomeHomework = () => import('../views/home/Homework.vue')
 const HomeCollection = () => import('../views/home/Collection.vue')
+const HomeProfile = () => import('../views/home/Profile.vue')
 
 const CompetitionIndex = () => import('../views/competition/Index.vue')
 const CompetitionGame = () => import('../views/competition/Game.vue')
 const CompetitionManager = () => import('../views/competition/Manager.vue')
 const CompetitionTrain = () => import('../views/competition/Train.vue')
+const CompetitionRank = () => import('../views/competition/Rank.vue')
+const CompetitionHome = () => import('../views/competition/Home.vue')
+
+const message_pages = [{
+    name : 'message-system',
+    path : '/message/system',
+    component : MessageSystem,
+}, {
+    path : '/message/',
+    redirect : '/message/system'
+}]
 
 const collection_pages = [{
     name : 'collection-info',
@@ -45,6 +61,10 @@ const home_pages = [{
     name : 'home-collection',
     path : '/home/collection',
     component : HomeCollection
+}, {
+    name : 'home-profile',
+    path : '/home/profile',
+    component : HomeProfile
 }]
 
 const competition_pages = [{
@@ -59,6 +79,14 @@ const competition_pages = [{
     name : 'competition-train',
     path : '/competition/train',
     component : CompetitionTrain
+}, {
+    name : 'competition-rank',
+    path : '/competition/rank',
+    component : CompetitionRank
+}, {
+    name : 'competition-home',
+    path : '/competition/home',
+    component : CompetitionHome
 }]
 
 export default [{
@@ -74,6 +102,19 @@ export default [{
         }
     },
     children : home_pages
+},{
+    name : 'message',
+    path : '/message',
+    component : Message,
+    meta : {
+        inNav : true,
+        icon : 'mdi-message-outline',
+        title : '消息',
+        required : {
+            online : true
+        }
+    },
+    children : message_pages
 },{
     name : 'homeworks',
     path : '/homeworks',

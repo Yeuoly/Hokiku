@@ -66,7 +66,7 @@
                     容器近期初次启动可能较慢
                 </v-card-text>
                 <v-card-text v-if="tm_info.port != 0">
-                    当前开启端口：{{ tm_info.port }}
+                    地址：iotshield.srmxy.cn:{{ tm_info.port }}
                 </v-card-text>
                 <v-card-text v-if="tm_info.remainder != 0">
                     当前靶机剩余时间：{{ tm_info.remainder }}秒左右
@@ -77,6 +77,7 @@
                     color="cyan"
                 ></v-progress-linear>
                 <v-btn @click="run" :disabled="tm_info.port != 0">启动</v-btn>
+                <v-btn @click="shutdown" :disabled="tm_info.port == 0" type="error">关闭</v-btn>
             </v-card>
         </v-dialog>
     </div>
@@ -84,7 +85,7 @@
 
 <script>
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_competition_train_commit_flag, api_competition_train_start, api_competition_train_start_check, api_competition_train_status } from '../../interface/api'
+import { api_competition_train_commit_flag, api_competition_train_shutdown, api_competition_train_start, api_competition_train_start_check, api_competition_train_status } from '../../interface/api'
 import { loadCompetitions } from '../../store/index'
 import { sleep } from '../../util'
 export default {
@@ -131,6 +132,20 @@ export default {
             this.dialog_open = true
             this.current_index = index
         },
+        async shutdown(){
+            const { data } = await api_competition_train_shutdown()
+            if(!data){
+                openErrorMessageBox('错误', '网络错误')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    openInfoMessageBox('成功', '靶机已关闭')
+                    this.tm_info.port = 0
+                    this.tm_info.remainder = 0
+                }
+            }
+        },
         async commit(){
             const flag = this.flag
             const id = this.trains[this.current_index].id
@@ -139,7 +154,7 @@ export default {
                 openErrorMessageBox('错误', '网络错误')
             }else{
                 if(data['res'] != 0){
-                    openErrorMessageBox('错误', 'flag错误')
+                    openErrorMessageBox('错误', data['err'])
                 }else{
                     openInfoMessageBox('成功', 'flag正确')
                 }

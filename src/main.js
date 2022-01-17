@@ -46,7 +46,7 @@ import { disableHeader, disableSideMenu, launchHeader, launchSideMenu } from './
   if(process.env.NODE_ENV == "development"){
     axios.defaults.baseURL = "http://127.0.0.1:8010"
   }else{
-    axios.defaults.baseURL = ""
+    axios.defaults.baseURL = "http://iotshield.srmxy.cn:8080"
   }
   axios.defaults.withCredentials = true
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'

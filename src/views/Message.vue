@@ -16,7 +16,7 @@
                                     v-for="(i, k) in navs"
                                     :key="k" 
                                     link 
-                                    @click="$router.push(`/home/${i.path}`)"
+                                    @click="$router.push(`/message/${i.path}`)"
                                 >
                                     {{ i.text }}
                                 </v-list-item>
@@ -25,12 +25,12 @@
                     </v-card>
                 </v-col>
                 <v-col v-else>
-                    <v-bottom-navigation class="home-bottom-nav">
+                    <v-bottom-navigation class="message-bottom-nav">
                         <v-btn
                            v-for="(i, k) in navs"
                             :key="k" 
                             link 
-                            @click="$router.push(`/home/${i.path}`)"
+                            @click="$router.push(`/message/${i.path}`)"
                         >
                             <span>{{ i.text }}</span>
                         </v-btn>
@@ -52,15 +52,9 @@
 export default {
     data : () => ({
         navs : [{
-            text : '个人',
-            path : 'profile'
-        }, /*{
-            text : '作业',
-            path : 'homework'
-        },*/{
-            text : '收集表',
-            path : 'collection'
-        }, ]
+            text : '系统消息',
+            path : 'system'
+        }],
     }),
     computed : {
         isMobile(){
@@ -71,7 +65,7 @@ export default {
 </script>
 
 <style>
-.home-bottom-nav{
+.message-bottom-nav{
     position: fixed;
     z-index: 5;
 }

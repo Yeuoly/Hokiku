@@ -4,6 +4,9 @@
             <v-row>
                 <v-col v-if="!isMobile" md="2" sm="0">
                      <v-card>
+                        <v-card-text>
+                            当前分数：{{ score }}
+                        </v-card-text>
                         <v-navigation-drawer
                             floating
                             permanent
@@ -49,12 +52,17 @@
 </template>
 
 <script>
+import { api_competition_train_get_score } from '../../interface/api'
 import { isSA } from '../../util'
 export default {
     data : () => ({
         navs : [{
             text : '比赛',
             path : 'game',
+            sa : true
+        }, {
+            text : '我的',
+            path : 'home',
             sa : false
         },{
             text : '练习',
@@ -64,7 +72,12 @@ export default {
             text : '管理',
             path : 'manager',
             sa : true
-        }]
+        }, {
+            text : '排名',
+            path : 'rank',
+            sa : false
+        }],
+        score : 0
     }),
     computed : {
         isMobile(){
@@ -74,7 +87,17 @@ export default {
     methods : {
         avaliable(item){
             return !item.sa || isSA(this.$store.getters.getUserStatus)
+        },
+        async getScore(){
+            const uid = this.$store.getters.getUserUid
+            const { data } = await api_competition_train_get_score(uid)
+            if(data && data['res'] == 0){
+                this.score = data['data']
+            }
         }
+    },
+    mounted(){
+        this.getScore()
     }
 }
 </script>

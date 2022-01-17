@@ -90,6 +90,7 @@
                 <v-data-table
                     :headers="excel_headers"
                     :items="statistics"
+                    :items-per-page="9999"
                     hide-default-footer
                     ref="table"
                 >

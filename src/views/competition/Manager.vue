@@ -8,6 +8,7 @@
                 :headers="headers"
                 :items="trains"
                 hide-default-footer
+                :items-per-page="1000"
             >
                 <template v-slot:item.type="{ item }">
                     {{ getTypeById(item.type) }}
@@ -115,7 +116,8 @@ export default {
             port_protocol : '',
             dynamic_flag : false,
             type : 0,
-            isNew : true
+            isNew : true,
+            train_id : 0
         },
     }),
     methods : {
@@ -142,6 +144,7 @@ export default {
             this.new_train.port_protocol = item.port_protocol
             this.new_train.dynamic_flag = isFlagDynamic(item.flag)
             this.new_train.open = true
+            this.new_train.train_id = item.id
         },
         async deleteTrain(item){
             const result = await openInfoMessageBox('提示', '您确定要删除吗')
@@ -174,7 +177,8 @@ export default {
                 ctf_flag : this.new_train.ctf_flag,
                 flag_dynamic : this.new_train.dynamic_flag,
                 port_protocol : this.new_train.port_protocol,
-                type : this.new_train.type
+                type : this.new_train.type,
+                train_id : this.new_train.train_id
             })
             if(!data){
                 openErrorMessageBox('错误', '网络错误')

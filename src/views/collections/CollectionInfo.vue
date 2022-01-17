@@ -51,6 +51,7 @@
                                     :key="k1"
                                     :label="j1"
                                     :value="k1"
+                                    @click.prevent="checkBoxClick(i.value, k1)"
                                     dense
                                 ></v-checkbox>
                             </v-card>
@@ -162,6 +163,13 @@ export default {
             }
             await openInfoMessageBox('成功', '提交成功')
             this.$router.push(`/result/提交成功`)
+        },
+        checkBoxClick(list, k){
+            if(list.includes(k)){
+                list.splice(list.indexOf(k), 1)
+            }else{
+                list.push(k)
+            }
         }
     },
     mounted(){

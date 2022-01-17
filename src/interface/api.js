@@ -121,3 +121,17 @@ export const api_competition_train_start_check = request_id => api_base('comp/tr
 export const api_competition_train_status = () => api_base('comp/train/status', 'post', '')
 
 export const api_competition_train_commit_flag = (id, flag) => api_base('comp/train/commit-flag', 'post', stringify({ train_id: id, flag }))
+
+export const api_competition_train_get_score = uid => api_base('comp/train/score', 'get', stringify({ uid }))
+
+export const api_competition_train_rank = () => api_base('comp/train/rank', 'get', '')
+
+export const api_competition_train_shutdown = () => api_base('comp/train/shutdown', 'post', '')
+
+export const api_competition_train_solved_user = id => api_base('comp/train/solved/train', 'get', stringify({ id }))
+
+export const api_competition_train_user_solved = uid => api_base('comp/train/solved/user', 'get', stringify({ uid }))
+
+export const api_organization_accept_apply = mid => api_base('org/apply/accept', 'post', stringify({ mid }))
+
+export const api_organization_reject_apply = mid => api_base('org/apply/reject', 'post', stringify({ mid }))

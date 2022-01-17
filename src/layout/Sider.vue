@@ -13,7 +13,7 @@
                 <v-list>
                     <v-list-item class="px-2">
                         <v-list-item-avatar>
-                        <v-img src="https://yeuoly.oss-cn-beijing.aliyuncs.com/irina/static/default_avatar.jpg"></v-img>
+                            <v-img src="https://yeuoly.oss-cn-beijing.aliyuncs.com/irina/static/default_avatar.jpg"></v-img>
                         </v-list-item-avatar>
                     </v-list-item>
 
