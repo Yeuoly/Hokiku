@@ -135,3 +135,11 @@ export const api_competition_train_user_solved = uid => api_base('comp/train/sol
 export const api_organization_accept_apply = mid => api_base('org/apply/accept', 'post', stringify({ mid }))
 
 export const api_organization_reject_apply = mid => api_base('org/apply/reject', 'post', stringify({ mid }))
+
+export const api_docker_image_get = (page, len) => api_base('docker/images', 'get', stringify({ page, len }))
+
+export const api_docker_image_insert = (image_name, port_protocol) => api_base('docker/new', 'post', stringify({ image_name, port_protocol }))
+
+export const api_docker_image_insert_check = request_id => api_base('docker/new/check', 'post', stringify({ request_id }))
+
+export const api_docker_image_delete = image_id => api_base('docker/delete', 'post', stringify({ image_id }))
