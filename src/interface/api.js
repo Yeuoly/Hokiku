@@ -132,9 +132,13 @@ export const api_competition_train_solved_user = id => api_base('comp/train/solv
 
 export const api_competition_train_user_solved = uid => api_base('comp/train/solved/user', 'get', stringify({ uid }))
 
-export const api_organization_accept_apply = mid => api_base('org/apply/accept', 'post', stringify({ mid }))
+export const api_organization_accept_apply = mid => api_base('org/apply/join/accept', 'post', stringify({ mid }))
 
-export const api_organization_reject_apply = mid => api_base('org/apply/reject', 'post', stringify({ mid }))
+export const api_organization_reject_apply = mid => api_base('org/apply/join/reject', 'post', stringify({ mid }))
+
+export const api_organization_my = () => api_base('org/my', 'get', '')
+
+export const api_organization_new = (name, desc) => api_base('org/create', 'post', stringify({ name, desc }))
 
 export const api_docker_image_get = (page, len) => api_base('docker/images', 'get', stringify({ page, len }))
 

@@ -18,6 +18,7 @@ const CollectionStatistics = () => import('../views/collections/CollectionStatis
 const HomeHomework = () => import('../views/home/Homework.vue')
 const HomeCollection = () => import('../views/home/Collection.vue')
 const HomeProfile = () => import('../views/home/Profile.vue')
+const HomeOrganization = () => import('../views/home/Organization.vue')
 
 const CompetitionIndex = () => import('../views/competition/Index.vue')
 const CompetitionGame = () => import('../views/competition/Game.vue')
@@ -65,6 +66,13 @@ const home_pages = [{
     name : 'home-profile',
     path : '/home/profile',
     component : HomeProfile
+}, {
+    name : 'home-organization',
+    path : '/home/org',
+    component : HomeOrganization
+}, {
+    path : '/home/',
+    redirect : '/home/profile'
 }]
 
 const competition_pages = [{

@@ -12,7 +12,6 @@
                     placeholder="组织内名"
                 ></v-text-field>
                 <v-textarea
-                
                     label="申请信息"
                     v-model="apply_join_org.apply.text"
                     placeholder="申请信息"
@@ -74,7 +73,8 @@
 </template>
 
 <script>
-
+import { openErrorMessageBox } from '../../concat/bus'
+import { api_organization_my } from '../../interface/api'
 import { isAvaliableNameFormat } from '../../util/index'
 
 export default {
@@ -86,7 +86,8 @@ export default {
         },
         orgs : [{
             name : 'Default',
-            id : 0
+            id : 0,
+            is_admin : 0
         }],
         chip_colors : ['primary', 'red', 'cyan', 'green', 'secondary'],
         dialogs : { org : false },
@@ -104,6 +105,24 @@ export default {
         },
         applyJoinOrg(){
             /* TODO */
+        },
+        async loadOrganizations(){
+            const { data } = await api_organization_my()
+            if(!data){
+                openErrorMessageBox('错误', '获取组织列表失败，请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else if(data['data']['r_member'] != null){
+                    for(const i of data['data']['r_organization']){
+                        this.orgs.push({
+                            name : i['name'],
+                            id : i['id'],
+                            is_admin : false
+                        })
+                    }
+                }
+            }
         }
     },
     computed : {
@@ -115,6 +134,8 @@ export default {
     mounted(){
         this.profile.id = this.$store.getters.getUserName
         this.profile.uid = this.$store.getters.getUserUid
+
+        this.loadOrganizations()
     }
 }
 </script>

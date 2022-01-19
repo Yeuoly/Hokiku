@@ -33,6 +33,10 @@ export const isSA = status => {
     return !!(status & ( 0x1 << 3 ))
 }
 
+export const allowManageOrganization = status => {
+    return !!(status & ( 0x1 << 5 ))
+}
+
 export const isHash = (hash, len) => {
     return new RegExp(`^[a-fA-F0-9]{${len}}$`).test(hash)
 }

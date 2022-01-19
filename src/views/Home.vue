@@ -60,7 +60,10 @@ export default {
         },*/{
             text : '收集表',
             path : 'collection'
-        }, ]
+        }, {
+            text : '组织',
+            path : 'org'
+        }]
     }),
     computed : {
         isMobile(){
