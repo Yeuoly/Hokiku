@@ -52,3 +52,7 @@ export const sleep = time => new Promise(resolve => {
 export const isAvaliableNameFormat = name => {
     return new RegExp('^[a-zA-Z0-9_\u4e00-\u9fa5\\.\u0800-\u4e00\\-]{6,16}$').test(name)
 }
+
+export const getMessageFromText = (type)=> {
+    return ['系统'][type]
+}

@@ -140,6 +140,8 @@ export const api_organization_my = () => api_base('org/my', 'get', '')
 
 export const api_organization_new = (name, desc) => api_base('org/create', 'post', stringify({ name, desc }))
 
+export const api_organization_apply_join = (gid, text, org_username) => api_base('org/apply/join', 'post', stringify({ gid, text, org_username }))
+
 export const api_docker_image_get = (page, len) => api_base('docker/images', 'get', stringify({ page, len }))
 
 export const api_docker_image_insert = (image_name, port_protocol) => api_base('docker/new', 'post', stringify({ image_name, port_protocol }))
@@ -147,3 +149,5 @@ export const api_docker_image_insert = (image_name, port_protocol) => api_base('
 export const api_docker_image_insert_check = request_id => api_base('docker/new/check', 'post', stringify({ request_id }))
 
 export const api_docker_image_delete = image_id => api_base('docker/delete', 'post', stringify({ image_id }))
+
+export const api_message_system_list = (page, len) => api_base('message/system/list', 'get', stringify({ page, len }))

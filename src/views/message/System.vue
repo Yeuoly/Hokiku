@@ -17,12 +17,13 @@
                                 {{ i.r_info.text }}
                             </v-card>
                             <v-card flat v-else-if="i.type === 1">
-                                个人 <strong>{{ i.r_info.applyer_name }}</strong>
-                                (uid <strong>{{ i.r_info.applyer_uid }}</strong>)
-                                申请以身份 <strong>{{ i.r_info.org_username }}</strong>
-                                加入组织 <strong>{{ i.r_info.org_name }}</strong>
-                                (gid <strong>{{ i.r_info.org_id }}</strong>)
+                                个人 <strong>{{ i.r_info.r_user.name }}</strong>
+                                (uid <strong>{{ i.r_info.uid }}</strong>)
+                                申请以身份 <strong>{{ i.r_info.username }}</strong>
+                                加入组织 <strong>{{ i.r_info.r_organization.name }}</strong>
+                                (gid <strong>{{ i.r_info.gid }}</strong>)
                                 <br>
+                                <span class="text-12">申请消息：{{ i.r_info.text }}</span>
                                 <br>
                                 <v-btn 
                                     @click="acceptJoinApply(i.r_info.id, k)"
@@ -43,7 +44,7 @@
                             </v-card>
                         </v-col>
                         <v-col cols="12" style="text-align: right">
-                            <span>来自：{{ i.from }}</span>
+                            <span>来自：{{ getMessageFromText(i.from) }}</span>
                         </v-col>
                         <v-col cols="12">
                             <v-divider></v-divider>
@@ -56,62 +57,23 @@
 </template>
 
 <script>
-const MESSAGE_TYPE_NORMAL = 0
-const MESSAGE_TYPE_APPLY_JOIN = 1
+//const MESSAGE_TYPE_NORMAL = 0
+//const MESSAGE_TYPE_APPLY_JOIN = 1
 
-import { api_organization_accept_apply, api_organization_reject_apply } from '../../interface/api'
+import { api_message_system_list, api_organization_accept_apply, api_organization_reject_apply } from '../../interface/api'
 import { openErrorMessageBox } from '../../concat/bus'
+
+import { getMessageFromText } from '../../util/index'
 
 export default {
     name : 'message-system',
     data : () => ({
-        messages : [{
-            id : 0,
-            title : '普通消息',
-            time : 0,
-            type : MESSAGE_TYPE_NORMAL,
-            r_info : {
-                id : 0,
-                text : '这是普通消息'
-            },
-            from : '系统'
-        }, {
-            id : 1,
-            title : '申请消息',
-            time : 123,
-            type : MESSAGE_TYPE_APPLY_JOIN,
-            r_info : {
-                id : 0,
-                org_id : 0,
-                org_name : 'IotShield',
-                status : 0,
-                applyer_uid : 0,
-                applyer_name : 'Yeuoly',
-                org_username : '周瑜',
-                apply_text : ''
-            },
-            from : '系统'
-        }, {
-            id : 1,
-            title : '申请消息',
-            time : 123,
-            type : MESSAGE_TYPE_APPLY_JOIN,
-            r_info : {
-                org_id : 0,
-                org_name : 'IotShield',
-                status : 1,
-                applyer_uid : 0,
-                applyer_name : 'Yeuoly',
-                org_username : '周瑜',
-                apply_text : ''
-            },
-            from : '系统'
-        }]
+        messages : [],
+        page : 1
     }),
     methods : {
         async acceptJoinApply(mid, idx){
-            console.log(123321)
-            const resp = await api_organization_accept_apply(mid)
+            const { resp } = await api_organization_accept_apply(mid)
             if(!resp){
                 openErrorMessageBox('错误', '请检查网络情况')
             }else{
@@ -123,7 +85,7 @@ export default {
             }
         },
         async rejectJoinApply(mid, idx){
-            const resp = await api_organization_reject_apply(mid)
+            const { resp } = await api_organization_reject_apply(mid)
             if(!resp){
                 openErrorMessageBox('错误', '请检查网络情况')
             }else{
@@ -133,7 +95,25 @@ export default {
                     this.messages[idx].r_info.status = -1
                 }
             }
+        },
+        async loadMessage(){
+            const { data } = await api_message_system_list(this.page, 10)
+            if(!data){
+                openErrorMessageBox('错误', '请检查网络情况')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    this.messages = this.messages.concat(data['data'])
+                }
+            }
+        },
+        getMessageFromText(type){
+            return getMessageFromText(type)
         }
+    },
+    mounted(){
+        this.loadMessage()
     }
 }
 </script>

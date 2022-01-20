@@ -7,9 +7,9 @@
                     v-model.number="apply_join_org.id"
                 ></v-text-field>
                 <v-text-field
-                    label="组织ID"
+                    label="组织内昵称"
                     v-model="apply_join_org.apply.name"
-                    placeholder="组织内名"
+                    placeholder="组织内昵称"
                 ></v-text-field>
                 <v-textarea
                     label="申请信息"
@@ -73,8 +73,8 @@
 </template>
 
 <script>
-import { openErrorMessageBox } from '../../concat/bus'
-import { api_organization_my } from '../../interface/api'
+import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
+import { api_organization_apply_join, api_organization_my } from '../../interface/api'
 import { isAvaliableNameFormat } from '../../util/index'
 
 export default {
@@ -103,8 +103,23 @@ export default {
         applyChangeName(){
             /* TODO */
         },
-        applyJoinOrg(){
-            /* TODO */
+        async applyJoinOrg(){
+            const { data } = await api_organization_apply_join(
+                this.apply_join_org.id,
+                this.apply_join_org.apply.text,
+                this.apply_join_org.apply.name
+            )
+
+            if(!data){
+                openErrorMessageBox('错误', '请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    await openInfoMessageBox('成功', '申请消息已发送')
+                    this.dialogs.org = false
+                }
+            }
         },
         async loadOrganizations(){
             const { data } = await api_organization_my()
