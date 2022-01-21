@@ -73,24 +73,24 @@ export default {
     }),
     methods : {
         async acceptJoinApply(mid, idx){
-            const { resp } = await api_organization_accept_apply(mid)
-            if(!resp){
+            const { data } = await api_organization_accept_apply(mid)
+            if(!data){
                 openErrorMessageBox('错误', '请检查网络情况')
             }else{
-                if(resp['res'] != 0){
-                    openErrorMessageBox('错误', resp['err'])
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
                 }else{
                     this.messages[idx].r_info.status = 1
                 }
             }
         },
         async rejectJoinApply(mid, idx){
-            const { resp } = await api_organization_reject_apply(mid)
-            if(!resp){
+            const { data } = await api_organization_reject_apply(mid)
+            if(!data){
                 openErrorMessageBox('错误', '请检查网络情况')
             }else{
-                if(resp['res'] != 0){
-                    openErrorMessageBox('错误', resp['err'])
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
                 }else{
                     this.messages[idx].r_info.status = -1
                 }

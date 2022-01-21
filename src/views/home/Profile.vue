@@ -57,7 +57,7 @@
                             :color="chip_colors[k % chip_colors.length]" 
                             :key="k"
                         >
-                            {{ i.name }}
+                            {{ i.name }} - gid:{{ i.id }}
                         </v-chip>
                     </v-chip-group>
                 </v-card-actions>

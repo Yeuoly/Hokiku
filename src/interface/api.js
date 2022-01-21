@@ -138,6 +138,10 @@ export const api_organization_reject_apply = mid => api_base('org/apply/join/rej
 
 export const api_organization_my = () => api_base('org/my', 'get', '')
 
+export const api_organization_manage_list_member = gid => api_base('org/manage/list-member', 'get', stringify({ gid }))
+
+export const api_organization_manage_list_orgs = () => api_base('org/manage/list-org', 'get', '')
+
 export const api_organization_new = (name, desc) => api_base('org/create', 'post', stringify({ name, desc }))
 
 export const api_organization_apply_join = (gid, text, org_username) => api_base('org/apply/join', 'post', stringify({ gid, text, org_username }))
