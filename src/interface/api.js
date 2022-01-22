@@ -146,6 +146,12 @@ export const api_organization_new = (name, desc) => api_base('org/create', 'post
 
 export const api_organization_apply_join = (gid, text, org_username) => api_base('org/apply/join', 'post', stringify({ gid, text, org_username }))
 
+export const api_organization_manage_appoint = (gid, uid) => api_base('org/manage/appoint', 'post', stringify({ gid, uid }))
+
+export const api_organization_manage_cancel = (gid, uid) => api_base('org/manage/cancel', 'post', stringify({ gid, uid }))
+
+export const api_organization_remove_member = (gid, uid) => api_base('org/manage/remove-member', 'post', stringify({ gid, uid }))
+
 export const api_docker_image_get = (page, len) => api_base('docker/images', 'get', stringify({ page, len }))
 
 export const api_docker_image_insert = (image_name, port_protocol) => api_base('docker/new', 'post', stringify({ image_name, port_protocol }))

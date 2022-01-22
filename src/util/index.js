@@ -56,3 +56,5 @@ export const isAvaliableNameFormat = name => {
 export const getMessageFromText = (type)=> {
     return ['系统'][type]
 }
+
+export const isOrganizationManager = flag => !!(flag & 2)

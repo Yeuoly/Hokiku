@@ -47,12 +47,31 @@
                 hide-default-footer
                 :items-per-page="1000"
             >
+                <template v-slot:item.is_manager="{ item }">
+                    {{ isOrganizationManager(item.flag) ? '管理员' : '普通成员'}}
+                </template>
                 <template v-slot:item.time="{ item }">
                     {{ new Date(item.time * 1000).formatDate('Y-M-D h:m:s') }}
                 </template>
-                <template v-slot:item.action="{  }">
-                    <v-btn small color="primary">任命管理员</v-btn>
-                    <v-btn small color="error">移除</v-btn>
+                <template v-slot:item.action="{ item }">
+                    <v-btn small color="primary" 
+                        :disabled="!current_own || item.uid == $store.getters.getUserUid"
+                        @click="() => {
+                            if(isOrganizationManager(item.flag)){
+                                cancelManager(item.gid, item.uid)
+                            }else{
+                                appointManager(item.gid, item.uid)
+                            }
+                        }"
+                    >
+                        {{ isOrganizationManager(item.flag) ? '取消' : '任命' }}管理员
+                    </v-btn>
+                    <v-btn small color="error" 
+                        :disabled="!((current_own || !isOrganizationManager(item.flag)) && item.uid != $store.getters.getUserUid)"
+                        @click="removeMember(item.gid, item.uid)"    
+                    >
+                        移除
+                    </v-btn>
                 </template> 
             </v-data-table>
         </v-col>
@@ -61,7 +80,9 @@
 
 <script>
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_organization_manage_list_member, api_organization_manage_list_orgs, api_organization_new } from '../../interface/api'
+import { api_organization_manage_appoint, api_organization_manage_cancel, api_organization_manage_list_member, api_organization_manage_list_orgs, api_organization_new, api_organization_remove_member } from '../../interface/api'
+import { isOrganizationManager } from '../../util/index'
+
 export default {
     data : () => ({
         dialog : {
@@ -71,6 +92,7 @@ export default {
         },
         my_orgs : [],
         current_org_idx : -1,
+        current_own : false,
         headers_members : [{
             text : '名称',
             value : 'name'
@@ -80,6 +102,9 @@ export default {
         },{
             text : '加入时间',
             value : 'time'
+        }, {
+            text : '身份',
+            value : 'is_manager'
         }, {
             text : '操作',
             value : 'action'
@@ -97,6 +122,9 @@ export default {
     methods : {
         createOrganization(){
             this.dialog.open = true
+        },
+        isOrganizationManager(flag){
+            return isOrganizationManager(flag)
         },
         async commitOrganization(){
             const { data } = await api_organization_new(
@@ -136,7 +164,63 @@ export default {
                 if(data['res'] != 0){
                     openErrorMessageBox('错误', data['err'])
                 }else{
-                    this.current_members = data['data']
+                    this.current_own = data['data']['own']
+                    this.current_members = data['data']['list']
+                }
+            }
+        },
+        async appointManager(gid, uid){
+            const { data } = await api_organization_manage_appoint(gid, uid)
+            if(!data){
+                openErrorMessageBox('错误', '请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    openInfoMessageBox('成功', '任命成功')
+                    for(const i of this.current_members){
+                        if(i.gid == gid && i.uid == uid){
+                            i.flag = i.flag | 2
+                            break
+                        }
+                    }
+                }
+            }
+        },
+        async cancelManager(gid, uid){
+            const { data } = await api_organization_manage_cancel(gid, uid)
+            if(!data){
+                openErrorMessageBox('错误', '请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    openInfoMessageBox('成功', '取消成功')
+                    for(const i of this.current_members){
+                        if(i.gid == gid && i.uid == uid){
+                            i.flag = i.flag & ~2
+                            break
+                        }
+                    }
+                }
+            }
+        },
+        async removeMember(gid, uid){
+            const { data } = await api_organization_remove_member(gid, uid)
+            if(!data){
+                openErrorMessageBox('错误', '请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    openInfoMessageBox('成功', '移除成功')
+                    for(const i in this.current_members){
+                        if(this.current_members[i].gid == gid 
+                            && this.current_members[i].uid == uid){
+                            this.current_members.splice(i, 1)
+                            break
+                        }
+                    }
                 }
             }
         }
