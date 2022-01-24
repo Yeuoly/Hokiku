@@ -42,6 +42,12 @@
                                     已被拒绝
                                 </span>
                             </v-card>
+                            <v-card flat v-else-if="i.type === 3">
+                                <strong> {{ i.r_info.r_homework.r_organization.name }} </strong>
+                                发布了新的作业 <strong>{{ i.r_info.r_homework.title }}</strong>
+                                (id <strong>{{ i.r_info.hid }}</strong>)
+                                请注意截止日期 <strong>{{ new Date(i.r_info.r_homework.endtime * 1000).formatDate('Y-M-D h:m:s') }}</strong>
+                            </v-card>
                         </v-col>
                         <v-col cols="12" style="text-align: right">
                             <span>来自：{{ getMessageFromText(i.from) }}</span>

@@ -2,11 +2,11 @@ const Index = () => import('../views/Index.vue')
 const Login = () => import('../views/Login.vue')
 const Register = () => import('../views/Register.vue')
 const Home = () => import('../views/Home.vue')
-const Homeworks = () => import('../views/Homeworks.vue')
 const Homework = () => import('../views/Homework.vue')
 const TeacherTerminal = () => import('../views/TeacherTerminal.vue')
 const ResultPage = () => import('../views/Result.vue')
 const Message = () => import('../views/Message.vue')
+const HomeworkCommits = () => import('../views/HomeworkCommits.vue')
 
 const MessageSystem = () => import('../views/message/System.vue')
 
@@ -124,18 +124,6 @@ export default [{
     },
     children : message_pages
 },{
-    name : 'homeworks',
-    path : '/homeworks',
-    component : Homeworks,
-    meta : {
-        inNav : true,
-        icon : 'mdi-calendar-check-outline',
-        title : '作业',
-        required : {
-            online : true
-        }
-    }
-},{
     name : 'homework',
     path : '/homework/:hid',
     component : Homework,
@@ -227,4 +215,14 @@ export default [{
         }
     },
     children : competition_pages
+}, {
+    name : 'homework-commits',
+    path : '/homework/commits/:hid',
+    component : HomeworkCommits,
+    meta : {
+        inNav : false,
+        required : {
+            online : true
+        }
+    }
 }]

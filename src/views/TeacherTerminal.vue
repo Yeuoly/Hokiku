@@ -22,7 +22,8 @@
                         <v-row>
                             <v-col :cols="12" :sm="12" :md="6" :lg="4" :xl="3">
                                 <v-text-field
-                                    label="作业名"
+                                    label="作业标题"
+                                    v-model="homework_title"
                                 ></v-text-field>
                             </v-col>
                             <v-col :cols="12" :sm="12" :md="6" :lg="4" :xl="3">
@@ -55,10 +56,12 @@
                             <v-col :cols="12" :sm="12" :md="6" :lg="4" :xl="3">
                                 <v-select
                                     label="发布到班级"
-                                    :items="classes"
+                                    :items="orgs"
+                                    item-text="name"
+                                    item-value="id"
                                     menu-props="auto"
                                     single-line
-                                    v-model="target_class"
+                                    v-model="target_org"
                                 ></v-select>
                             </v-col>
                             <v-col :cols="12" :sm="12" :md="12" :lg="12" :xl="12">
@@ -67,14 +70,37 @@
                                 ></rich-editor>
                             </v-col>
                             <v-col :cols="12">
-                                <v-btn color="primary">发布</v-btn>
+                                <v-btn color="primary" @click="publishHomework">发布</v-btn>
                             </v-col>
                         </v-row>
                     </v-container>
                 </v-tab-item>
                 <v-tab-item :key="1">
                     <v-container>
-                        321
+                        <v-data-table
+                            :headers="homework_table_headers"
+                            :loading="homework_table_loading"
+                            :items="homework_table_data"
+                            :server-items-length="homework_table_tot_len"
+                            :options.sync="homework_table_options"
+                            :page.sync="homework_table_page"
+                            :items-per-page="10"
+                        >
+                            <template v-slot:item.actions="{ item }">
+                                <v-icon
+                                    small
+                                    @click="homeworkCommits(item)"
+                                >
+                                    mdi-chart-box-outline
+                                </v-icon>
+                            </template>
+                            <template v-slot:item.time="{ item }">
+                                {{ new Date(item.time * 1000).formatDate('Y-M-D h:m:s') }}
+                            </template>
+                            <template v-slot:item.endtime="{ item }">
+                                {{ new Date(item.endtime * 1000).formatDate('Y-M-D h:m:s') }}
+                            </template>
+                        </v-data-table>
                     </v-container>
                 </v-tab-item>
                 <v-tab-item :key="2">
@@ -130,19 +156,52 @@
 
 <script>
 import RichEditor from '../components/common/RichEditor.vue'
-import { openErrorMessageBox } from '../concat/bus'
-import { api_list_collection } from '../interface/api'
+import { openErrorMessageBox, openInfoMessageBox } from '../concat/bus'
+import { 
+  api_homework_publish,
+    api_homework_publish_list,
+    api_list_collection, 
+    api_organization_manage_list_orgs 
+} from '../interface/api'
 
 export default {
     components : { RichEditor },
     data : () => ({
         current_tab : '',
         tabs : ['发布作业', '作业列表',  '我的班级', '收集表'],
-        classes : ['计通-A', '计通-B', '物电-A'],
-        target_class : '',
-        homework_desc : 'www',
+        orgs : [],
+        target_org : 0,
+        homework_title : '',
+        homework_desc : '',
         end_at : '',
         date_picker_menu : false,
+        homework_table_headers : [{
+            text : 'id',
+            value : 'id'
+        },{
+            text : '标题',
+            value : 'title'
+        }, {
+            text : '组织',
+            value : 'org'
+        }, {
+            text : '发布者',
+            value : 'owner'
+        },{
+            text : '发布时间',
+            value : 'time'
+        }, {
+            text : '结束时间',
+            value : 'endtime'
+        }, {
+            text : '提交情况',
+            value : 'actions'
+        }],
+        homework_table_options : {},
+        homework_table_data : [],
+        homework_table_loading : false,
+        homework_table_tot_len : 99999,
+        homework_table_page : 1,
         collection_table_headers : [{
             text : '标题',
             align : 'start',
@@ -151,8 +210,8 @@ export default {
             text : 'cid',
             value : 'cid'
         }, {
-            text : '类型',
-            value : 'type'
+                text : '类型',
+                value : 'type'
         }, {
             text : '创建时间',
             value : 'time'
@@ -171,41 +230,104 @@ export default {
             handler(){
                 this.getCollectionList()
             },
-            deep: true
-        }        
+            deep : true
+        },
+        homework_table_options : {
+            handler(){
+                this.loadPublishList()
+            },
+            deep : true
+        }
     },
     computed : {
-        
+        endtime(){
+            return parseInt(new Date(this.end_at).getTime() / 1000)
+        }
     },
     methods : {
-       toCreateCol(){
+        toCreateCol(){
            this.$router.push('/coll/publish')
-       },
-       async getCollectionList(){
-           this.collection_table_loading = true
-           const { page } = this.collection_table_option
-           const { data } = await api_list_collection(page, 10)
-           if(!data){
-               openErrorMessageBox('错误', '网络异常')
-           }else{
-               if(data['res'] != 0){
-                   openErrorMessageBox('错误', data['err'])
-               }else{
-                   this.collection_table_data = data['data']['list']
-                   this.collection_table_tot_len = data['data']['count']
-               }
-           }
-           this.collection_table_loading = false
-       },
-       collectionCharts(item){
-           this.$router.push(`/coll/statistics/${item.cid}`)
-       },
-       collectionDetail(item){
-           this.$router.push(`/coll/info/${item.cid}`)
-       }
+        },
+        async getCollectionList(){
+            this.collection_table_loading = true
+            const { page } = this.collection_table_option
+            const { data } = await api_list_collection(page, 10)
+            if(!data){
+                openErrorMessageBox('错误', '网络异常')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    this.collection_table_data = data['data']['list']
+                    this.collection_table_tot_len = data['data']['count']
+                }
+            }
+            this.collection_table_loading = false
+        },
+        async loadOrganizations(){
+            const { data } = await api_organization_manage_list_orgs();
+            if(!data){
+                openErrorMessageBox('错误', '网络异常')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    this.orgs = data['data']
+                }
+            }
+        },
+        async publishHomework(){
+            const { data } = await api_homework_publish(
+                this.target_org,
+                this.homework_title,
+                this.endtime,
+                this.homework_desc,
+            )
+            if(!data){
+                openErrorMessageBox('错误', '网络异常')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    openInfoMessageBox('成功', '发布成功')
+                }
+            }
+        },
+        async loadPublishList(){
+            const { page } = this.homework_table_options
+            const { data } = await api_homework_publish_list(page, 10)
+            if(!data){
+                openErrorMessageBox('错误', '网络异常')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else if(data['data']){
+                    this.homework_table_data.splice(0, this.homework_table_data.length)
+                    for(const i of data['data']){
+                        this.homework_table_data.push({
+                            id : i.id,
+                            title : i.title,
+                            org : i.r_organization.name,
+                            owner : i.r_owner.name,
+                            time : i.time,
+                            endtime : i.endtime
+                        })
+                    }
+                }
+            }
+        },
+        collectionCharts(item){
+            this.$router.push(`/coll/statistics/${item.cid}`)
+        },
+        collectionDetail(item){
+            this.$router.push(`/coll/info/${item.cid}`)
+        },
+        homeworkCommits(item){
+            this.$router.push(`/homework/commits/${item.id}`)
+        }
     },
     async mounted(){
-        
+        this.loadOrganizations()
     }
 }
 </script>

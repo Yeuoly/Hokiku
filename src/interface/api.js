@@ -47,43 +47,6 @@ export const api_get_email_captcha = (captcha, method, email) => api_base('captc
 
 export const api_auth_check = () => api_base('auth/check', 'post')
 
-export const api_get_homework_record = (page) => new Promise(resolve => {
-    console.log(page)
-    setTimeout(() => {
-        resolve([{
-            hid : 1, title : '测试', desc : 'PHP反序列化', time : '2021-7-16 16:00', end_at : '2022-7-16'
-        }])
-    }, 1000)
-})
-
-export const api_get_homeworks = (page) => new Promise(resolve => {
-    console.log(page)
-    setTimeout(() => {
-        resolve([{
-            hid : 1, title : '测试', publisher : '李林', desc : 'PHP反序列化', time : '2021-7-16 16:00', end_at : '2022-7-16'
-        }])
-    }, 1000)
-})
-
-export const api_get_homework = (hid) => new Promise(resolve => {
-    console.log(hid)
-    setTimeout(() => {
-        resolve({
-            res : 1,
-            err : null,
-            data : {
-                hid : hid,
-                title : '测试作业',
-                publisher : '李林',
-                desc : 'PHP反序列化',
-                time : 1626422400, 
-                end_at : 1657958400,
-                ans : '<div>测试测试测试</div>'
-            }
-        })
-    }, 1000)
-})
-
 export const api_get_csrftoken = () => api_base('auth/csrf', 'post')
 
 export const api_logout = () => api_base('auth/logout', 'post')
@@ -161,3 +124,19 @@ export const api_docker_image_insert_check = request_id => api_base('docker/new/
 export const api_docker_image_delete = image_id => api_base('docker/delete', 'post', stringify({ image_id }))
 
 export const api_message_system_list = (page, len) => api_base('message/system/list', 'get', stringify({ page, len }))
+
+export const api_homework_publish = (org, title, endtime, desc) => api_base('homework/publish', 'post', stringify({ org, title, endtime, desc }))
+
+export const api_homework_list = (page, len) => api_base('homework/list', 'get', stringify({ page, len }))
+
+export const api_homework_get = hid => api_base('homework/get', 'get', stringify({ hid }))
+
+export const api_homework_result_get= hid => api_base('homework/commit/get', 'get', stringify({ hid }))
+
+export const api_homework_result_commit = (hid, text) => api_base('homework/commit/text', 'post', stringify({ hid, text }))
+
+export const api_homework_publish_list = (page, len) => api_base('homework/publish/list', 'get', stringify({ page, len }))
+
+export const api_homework_commits = hid => api_base('homework/commits', 'get', stringify({ hid }))
+
+export const api_homework_mark = (uid, hid, score) => api_base('homework/mark', 'post', stringify({ uid, hid, score }))

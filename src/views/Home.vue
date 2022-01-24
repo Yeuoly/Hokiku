@@ -54,10 +54,10 @@ export default {
         navs : [{
             text : '个人',
             path : 'profile'
-        }, /*{
+        }, {
             text : '作业',
             path : 'homework'
-        },*/{
+        }, {
             text : '收集表',
             path : 'collection'
         }, {

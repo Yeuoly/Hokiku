@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios'
 
 import './style/font.css'
 import './style/common.css'
+import './style/hljs.css'
 import './util'
 import route from './router/router'
 import { api_auth_check, api_get_csrftoken } from './interface/api'

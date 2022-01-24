@@ -12,20 +12,23 @@
                     </v-card-text>
                     <v-card-text class="px3 pt1 pb1 text-11">
                         时限：{{ new Date(time*1000).formatDate('Y-M-D h:m:s') }}
-                        ~ {{ new Date(end_at*1000).formatDate('Y-M-D h:m:s') }}
+                        ~ {{ new Date(endtime*1000).formatDate('Y-M-D h:m:s') }}
                         <v-chip small :color="status[1]">
                             {{ status[0] }}
                         </v-chip>
                     </v-card-text>
                     <v-card-text class="px3 pt1 pb1 text-10">
-                        发布者：{{ publisher }}
+                        发布者：{{ owner }}
                     </v-card-text>
                     <v-card-text class="px3 pt1 pb1 text-10">
-                        简介：{{ desc }}
+                        简介：<span v-html="clean_desc"></span>
                     </v-card-text>
                     <rich-editor v-model="ans" class="px2 py2"></rich-editor>
                     <v-card-actions>
-                        <v-btn small color="primary" :disabled="status[1] != 'primary'">
+                        <v-btn color="primary" 
+                            @click="commit" 
+                            :disabled="status[1] != 'primary'"
+                        >
                             提交
                         </v-btn>
                     </v-card-actions>
@@ -37,38 +40,77 @@
 </template>
 
 <script>
-import { api_get_homework } from '../interface/api'
-import { openErrorMessageBox } from '../concat/bus'
+import { api_homework_get, api_homework_result_commit, api_homework_result_get } from '../interface/api'
+import { openErrorMessageBox, openInfoMessageBox } from '../concat/bus'
 
 import RichEditor from '../components/common/RichEditor.vue'
+import { xssFilter } from '../util'
 
 export default {
     components : { RichEditor },
     data : () => ({
         hid : 0,
         title : '',
-        publisher : '',
+        owner : '',
         desc : '',
         time : 0,
-        end_at : 0,
+        endtime : 0,
         ans : ''
     }),
-    watch : {
-
-    },
     computed : {
         status(){
             const time = new Date().getTime() / 1000
             if (time < this.time){
                 return ['未开始', 'grey']
-            }else if(time > this.end_at){
+            }else if(time > this.endtime){
                 return ['已结束', 'red']
             }
             return ['进行中', 'primary']
+        },
+        clean_desc(){
+            return xssFilter(this.desc)
         }
     },
     methods : {
-        
+        async loadResult(){
+            const { data } = await api_homework_result_get(this.hid)
+            if(!data){
+                openErrorMessageBox('警告', '获取提交记录失败')
+            }else{
+                if(data['res'] == 0){
+                    this.ans = data['data']['r_info']['text']
+                }
+            }
+        },
+        async loadHomework(){
+            const { data } = await api_homework_get(this.hid)
+            if(!data){
+                await openErrorMessageBox('警告', '获取作业失败', '确定')
+            }else{
+                if(data['res'] < 0){
+                    await openErrorMessageBox('警告', data['err'], '确定')
+                }else{
+                    this.title = data['data']['title']
+                    this.desc = data['data']['desc']
+                    this.owner = data['data']['r_owner']['name']
+                    this.time = data['data']['time']
+                    this.endtime = data['data']['endtime']
+                    this.ans = data['data']['ans']
+                }
+            }
+        },
+        async commit(){
+            const { data } = await api_homework_result_commit(this.hid, this.ans)
+            if(!data){
+                openErrorMessageBox('错误', '请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    openInfoMessageBox('成功', '提交成功')
+                }
+            }
+        }
     },
     async mounted(){
         const hid = parseInt(this.$route.params.hid)
@@ -78,21 +120,8 @@ export default {
             return
         }
         this.hid = hid
-        const data = await api_get_homework(hid)
-        if(!data){
-            await openErrorMessageBox('警告', '获取作业失败', '确定')
-        }else{
-            if(data['res'] < 0){
-                await openErrorMessageBox('警告', data['err'], '确定')
-            }else{
-                this.title = data['data']['title']
-                this.desc = data['data']['desc']
-                this.publisher = data['data']['publisher']
-                this.time = data['data']['time']
-                this.end_at = data['data']['end_at']
-                this.ans = data['data']['ans']
-            }
-        }
+        this.loadHomework()
+        this.loadResult()
     }
 }
 </script>

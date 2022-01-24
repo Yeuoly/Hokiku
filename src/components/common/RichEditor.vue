@@ -49,7 +49,7 @@ export default {
                         active = false
                         timer()
                     }
-                }, 1000)
+                }, 300)
             }
         }
         const change = html => {
