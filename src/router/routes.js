@@ -7,6 +7,7 @@ const TeacherTerminal = () => import('../views/TeacherTerminal.vue')
 const ResultPage = () => import('../views/Result.vue')
 const Message = () => import('../views/Message.vue')
 const HomeworkCommits = () => import('../views/HomeworkCommits.vue')
+const Knowledge = () => import('../views/Knowledge.vue')
 
 const MessageSystem = () => import('../views/message/System.vue')
 
@@ -26,6 +27,22 @@ const CompetitionManager = () => import('../views/competition/Manager.vue')
 const CompetitionTrain = () => import('../views/competition/Train.vue')
 const CompetitionRank = () => import('../views/competition/Rank.vue')
 const CompetitionHome = () => import('../views/competition/Home.vue')
+
+const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
+const KnowledgePublic = () => import('../views/knowledge/Public.vue')
+
+const knowledge_pages = [{
+    name : 'knowledge-mine',
+    path : '/knowledge/mine',
+    component : KnowledgeMine
+}, {
+    name : 'knowledge-public',
+    path : '/knowledge/public',
+    component : KnowledgePublic
+}, {
+    path : '/knowledge/',
+    redirect : '/knowledge/mine'
+}]
 
 const message_pages = [{
     name : 'message-system',
@@ -151,7 +168,7 @@ export default [{
     path : '/',
     component : Index,
     meta : {
-        inNav : true,
+        inNav : false,
         icon : 'mdi-home-circle-outline',
         title : '主页',
         required : {
@@ -216,6 +233,19 @@ export default [{
     },
     children : competition_pages
 }, {
+    name : 'knowledge',
+    path : '/knowledge',
+    component : Knowledge,
+    meta : {
+        inNav : true,
+        icon : 'mdi-book-outline',
+        title : '学习中心',
+        required : {
+            online : true
+        }
+    },
+    children : knowledge_pages
+}, {
     name : 'homework-commits',
     path : '/homework/commits/:hid',
     component : HomeworkCommits,
@@ -224,5 +254,6 @@ export default [{
         required : {
             online : true
         }
-    }
-}]
+    },
+    
+}, ]
