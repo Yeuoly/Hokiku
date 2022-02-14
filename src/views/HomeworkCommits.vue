@@ -5,7 +5,7 @@
             width="800"
         >
             <v-card class="px5 py5">
-                <span v-html="dialog.innerhtml"></span>
+                <InnerHTML :html="dialog.innerhtml"></InnerHTML>
             </v-card>
         </v-dialog>
         <v-card>
@@ -43,7 +43,10 @@ import { openErrorMessageBox, openInfoMessageBox } from '../concat/bus'
 import { api_homework_commits, api_homework_mark } from '../interface/api'
 import { xssFilter } from '../util'
 
+import InnerHTML from '../components/common/InnerHTML.vue'
+
 export default {
+    components : { InnerHTML },
     data : () => ({
         hid : 0,
         headers : [{

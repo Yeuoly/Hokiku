@@ -112,6 +112,9 @@ const competition_pages = [{
     name : 'competition-home',
     path : '/competition/home',
     component : CompetitionHome
+}, {
+    path : '/competition/',
+    redirect : '/competition/train'
 }]
 
 export default [{

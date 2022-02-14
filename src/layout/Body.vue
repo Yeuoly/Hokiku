@@ -34,6 +34,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        
         <v-slide-y-transition mode="out-in">
             <router-view></router-view>
         </v-slide-y-transition>

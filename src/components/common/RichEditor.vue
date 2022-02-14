@@ -1,5 +1,6 @@
 <template>
     <div>
+        <LoadingOverlay></LoadingOverlay>
         <div ref="editor" style="z-index:1"></div>
     </div>
 </template>
@@ -7,8 +8,12 @@
 <script>
 import WangEditor from 'wangeditor'
 import HLJS from 'highlight.js'
+import { api_resource_upload_image } from '../../interface/api'
+import { closeLoadingOverlay, openErrorMessageBox, openLoadingOverlay } from '../../concat/bus'
+import LoadingOverlay from './LoadingOverlay.vue'
 
 export default {
+    components : { LoadingOverlay },
     name : 'RichEditor',
     model : {
         event : 'change',
@@ -28,10 +33,21 @@ export default {
     mounted(){
         const editor = new WangEditor(this.$refs.editor)
         editor.highlight = HLJS
-        editor.config.uploadImgMaxSize = 2 * 1024 * 1024
-        editor.config.customUploadImg = (files, insert) => {
-            //上传图片
-            console.log(files, insert)
+        editor.config.uploadImgMaxSize = 4 * 1024 * 1024
+        editor.config.customUploadImg = async (files, insert) => {
+            const file = files[0]
+            openLoadingOverlay()
+            const { data } = await api_resource_upload_image(file)
+            if(!data){
+                openErrorMessageBox('错误', '请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    insert(data['data'])
+                }
+            }
+            closeLoadingOverlay()
         }
         editor.create()
         let active = false

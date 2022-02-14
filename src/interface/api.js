@@ -140,3 +140,17 @@ export const api_homework_publish_list = (page, len) => api_base('homework/publi
 export const api_homework_commits = hid => api_base('homework/commits', 'get', stringify({ hid }))
 
 export const api_homework_mark = (uid, hid, score) => api_base('homework/mark', 'post', stringify({ uid, hid, score }))
+
+export const api_resource_upload_image = file => new Promise(resolve => {
+    (async function(){
+        const form_data = new FormData()
+        form_data.append('file', file, file.name)
+        form_data.append('csrf_token', csrf_token)
+        try{
+            const data = await axios.post('resource/upload/image', form_data)
+            resolve(typeof data === 'string' ? false : data)
+        }catch(e){
+            resolve(false)
+        }
+    })()
+})

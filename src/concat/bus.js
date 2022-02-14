@@ -29,3 +29,11 @@ export const openInfoMessageBox = (...args) => new Promise( resolve => {
 export const openErrorMessageBox = (...args) => new Promise( resolve => {
     ui_trans_bus.$emit('open-message', resolve, 'red', ...args)
 })
+
+export const openLoadingOverlay = () => {
+    ui_trans_bus.$emit('open-loading-overlay');
+};
+
+export const closeLoadingOverlay = () => {
+    ui_trans_bus.$emit('close-loading-overlay');
+};

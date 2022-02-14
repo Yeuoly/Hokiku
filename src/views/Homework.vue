@@ -21,7 +21,7 @@
                         发布者：{{ owner }}
                     </v-card-text>
                     <v-card-text class="px3 pt1 pb1 text-10">
-                        简介：<span v-html="clean_desc"></span>
+                        简介：<InnerHTML :html="desc"></InnerHTML>
                     </v-card-text>
                     <rich-editor v-model="ans" class="px2 py2"></rich-editor>
                     <v-card-actions>
@@ -44,10 +44,10 @@ import { api_homework_get, api_homework_result_commit, api_homework_result_get }
 import { openErrorMessageBox, openInfoMessageBox } from '../concat/bus'
 
 import RichEditor from '../components/common/RichEditor.vue'
-import { xssFilter } from '../util'
+import InnerHTML from '../components/common/InnerHTML.vue'
 
 export default {
-    components : { RichEditor },
+    components : { RichEditor, InnerHTML },
     data : () => ({
         hid : 0,
         title : '',
@@ -67,9 +67,6 @@ export default {
             }
             return ['进行中', 'primary']
         },
-        clean_desc(){
-            return xssFilter(this.desc)
-        }
     },
     methods : {
         async loadResult(){
