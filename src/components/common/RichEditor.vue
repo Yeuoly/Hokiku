@@ -44,7 +44,7 @@ export default {
                 if(data['res'] != 0){
                     openErrorMessageBox('错误', data['err'])
                 }else{
-                    insert(data['data'])
+                    insert(data['data']['extra'])
                 }
             }
             closeLoadingOverlay()

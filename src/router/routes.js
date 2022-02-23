@@ -8,6 +8,9 @@ const ResultPage = () => import('../views/Result.vue')
 const Message = () => import('../views/Message.vue')
 const HomeworkCommits = () => import('../views/HomeworkCommits.vue')
 const Knowledge = () => import('../views/Knowledge.vue')
+const Admin = () => import('../views/Admin.vue')
+
+const AdminCourse = () => import('../views/admin/Course.vue')
 
 const MessageSystem = () => import('../views/message/System.vue')
 
@@ -30,6 +33,15 @@ const CompetitionHome = () => import('../views/competition/Home.vue')
 
 const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
 const KnowledgePublic = () => import('../views/knowledge/Public.vue')
+
+const admin_pages = [{
+    name : 'admin-course',
+    path : '/admin/course',
+    component : AdminCourse
+}, {
+    path : '/admin/',
+    redirect : '/admin/course'
+}]
 
 const knowledge_pages = [{
     name : 'knowledge-mine',
@@ -258,5 +270,18 @@ export default [{
             online : true
         }
     },
-    
+}, {
+    name : 'admin',
+    path : '/admin',
+    component : Admin,
+    meta : {
+        inNav : true,
+        icon : 'mdi-shield-crown-outline',
+        title : '后台管理',
+        required : {
+            online : true,
+            teacher : true
+        }
+    },
+    children : admin_pages
 }, ]

@@ -52,6 +52,7 @@ const XSSFilterXSS = new XSS.FilterXSS({
             'margin-right' : true,
             'margin-top' : true,
             'margin-bottom' : true,
+            'max-width' : true
         }
     },
     whiteList : {
@@ -64,7 +65,7 @@ const XSSFilterXSS = new XSS.FilterXSS({
         h6 : ['style','class'],
         span : ['style','class'],
         br : [],
-        img : ['src','class','preview'],
+        img : ['src','class','preview', 'style', 'contenteditable', 'width'],
         a : ['href','target'],
         sup : ['class'],
         ol : ['class'],

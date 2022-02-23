@@ -154,3 +154,9 @@ export const api_resource_upload_image = file => new Promise(resolve => {
         }
     })()
 })
+
+export const api_course_create = (type, title, desc, cover_rid, is_public) => api_base('course/create', 'post', stringify({
+   type, title, desc, cover_rid, public: is_public
+}))
+
+export const api_course_get_admin = (page, len) => api_base('course/list/admin', 'get', stringify({page, len}))
