@@ -160,3 +160,5 @@ export const api_course_create = (type, title, desc, cover_rid, is_public) => ap
 }))
 
 export const api_course_get_admin = (page, len) => api_base('course/list/admin', 'get', stringify({page, len}))
+
+export const api_course_public_list = (page, len) => api_base('course/list/public', 'get', stringify({ page, len }))
