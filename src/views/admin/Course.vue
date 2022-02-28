@@ -15,6 +15,9 @@
                 :items-per-page="10"
                 :server-items-length="99999999"
                 :options.sync="options"
+                :expanded.sync="expanded.course"
+                show-expand
+                single-expand
             >
                 <template v-slot:item.time="{ item }">
                     {{ new Date(item.time * 1000).formatDate('Y-M-D h:m:s') }}
@@ -22,7 +25,34 @@
                 <template v-slot:item.actions="{ item }">
                     <!-- <v-btn small @click="openEditDialog(item)">编辑</v-btn> -->
                     <v-btn small color="error" @click="del(item)">删除</v-btn>
-                </template> 
+                </template>
+                <template v-slot:expanded-item="{ headers }">
+                    <td :colspan="headers.length">
+                        <div class="px2 py2">
+                            <v-btn small color="primary">添加章节</v-btn>
+                            <v-simple-table>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">
+                                            章节名
+                                        </th>
+                                        <td class="text-left">
+                                            创建时间
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="item in expanded.units"
+                                        :key="item.id"
+                                    >
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ new Date(item.time * 1000).formatDate('Y-M-D h:m:s') }}</td>
+                                    </tr>
+                                </tbody>
+                            </v-simple-table>
+                        </div>
+                    </td>
+                </template>
             </v-data-table>
         </v-col>
         <v-dialog v-model="new_dialog" width="800">
@@ -58,7 +88,7 @@
 
 import UploadImage from '../../components/common/UploadImage.vue'
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_course_create, api_course_get_admin } from '../../interface/api'
+import { api_course_admin_list_own, api_course_create, api_course_get_admin } from '../../interface/api'
 
 export default {
     components : { UploadImage },
@@ -88,6 +118,10 @@ export default {
             cover_rid : 0,
             public : false
         },
+        expanded : {
+            course : [],
+            units : []
+        },
         options : {},
     }),
     watch : {
@@ -96,9 +130,32 @@ export default {
                 this.load()
             },
             deep : true
+        },
+        'expanded.course' : {
+            handler(v){
+                if(v.length > 0){
+                    this.loadUnits(v[0])
+                }
+            },
+            deep : true
         }
     },
     methods : {
+        async loadUnits(v){
+            this.expanded.units = []
+            const { data } = await api_course_admin_list_own(v.id)
+            if(!data){
+                openErrorMessageBox('错误', '网络错误')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    if(data['data'] != null){
+                        this.expanded.units = data['data']
+                    }
+                }
+            }
+        },
         async load(){
             const page = this.options.page
             const { data } = await api_course_get_admin(page, 10)

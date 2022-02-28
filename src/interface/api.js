@@ -162,3 +162,9 @@ export const api_course_create = (type, title, desc, cover_rid, is_public) => ap
 export const api_course_get_admin = (page, len) => api_base('course/list/admin', 'get', stringify({page, len}))
 
 export const api_course_public_list = (page, len) => api_base('course/list/public', 'get', stringify({ page, len }))
+
+export const api_course_detail = cid => api_base('course/detail', 'get', stringify({ cid }))
+
+export const api_course_subscribe = cid => api_base('course/subscribe', 'post', stringify({ cid }))
+
+export const api_course_admin_list_own = cid => api_base('course/list/admin/own', 'get', stringify({ cid }))
