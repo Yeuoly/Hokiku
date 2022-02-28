@@ -33,6 +33,7 @@ const CompetitionHome = () => import('../views/competition/Home.vue')
 
 const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
 const KnowledgePublic = () => import('../views/knowledge/Public.vue')
+const KnowledgeCourse = () => import('../views/knowledge/Course.vue')
 
 const admin_pages = [{
     name : 'admin-course',
@@ -51,6 +52,10 @@ const knowledge_pages = [{
     name : 'knowledge-public',
     path : '/knowledge/public',
     component : KnowledgePublic
+}, {
+    name : 'knowledge-course',
+    path : '/knowledge/course/:cid',
+    component : KnowledgeCourse
 }, {
     path : '/knowledge/',
     redirect : '/knowledge/mine'

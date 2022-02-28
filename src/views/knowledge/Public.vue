@@ -1,10 +1,24 @@
 <template>
     <v-row class="px5 py5">
-        <h1>比赛模块还在开发中哟，可以看看练习模块呀～</h1>
-        <v-pagination
-            v-model="page"
-            :length="6"
-        ></v-pagination>
+        <v-col sm="12" md="6" lg="4" xl="3"
+            v-for="(i, k) in list"
+            :key="k"
+        >
+            <v-card class="clickable" @click="toCourse(i.id)">
+                <v-card-title>{{ i.title }}</v-card-title>
+                <v-img :src="i.r_cover.url"></v-img>
+                <v-card-text class="text-12 text-grey" style="height: 70px">
+                    {{ i.desc }}
+                </v-card-text>
+            </v-card>
+        </v-col>
+        <v-col cols="12" class="text-center">
+            <v-pagination
+                v-model="page"
+                :length="pages"
+                :total-visible="6"
+            ></v-pagination>
+        </v-col>
     </v-row>
 </template>
 
@@ -14,7 +28,14 @@ import { api_course_public_list } from '../../interface/api'
 export default {
     data : () => ({
         page : 1,
+        length : 0,
+        list : []
     }),
+    computed : {
+        pages(){
+            return Math.ceil(this.length / 6)
+        }
+    },
     watch : {
         page : {
             handler(){
@@ -34,10 +55,14 @@ export default {
                     openErrorMessageBox('错误', data['err'])
                 }else{
                     if(data['data'] != null){
-                        this.data = data['data']
+                        this.list = data['data']['list']
+                        this.length = data['data']['length']
                     }
                 }
             }
+        },
+        toCourse(cid){
+            this.$router.push(`/knowledge/course/${cid}`)
         }
     }
 }
