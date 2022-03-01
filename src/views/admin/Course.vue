@@ -29,7 +29,7 @@
                 <template v-slot:expanded-item="{ headers }">
                     <td :colspan="headers.length">
                         <div class="px2 py2">
-                            <v-btn small color="primary">添加章节</v-btn>
+                            <v-btn small color="primary" @click="openNewUnitDialog">添加章节</v-btn>
                             <v-simple-table>
                                 <thead>
                                     <tr>
@@ -81,17 +81,40 @@
                 </div>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="new_unit" width="800">
+            <v-card>
+                <v-toolbar color="primary">
+                    <v-toolbar-title class="text-white">
+                        创建章节
+                    </v-toolbar-title>
+                </v-toolbar>
+                <div class="px5 py2">
+                    <v-text-field
+                        label="标题"
+                        v-model="new_unit_model.name"
+                    ></v-text-field>
+                    <span class="text-grey">上传封面</span>
+                    <UploadImage v-model="new_unit_model.cover_rid" :height="100" />
+                    <span class="text-grey">上传ppt</span>
+                    <UploadAny v-model="new_unit_model.ppt_rid" :height="100" />
+                    <span class="text-grey">上传视频</span>
+                    <UploadAny v-model="new_unit_model.media_rid" :height="100" />
+                    <v-btn color="primary" @click="commitUnit">提交</v-btn>
+                </div>
+            </v-card>
+        </v-dialog>
     </v-row>
 </template>
 
 <script>
 
 import UploadImage from '../../components/common/UploadImage.vue'
+import UploadAny from '../../components/common/UploadAttachment.vue'
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_course_admin_list_own, api_course_create, api_course_get_admin } from '../../interface/api'
+import { api_course_admin_list_own, api_course_create, api_course_get_admin, api_course_unit_create } from '../../interface/api'
 
 export default {
-    components : { UploadImage },
+    components : { UploadImage, UploadAny },
     data : () => ({
         headers : [{
             text : 'ID',
@@ -111,12 +134,19 @@ export default {
         }],
         data : [],
         new_dialog : false,
+        new_unit : false,
         new_model : {
             type : 0,
             title : '',
             desc : '',
             cover_rid : 0,
             public : false
+        },
+        new_unit_model : {
+            ppt_rid : 0,
+            media_rid : 0,
+            cover_rid : 0,
+            name : ''
         },
         expanded : {
             course : [],
@@ -141,6 +171,25 @@ export default {
         }
     },
     methods : {
+        async commitUnit(){
+            const cid = this.expanded.course[0].id
+            const { data } = await api_course_unit_create(
+                cid, 
+                this.new_unit_model.name,
+                this.new_unit_model.cover_rid,
+                this.new_unit_model.ppt_rid,
+                this.new_unit_model.media_rid
+            )
+            if(!data){
+                openErrorMessageBox('错误', '网络错误')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    openInfoMessageBox('成功', '创建成功')
+                }
+            }
+        },
         async loadUnits(v){
             this.expanded.units = []
             const { data } = await api_course_admin_list_own(v.id)
@@ -199,6 +248,14 @@ export default {
             this.new_model.public = false
 
             this.new_dialog = true
+        },
+        openNewUnitDialog(){
+            this.new_unit_model.ppt_rid = 0
+            this.new_unit_model.media_rid = 0
+            this.new_unit_model.cover_rid = 0
+            this.new_unit_model.name = ''
+
+            this.new_unit = true
         }
     },
     mounted(){

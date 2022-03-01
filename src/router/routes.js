@@ -58,7 +58,7 @@ const knowledge_pages = [{
     component : KnowledgeCourse
 }, {
     path : '/knowledge/',
-    redirect : '/knowledge/mine'
+    redirect : '/knowledge/public'
 }]
 
 const message_pages = [{

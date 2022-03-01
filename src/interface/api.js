@@ -168,3 +168,23 @@ export const api_course_detail = cid => api_base('course/detail', 'get', stringi
 export const api_course_subscribe = cid => api_base('course/subscribe', 'post', stringify({ cid }))
 
 export const api_course_admin_list_own = cid => api_base('course/list/admin/own', 'get', stringify({ cid }))
+
+export const api_resource_upload_any = file => new Promise(resolve => {
+    (async function(){
+        const form_data = new FormData()
+        form_data.append('file', file, file.name)
+        form_data.append('csrf_token', csrf_token)
+        try{
+            const data = await axios.post('resource/upload/any', form_data)
+            resolve(typeof data === 'string' ? false : data)
+        }catch(e){
+            resolve(false)
+        }
+    })()
+})
+
+export const api_course_unit_create = (cid, name, cover_rid, ppt_rid, media_rid) => api_base('course/unit/create', 'post', stringify({ 
+    cid, name, cover_rid, ppt_rid, media_rid
+}))
+
+export const api_course_get_progress = cid => api_base('course/progress', 'get', stringify({ cid }))
