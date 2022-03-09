@@ -36,9 +36,12 @@
                                         <th class="text-left">
                                             章节名
                                         </th>
-                                        <td class="text-left">
+                                        <th class="text-left">
                                             创建时间
-                                        </td>
+                                        </th>
+                                        <th class="text-left">
+                                            操作
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -47,6 +50,10 @@
                                     >
                                         <td>{{ item.name }}</td>
                                         <td>{{ new Date(item.time * 1000).formatDate('Y-M-D h:m:s') }}</td>
+                                        <td>
+                                            <v-btn color="primary" class="mr2" small @click="openUpdateUnitDialog(item)">编辑</v-btn>
+                                            <v-btn color="red" class="text-white" small>删除</v-btn>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </v-simple-table>
@@ -98,8 +105,30 @@
                     <span class="text-grey">上传ppt</span>
                     <UploadAny v-model="new_unit_model.ppt_rid" :height="100" />
                     <span class="text-grey">上传视频</span>
-                    <UploadAny v-model="new_unit_model.media_rid" :height="100" />
+                    <UploadStream v-model="new_unit_model.media_rid" :height="100" />
                     <v-btn color="primary" @click="commitUnit">提交</v-btn>
+                </div>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="update_unit" width="800">
+            <v-card>
+                <v-toolbar color="primary">
+                    <v-toolbar-title class="text-white">
+                        编辑
+                    </v-toolbar-title>
+                </v-toolbar>
+                <div class="px5 py2">
+                    <v-text-field
+                        label="标题"
+                        v-model="update_unit_model.name"
+                    ></v-text-field>
+                    <span class="text-grey">上传封面</span>
+                    <UploadImage v-model="update_unit_model.cover_rid" :height="100" />
+                    <span class="text-grey">上传ppt</span>
+                    <UploadAny v-model="update_unit_model.ppt_rid" :height="100" />
+                    <span class="text-grey">上传视频</span>
+                    <UploadStream v-model="update_unit_model.media_rid" :height="100" />
+                    <v-btn color="primary" @click="commitUpdateUnit">提交</v-btn>
                 </div>
             </v-card>
         </v-dialog>
@@ -110,11 +139,12 @@
 
 import UploadImage from '../../components/common/UploadImage.vue'
 import UploadAny from '../../components/common/UploadAttachment.vue'
+import UploadStream from '../../components/common/UploadStream.vue'
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_course_admin_list_own, api_course_create, api_course_get_admin, api_course_unit_create } from '../../interface/api'
+import { api_course_admin_list_own, api_course_create, api_course_get_admin, api_course_unit_create, api_course_update_unit } from '../../interface/api'
 
 export default {
-    components : { UploadImage, UploadAny },
+    components : { UploadImage, UploadAny, UploadStream },
     data : () => ({
         headers : [{
             text : 'ID',
@@ -135,6 +165,7 @@ export default {
         data : [],
         new_dialog : false,
         new_unit : false,
+        update_unit : false,
         new_model : {
             type : 0,
             title : '',
@@ -143,6 +174,13 @@ export default {
             public : false
         },
         new_unit_model : {
+            ppt_rid : 0,
+            media_rid : 0,
+            cover_rid : 0,
+            name : ''
+        },
+        update_unit_model : {
+            id : 0,
             ppt_rid : 0,
             media_rid : 0,
             cover_rid : 0,
@@ -220,6 +258,24 @@ export default {
                 }
             }
         },
+        async commitUpdateUnit(){
+            const { data } = await api_course_update_unit(
+                this.update_unit_model.id,
+                this.update_unit_model.cover_rid, 
+                this.update_unit_model.media_rid,
+                this.update_unit_model.ppt_rid,
+                this.update_unit_model.name,
+            )
+            if(!data){
+                openErrorMessageBox('错误', '请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    openInfoMessageBox('成功', '更新成功')
+                }
+            }
+        },
         async del(item){
             console.log(item)
         },
@@ -256,6 +312,15 @@ export default {
             this.new_unit_model.name = ''
 
             this.new_unit = true
+        },
+        openUpdateUnitDialog(item){
+            this.update_unit_model.ppt_rid = item.ppt_rid
+            this.update_unit_model.media_rid = item.media_rid
+            this.update_unit_model.cover_rid = item.cover_rid
+            this.update_unit_model.name = item.name
+            this.update_unit_model.id = item.id
+
+            this.update_unit = true
         }
     },
     mounted(){

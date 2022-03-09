@@ -138,3 +138,16 @@ export const getMessageFromText = (type)=> {
 }
 
 export const isOrganizationManager = flag => !!(flag & 2)
+
+export const visitableMemberSpace = bytes => {
+    const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
+    let mem = bytes
+
+    for (let i = 0; i < units.length; i++) {
+        if((mem / 1024) < 1) {
+            return `${mem.toFixed(2)}${units[i]}`
+        }
+
+        mem = mem / 1024
+    }
+}

@@ -1,5 +1,24 @@
 <template>
     <v-row class="px5 py5">
+        <v-dialog v-model="apply_join_dialog.org" width="500">
+            <v-card class="px5 py5">
+                <v-text-field
+                    label="组织ID"
+                    v-model.number="apply_join_org.id"
+                ></v-text-field>
+                <v-text-field
+                    label="组织内昵称"
+                    v-model="apply_join_org.apply.name"
+                    placeholder="组织内昵称"
+                ></v-text-field>
+                <v-textarea
+                    label="申请信息"
+                    v-model="apply_join_org.apply.text"
+                    placeholder="申请信息"
+                ></v-textarea>
+                <v-btn color="primary" @click="applyJoinOrg">提交申请</v-btn>
+            </v-card>
+        </v-dialog>
         <v-dialog v-model="dialog.open" width="500">
             <v-card class="px5 py5">
                 <v-text-field
@@ -15,6 +34,27 @@
                 <v-btn color="primary" @click="commitOrganization">提交申请</v-btn>
             </v-card>
         </v-dialog>
+        <v-col cols="10" class="pl5">
+            <v-card-text>已加入组织：</v-card-text>
+            <v-card-actions>
+                <v-chip-group>
+                    <v-chip 
+                        text-color="white" 
+                        v-for="(i, k) in orgs" 
+                        :color="chip_colors[k % chip_colors.length]" 
+                        :key="k"
+                    >
+                        {{ i.name }} - gid:{{ i.id }}
+                    </v-chip>
+                </v-chip-group>
+            </v-card-actions>
+        </v-col>
+        <v-col cols="2">
+            <v-btn style="float: right" color="primary" @click="dialogs.org = true">申请加入</v-btn>
+        </v-col>
+        <v-col cols="12">
+            <v-divider></v-divider>
+        </v-col>
         <v-col :cols="6">
             <v-card-title>
                 我管理的组织
@@ -80,11 +120,24 @@
 
 <script>
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_organization_manage_appoint, api_organization_manage_cancel, api_organization_manage_list_member, api_organization_manage_list_orgs, api_organization_new, api_organization_remove_member } from '../../interface/api'
+import { api_organization_apply_join, api_organization_manage_appoint, api_organization_manage_cancel, api_organization_manage_list_member, api_organization_manage_list_orgs, api_organization_my, api_organization_new, api_organization_remove_member } from '../../interface/api'
 import { isOrganizationManager } from '../../util/index'
 
 export default {
     data : () => ({
+        apply_join_org : {
+            id : 0,
+            apply : {
+                text : '',
+                name : ''
+            }
+        },
+        chip_colors : ['primary', 'red', 'cyan', 'green', 'secondary'],
+        orgs : [{
+            name : 'Default',
+            id : 0,
+            is_admin : 0
+        }],
         dialog : {
             open : false,
             org_name : '',
@@ -109,7 +162,10 @@ export default {
             text : '操作',
             value : 'action'
         }],
-        current_members : []
+        current_members : [],
+        apply_join_dialog : {
+            org : false
+        }
     }),
     watch : {
         current_org_idx : {
@@ -125,6 +181,42 @@ export default {
         },
         isOrganizationManager(flag){
             return isOrganizationManager(flag)
+        },
+        async applyJoinOrg(){
+            const { data } = await api_organization_apply_join(
+                this.apply_join_org.id,
+                this.apply_join_org.apply.text,
+                this.apply_join_org.apply.name
+            )
+
+            if(!data){
+                openErrorMessageBox('错误', '请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    await openInfoMessageBox('成功', '申请消息已发送')
+                    this.dialogs.org = false
+                }
+            }
+        },
+        async loadJoinedOrganizations(){
+            const { data } = await api_organization_my()
+            if(!data){
+                openErrorMessageBox('错误', '获取组织列表失败，请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else if(data['data']['r_member'] != null){
+                    for(const i of data['data']['r_organization']){
+                        this.orgs.push({
+                            name : i['name'],
+                            id : i['id'],
+                            is_admin : false
+                        })
+                    }
+                }
+            }
         },
         async commitOrganization(){
             const { data } = await api_organization_new(
@@ -227,6 +319,7 @@ export default {
     },
     mounted(){
         this.loadOrganizations()
+        this.loadJoinedOrganizations()
     }
 }
 </script>

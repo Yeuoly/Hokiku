@@ -188,3 +188,28 @@ export const api_course_unit_create = (cid, name, cover_rid, ppt_rid, media_rid)
 }))
 
 export const api_course_get_progress = cid => api_base('course/progress', 'get', stringify({ cid }))
+
+export const api_resource_upload_stream_init = file => api_base('resource/upload/stream/init', 'post', stringify({ file }))
+
+export const api_resource_upload_stream = (id, file) => new Promise(resolve => {
+    (async function(){
+        const form_data = new FormData()
+        form_data.append('file', file, file.name)
+        form_data.append('id', id)
+        form_data.append('csrf_token', csrf_token)
+        try{
+            const data = await axios.post('resource/upload/stream', form_data)
+            resolve(typeof data === 'string' ? false : data)
+        }catch(e){
+            resolve(false)
+        }
+    })()
+})
+
+export const api_resource_upload_stream_end = id => api_base('resource/upload/stream/end', 'post', stringify({ id }))
+
+export const api_user_profile = () => api_base('user/profile', 'get', '')
+
+export const api_course_update_unit = (id, cover_rid, media_rid, ppt_rid, name) => api_base('course/unit/update', 'post', stringify({
+    id, cover_rid, media_rid, ppt_rid, name
+}))
