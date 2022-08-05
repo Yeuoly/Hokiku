@@ -66,6 +66,7 @@
 <script>
 import { openErrorMessageBox, openInfoMessageBox } from '../concat/bus'
 import { api_get_math_captcha, api_auth_login } from '../interface/api'
+import { setAuthToken } from '../util/auth'
 import md5 from 'md5'
 
 export default {
@@ -114,6 +115,7 @@ export default {
             }else if(data['res'] < 0){
                 openErrorMessageBox('错误', data['err'])
             }else{
+                setAuthToken(data['data'])
                 await openInfoMessageBox('成功', '登录成功')
                 window.location.href = '/home'
             }

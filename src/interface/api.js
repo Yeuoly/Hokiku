@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { stringify } from 'querystring'
+import { getAuthToken } from '../util/auth'
 import VueCookie from 'vue-cookie'
 
 let csrf_token = VueCookie.get("irina_jct") || ''
@@ -15,11 +16,20 @@ export const setCsrftoken = token => {
 const api_base = (url, method, args) => new Promise( resolve => {
     (async function(){
         args = args || ''
-        args = ( args == '' ? '' : args + '&' ) + 'csrf_token=' + csrf_token
+        const auth_token = getAuthToken()
         switch(method.toLowerCase()){
             case 'post':
                 try{
-                    const data = await axios.post(url, args)
+                    let data
+                    if( !auth_token) {
+                        data = await axios.post(url, args)
+                    } else {
+                        data = await axios.post(url, args, {
+                            headers: {
+                                'Start-Dash': getAuthToken()
+                            }
+                        })
+                    }
                     resolve(typeof data === 'string' ? false : data)
                 }catch(e){
                     resolve(false)
@@ -27,7 +37,16 @@ const api_base = (url, method, args) => new Promise( resolve => {
                 break
             case 'get':
                 try{
-                    const data = await axios.get(url + '?' + args)
+                    let data
+                    if (!auth_token) {
+                        data = await axios.get(url + '?' + args)
+                    } else {
+                        data = await axios.get(url + '?' + args, {
+                            headers: {
+                                'Start-Dash': getAuthToken()
+                            }
+                        })
+                    }
                     resolve(typeof data === 'string' ? false : data)
                 }catch(e){
                     resolve(false)
