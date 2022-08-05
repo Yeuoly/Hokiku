@@ -36,6 +36,13 @@
                 </v-card>
             </v-col>
         </v-row>
+            <div class="text-center mt2">
+                <v-pagination
+                    v-model="page"
+                    :length="999"
+                    :total-visible="5"
+                ></v-pagination>
+            </div>
         <v-dialog
             v-model="dialog_open"
             width="500"
@@ -207,6 +214,12 @@ export default {
         type : {
             handler(v){
                 this.load(v, this.page)
+            },
+            immediate : true
+        },
+        page : {
+            handler(v){
+                this.load(this.type, v)
             },
             immediate : true
         }

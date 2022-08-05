@@ -78,6 +78,21 @@
                         label="默认flag"
                         v-model="new_train.ctf_flag"
                     ></v-text-field>
+                    <v-radio-group
+                        row
+                        v-model="new_train.flag_type"
+                    >
+                        <v-radio
+                            v-for="(i, k) in flag_types"
+                            :key="k"
+                            :label="flag_types[k]"
+                            :value="k"
+                        ></v-radio>
+                    </v-radio-group>
+                    <v-text-field
+                        label="flag路径"
+                        v-model="new_train.flag_path"
+                    ></v-text-field>
                     <v-text-field
                         label="端口映射"
                         v-model="new_train.port_protocol"
@@ -160,6 +175,9 @@ export default {
             text : '开放端口与协议',
             value : 'port_protocol'
         }, {
+            text: 'flag路径',
+            value: 'flag_path'
+        }, {
             text : '操作',
             value : 'action'
         }],
@@ -185,6 +203,7 @@ export default {
         trains : [],
         images : [],
         types : ['DEFAULT', 'WEB', 'PWN', 'MISC', 'REVERSE', 'CRYPTO', 'MOBILE'],
+        flag_types: ['DEFAULT', '文件flag', '模板指令', '环境变量'],
         new_train : {
             open : false,
             title : '',
@@ -196,7 +215,9 @@ export default {
             dynamic_flag : false,
             type : 0,
             is_new : true,
-            train_id : 0
+            train_id : 0,
+            flag_path: '',
+            flag_type: 1
         },
         new_image : {
             open : false,
@@ -261,6 +282,8 @@ export default {
             this.new_train.dynamic_flag = isFlagDynamic(item.flag)
             this.new_train.open = true
             this.new_train.train_id = item.id
+            this.new_train.flag_path = item.flag_path
+            this.new_train.flag_type = item.flag_type
         },
         async deleteTrain(item){
             const result = await openInfoMessageBox('提示', '您确定要删除吗')
@@ -310,7 +333,9 @@ export default {
                 flag_dynamic : this.new_train.dynamic_flag,
                 port_protocol : this.new_train.port_protocol,
                 type : this.new_train.type,
-                train_id : this.new_train.train_id
+                train_id : this.new_train.train_id,
+                flag_path : this.new_train.flag_path,
+                flag_type : this.new_train.flag_type
             })
             if(!data){
                 openErrorMessageBox('错误', '网络错误')
@@ -361,11 +386,12 @@ export default {
         openAddTrainDialog(){
             this.new_train.is_new = true
             this.new_train.title = ''
-            this.new_train.author = ''
+            this.new_train.author = this.$store.getters.getUserName
             this.new_train.image = ''
-            this.new_train.comment = ''
-            this.new_train.ctf_flag = ''
+            this.new_train.comment = 'none'
+            this.new_train.ctf_flag = 'none'
             this.new_train.port_protocol = ''
+            this.new_train.flag_path = '/home/ctf/flag'
             this.new_train.type = 0
             this.new_train.dynamic_flag = false
             this.new_train.open = true
