@@ -47,7 +47,7 @@
             v-model="dialog_open"
             width="500"
         >
-            <v-card v-if="dialog_open">
+            <v-card v-if="dialog_open" class="py2 px2">
                 <v-card-title>
                     {{ trains[current_index].title }}
                 </v-card-title>
@@ -85,6 +85,7 @@
                 ></v-progress-linear>
                 <v-btn @click="run" :disabled="tm_info.port != 0">启动</v-btn>
                 <v-btn @click="shutdown" :disabled="tm_info.port == 0" type="error">关闭</v-btn>
+                <v-btn @click="toSolvedList">查看排行榜</v-btn>
             </v-card>
         </v-dialog>
     </div>
@@ -131,6 +132,9 @@ export default {
         flag : ''
     }),
     methods : {
+        toSolvedList() {
+            this.$router.push(`/competition/train/solved/${this.trains[this.current_index].id}`)
+        },
         select(type){
             this.page = 1
             this.type = type + 1

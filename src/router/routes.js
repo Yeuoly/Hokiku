@@ -25,11 +25,13 @@ const HomeProfile = () => import('../views/home/Profile.vue')
 const HomeOrganization = () => import('../views/home/Organization.vue')
 
 const CompetitionIndex = () => import('../views/competition/Index.vue')
-const CompetitionGame = () => import('../views/competition/Game.vue')
+const CompetitionGame = () => import('../views/game/Index.vue')
+const CompetitionGameManager = () => import('../views/game/Manager.vue')
 const CompetitionManager = () => import('../views/competition/Manager.vue')
 const CompetitionTrain = () => import('../views/competition/Train.vue')
 const CompetitionRank = () => import('../views/competition/Rank.vue')
 const CompetitionHome = () => import('../views/competition/Home.vue')
+const CompetitionTrainSolved = () => import('../views/competition/TrainSolved.vue')
 
 const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
 const KnowledgePublic = () => import('../views/knowledge/Public.vue')
@@ -129,6 +131,14 @@ const competition_pages = [{
     name : 'competition-home',
     path : '/competition/home',
     component : CompetitionHome
+}, {
+    name : 'competition-game-manager',
+    path : '/competition/game/manager',
+    component : CompetitionGameManager
+}, {
+    name : 'competition-train-solved',
+    path : '/competition/train/solved/:train_id',
+    component : CompetitionTrainSolved
 }, {
     path : '/competition/',
     redirect : '/competition/train'

@@ -73,6 +73,10 @@ export default {
             path : 'manager',
             sa : true
         }, {
+            text : '比赛管理',
+            path : 'game/manager',
+            sa : true
+        }, {
             text : '排名',
             path : 'rank',
             sa : false

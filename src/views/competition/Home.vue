@@ -29,6 +29,50 @@
                         <thead>
                             <tr>
                                 <th class="text-left">
+                                    赛事ID
+                                </th>
+                                <th class="text-left">
+                                    赛事标题
+                                </th>
+                                <th class="text-left">
+                                    持续时间
+                                </th>
+                                <th class="text-left">
+                                    得分
+                                </th>
+                                <th class="text-left">
+                                    状态
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(i, k) in signups"
+                                :key="k"
+                            >
+                                <td>{{ i.r_competition_game.id }}</td>
+                                <td>{{ i.r_competition_game.title }}</td>
+                                <td>
+                                    {{ new Date(i.r_competition_game.game_start_time * 1000).formatDate('Y-D-M h:m:s') }} ~
+                                    {{ new Date(i.r_competition_game.game_end_time * 1000).formatDate('Y-D-M h:m:s') }}
+                                </td>
+                                <td>
+                                    {{ i.score }}
+                                </td>
+                                <td>
+                                    {{ getGameStatus(i.r_competition_game.game_start_time, i.r_competition_game.game_end_time) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
+            </v-col>
+            <v-col xl="12" lg="12" md="12" sm="12" cols="12">
+                <v-simple-table>
+                    <template v-slot:default>
+                        <thead>
+                            <tr>
+                                <th class="text-left">
                                     题目ID
                                 </th>
                                 <th class="text-left">
@@ -64,7 +108,7 @@
 import DateValueSmoothChart from '../../components/charts/DateValueSmoothChart.vue'
 import PieCharts from '../../components/charts/PieCharts.vue'
 import { openErrorMessageBox } from '../../concat/bus'
-import { api_competition_train_user_solved } from '../../interface/api'
+import { api_competition_train_user_solved, api_competition_game_signup_my } from '../../interface/api'
 
 export default {
     components : { PieCharts, DateValueSmoothChart },
@@ -112,6 +156,7 @@ export default {
             date : [],
             value : [[]]
         },
+        signups : []
     }),
     methods : {
         async load(){
@@ -156,6 +201,27 @@ export default {
                         }
                     }
                 }
+            }
+
+            const { data: data2 } = await api_competition_game_signup_my()
+            if(!data2){
+                openErrorMessageBox('错误', '网络错误')
+            }else{
+                if (data2['res'] != 0) {
+                    openErrorMessageBox('错误', data2['err'])
+                } else {
+                    this.signups = data2['data']
+                }
+            }
+        },
+        getGameStatus(start_time, end_time) {
+            const current_time = parseInt(new Date().getTime() / 1000)
+            if (current_time < start_time) {
+                return '未开始'
+            } else if (current_time > end_time) {
+                return '已结束'
+            } else {
+                return '进行中'
             }
         }
     },

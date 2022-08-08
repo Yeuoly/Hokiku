@@ -164,9 +164,12 @@ export const api_resource_upload_image = file => new Promise(resolve => {
     (async function(){
         const form_data = new FormData()
         form_data.append('file', file, file.name)
-        form_data.append('csrf_token', csrf_token)
         try{
-            const data = await axios.post('resource/upload/image', form_data)
+            const data = await axios.post('resource/upload/image', form_data, {
+                headers: {
+                    'Start-Dash': getAuthToken()
+                }
+            })
             resolve(typeof data === 'string' ? false : data)
         }catch(e){
             resolve(false)
@@ -192,9 +195,12 @@ export const api_resource_upload_any = file => new Promise(resolve => {
     (async function(){
         const form_data = new FormData()
         form_data.append('file', file, file.name)
-        form_data.append('csrf_token', csrf_token)
         try{
-            const data = await axios.post('resource/upload/any', form_data)
+            const data = await axios.post('resource/upload/any', form_data, {
+                headers: {
+                    'Start-Dash': getAuthToken()
+                }
+            })
             resolve(typeof data === 'string' ? false : data)
         }catch(e){
             resolve(false)
@@ -215,9 +221,12 @@ export const api_resource_upload_stream = (id, file) => new Promise(resolve => {
         const form_data = new FormData()
         form_data.append('file', file, file.name)
         form_data.append('id', id)
-        form_data.append('csrf_token', csrf_token)
         try{
-            const data = await axios.post('resource/upload/stream', form_data)
+            const data = await axios.post('resource/upload/stream', form_data, {
+                headers: {
+                    'Start-Dash': getAuthToken()
+                } 
+            })
             resolve(typeof data === 'string' ? false : data)
         }catch(e){
             resolve(false)
@@ -233,3 +242,18 @@ export const api_course_update_unit = (id, cover_rid, media_rid, ppt_rid, name) 
     id, cover_rid, media_rid, ppt_rid, name
 }))
 
+export const api_competition_game_create = (title, page_url, signup_start_time, signup_end_time, game_start_time, game_end_time, concats, type, is_private, cover_rid) => api_base('comp/game/admin/create', 'post', stringify({
+    title, page_url, signup_start_time, signup_end_time, game_start_time, game_end_time, concats, type, is_private, cover_rid
+}))
+
+export const api_competition_game_list = (page, len) => api_base('comp/game/admin/list', 'get', stringify({ page, len }))
+
+export const api_competition_game_player_list = (page, len) => api_base('comp/game/list', 'get', stringify({ page, len }))
+
+export const api_competition_game_delete = cid => api_base('comp/game/admin/delete', 'post', stringify({ cid }))
+
+export const api_competition_game_update = (cid, args) => api_base('comp/game/admin/update', 'post', stringify({ cid, ...args }))
+
+export const api_competition_signup = (competition_id, nickname) => api_base('comp/game/signup', 'post', stringify({ competition_id, nickname }))
+
+export const api_competition_game_signup_my = () => api_base('comp/game/signup/my', 'get', '')
