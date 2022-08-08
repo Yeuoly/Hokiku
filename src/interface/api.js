@@ -232,3 +232,4 @@ export const api_user_profile = () => api_base('user/profile', 'get', '')
 export const api_course_update_unit = (id, cover_rid, media_rid, ppt_rid, name) => api_base('course/unit/update', 'post', stringify({
     id, cover_rid, media_rid, ppt_rid, name
 }))
+
