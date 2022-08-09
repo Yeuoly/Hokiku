@@ -9,6 +9,7 @@ const Message = () => import('../views/Message.vue')
 const HomeworkCommits = () => import('../views/HomeworkCommits.vue')
 const Knowledge = () => import('../views/Knowledge.vue')
 const Admin = () => import('../views/Admin.vue')
+const About = () => import('../views/About.vue')
 
 const AdminCourse = () => import('../views/admin/Course.vue')
 
@@ -32,6 +33,7 @@ const CompetitionTrain = () => import('../views/competition/Train.vue')
 const CompetitionRank = () => import('../views/competition/Rank.vue')
 const CompetitionHome = () => import('../views/competition/Home.vue')
 const CompetitionTrainSolved = () => import('../views/competition/TrainSolved.vue')
+const CompetitionGameEditor = () => import('../views/game/Editor.vue')
 
 const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
 const KnowledgePublic = () => import('../views/knowledge/Public.vue')
@@ -140,6 +142,10 @@ const competition_pages = [{
     path : '/competition/train/solved/:train_id',
     component : CompetitionTrainSolved
 }, {
+    name : 'competition-game-edit',
+    path : '/competition/game/edit/:competition_id',
+    component : CompetitionGameEditor
+}, {
     path : '/competition/',
     redirect : '/competition/train'
 }]
@@ -204,7 +210,8 @@ export default [{
         required : {
 
         }
-    }
+    },
+    redirect : '/about'
 }, {
     name : 'login',
     path : '/login',
@@ -299,4 +306,26 @@ export default [{
         }
     },
     children : admin_pages
-}, ]
+}, {
+    name : 'about',
+    path : '/about',
+    component : About,
+    meta : {
+        inNav : true,
+        icon : 'mdi-information-outline',
+        title : '关于',
+        required : {
+            online : false,
+            teacher : false
+        }
+    }
+}, {
+    path : '*',
+    redirect : '/about',
+    meta : {
+        inNav : false,
+        required : {
+            online : false
+        }
+    },
+}]

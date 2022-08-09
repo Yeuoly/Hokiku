@@ -257,3 +257,7 @@ export const api_competition_game_update = (cid, args) => api_base('comp/game/ad
 export const api_competition_signup = (competition_id, nickname) => api_base('comp/game/signup', 'post', stringify({ competition_id, nickname }))
 
 export const api_competition_game_signup_my = () => api_base('comp/game/signup/my', 'get', '')
+
+export const api_competition_game_detail = competition_id => api_base('comp/game/detail', 'get', stringify({ competition_id }))
+
+export const api_competition_game_detail_upload = (competition_id, html_content) => api_base('comp/game/detail/upload', 'post', stringify({ competition_id, html_content }))

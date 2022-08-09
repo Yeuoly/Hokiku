@@ -3,6 +3,7 @@
     <Header></Header>
     <Sider></Sider>
     <Body></Body>
+    <Footer></Footer>
   </v-app>
 </template>
 
@@ -10,6 +11,7 @@
 import Header from './layout/Header.vue'
 import Sider from './layout/Sider.vue'
 import Body from './layout/Body.vue'
+import Footer from './layout/Footer.vue'
 
 export default {
   name: 'App',
@@ -17,7 +19,8 @@ export default {
   components: {
     Header,
     Sider,
-    Body
+    Body,
+    Footer
   },
 
   data: () => ({

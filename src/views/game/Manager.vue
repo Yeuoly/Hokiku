@@ -37,6 +37,10 @@
                         x-small
                         @click="deleteGame(item.id)"
                     >删除</v-btn>
+                    <v-btn color="" 
+                        x-small
+                        @click="manageGame(item.id)"
+                    >管理</v-btn>
                 </template>
             </v-data-table>
         </v-col>
@@ -506,6 +510,9 @@ export default {
                     openInfoMessageBox('成功', '添加成功')
                 }
             }
+        },
+        manageGame(id) {
+            this.$router.push(`/competition/game/edit/${id}`)
         },
         async editGame() {
             const { data } = await api_competition_game_update(this.dialog.id, {
