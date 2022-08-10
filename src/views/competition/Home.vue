@@ -53,8 +53,8 @@
                                 <td>{{ i.r_competition_game.id }}</td>
                                 <td>{{ i.r_competition_game.title }}</td>
                                 <td>
-                                    {{ new Date(i.r_competition_game.game_start_time * 1000).formatDate('Y-D-M h:m:s') }} ~
-                                    {{ new Date(i.r_competition_game.game_end_time * 1000).formatDate('Y-D-M h:m:s') }}
+                                    {{ new Date(i.r_competition_game.game_start_time * 1000).formatDate('Y-M-D h:m:s') }} ~
+                                    {{ new Date(i.r_competition_game.game_end_time * 1000).formatDate('Y-M-D h:m:s') }}
                                 </td>
                                 <td>
                                     {{ i.score }}

@@ -458,16 +458,16 @@ export default {
             this.dialog.title = game.title
             this.dialog.page_url = game.page_url
             //parse timestamp to date and time
-            const signup_datetime = new Date(game.signup_start_time * 1000).formatDate('Y-D-M h:m:s').split(' ')
+            const signup_datetime = new Date(game.signup_start_time * 1000).formatDate('Y-M-D h:m:s').split(' ')
             this.dialog.signup_start_date = signup_datetime[0]
             this.dialog.signup_start_time = signup_datetime[1]
-            const signup_end_datetime = new Date(game.signup_end_time * 1000).formatDate('Y-D-M h:m:s').split(' ')
+            const signup_end_datetime = new Date(game.signup_end_time * 1000).formatDate('Y-M-D h:m:s').split(' ')
             this.dialog.signup_end_date = signup_end_datetime[0]
             this.dialog.signup_end_time = signup_end_datetime[1]
-            const game_start_datetime = new Date(game.game_start_time * 1000).formatDate('Y-D-M h:m:s').split(' ')
+            const game_start_datetime = new Date(game.game_start_time * 1000).formatDate('Y-M-D h:m:s').split(' ')
             this.dialog.game_start_date = game_start_datetime[0]
             this.dialog.game_start_time = game_start_datetime[1]
-            const game_end_datetime = new Date(game.game_end_time * 1000).formatDate('Y-D-M h:m:s').split(' ')
+            const game_end_datetime = new Date(game.game_end_time * 1000).formatDate('Y-M-D h:m:s').split(' ')
             this.dialog.game_end_date = game_end_datetime[0]
             this.dialog.game_end_time = game_end_datetime[1]
             this.dialog.concats = game.concats
