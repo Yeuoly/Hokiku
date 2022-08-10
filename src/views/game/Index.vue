@@ -35,7 +35,9 @@
                         </v-card-text>
                     </v-col>
                     <v-col cols="3">
-                        <v-btn v-if="i.page_url.startsWith('http')" class="mr2" style="float: right">
+                        <v-btn class="mr2" style="float: right"
+                            @click="toDetail(i)"
+                        >
                             进入详情页
                         </v-btn>
                         <v-btn color="primary" style="float: right" @click="openSignUpDialog(i.id)">
@@ -103,6 +105,13 @@ export default {
                 } else {
                     openErrorMessageBox('错误', data['err'])
                 }
+            }
+        },
+        toDetail(game) {
+            if(game.page_url.startsWith('http')) {
+                window.open(game.url_page)
+            } else {
+                this.$router.push(`/game/detail/${game.id}`)
             }
         }
     },

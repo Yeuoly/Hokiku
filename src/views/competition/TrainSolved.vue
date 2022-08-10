@@ -33,7 +33,7 @@
                                 <td>{{ i.uid }}</td>
                                 <td>{{ i.name }}</td>
                                 <td>
-                                    {{ new Date(i.time * 1000).formatDate('Y-D-M h:m:s') }}
+                                    {{ new Date(i.time * 1000).formatDate('Y-M-D h:m:s') }}
                                 </td>
                                 <td>
                                     {{ getRank(k + 1) }}

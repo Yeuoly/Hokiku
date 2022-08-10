@@ -196,14 +196,14 @@ export default {
         }, {
             text : '协议与端口',
             value : 'port_protocol'
-        }, {
+        }, {types : ['DEFAULT', 'WEB', 'PWN', 'MISC', 'REVERSE', 'CRYPTO', 'MOBILE'],
+        flag_types: ['DEFAULT', '文件flag', '模板指令', '环境变量'],
             text : '操作',
             value : 'action'
         }],
         trains : [],
         images : [],
-        types : ['DEFAULT', 'WEB', 'PWN', 'MISC', 'REVERSE', 'CRYPTO', 'MOBILE'],
-        flag_types: ['DEFAULT', '文件flag', '模板指令', '环境变量'],
+        
         new_train : {
             open : false,
             title : '',

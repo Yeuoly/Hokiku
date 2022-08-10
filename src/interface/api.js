@@ -261,3 +261,19 @@ export const api_competition_game_signup_my = () => api_base('comp/game/signup/m
 export const api_competition_game_detail = competition_id => api_base('comp/game/detail', 'get', stringify({ competition_id }))
 
 export const api_competition_game_detail_upload = (competition_id, html_content) => api_base('comp/game/detail/upload', 'post', stringify({ competition_id, html_content }))
+
+export const api_comeptition_game_subject_admin_list = competition_id => api_base('comp/game/admin/subject/list', 'get', stringify({ competition_id }))
+
+export const api_competition_game_subject_admin_create = (
+    image, comment, origin_score, ctf_flag, title, port_protocol, flag_type, flag_path, competition_id, start_time, subject_type, hint
+) => api_base('comp/game/admin/subject/add', 'post', stringify({ 
+    image, comment, origin_score, ctf_flag, title, port_protocol, flag_type, flag_path, competition_id, start_time, subject_type, hint
+ }))
+
+export const api_competition_game_subject_admin_update = (cid, args) => api_base('comp/game/admin/subject/update', 'post', stringify({ cid, ...args }))
+
+export const api_competition_game_subject_admin_delete = cid => api_base('comp/game/admin/subject/delete', 'post', stringify({ cid }))
+
+export const api_competition_game_subject_list = competition_id => api_base('comp/game/subject/list', 'get', stringify({ competition_id }))
+
+export const api_competition_game_subject_detail = subject_id => api_base('comp/game/subject/detail', 'get', stringify({ subject_id }))

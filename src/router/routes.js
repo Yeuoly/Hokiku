@@ -34,6 +34,7 @@ const CompetitionRank = () => import('../views/competition/Rank.vue')
 const CompetitionHome = () => import('../views/competition/Home.vue')
 const CompetitionTrainSolved = () => import('../views/competition/TrainSolved.vue')
 const CompetitionGameEditor = () => import('../views/game/Editor.vue')
+const CompetitionGameDetail = () => import('../views/game/Detail.vue')
 
 const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
 const KnowledgePublic = () => import('../views/knowledge/Public.vue')
@@ -147,7 +148,7 @@ const competition_pages = [{
     component : CompetitionGameEditor
 }, {
     path : '/competition/',
-    redirect : '/competition/train'
+    redirect : '/competition/game'
 }]
 
 export default [{
@@ -314,6 +315,17 @@ export default [{
         inNav : true,
         icon : 'mdi-information-outline',
         title : '关于',
+        required : {
+            online : false,
+            teacher : false
+        }
+    }
+}, {
+    name : 'game-detail',
+    path : '/game/detail/:competition_id',
+    component : CompetitionGameDetail,
+    meta : {
+        inNav : false,
         required : {
             online : false,
             teacher : false
