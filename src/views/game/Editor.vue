@@ -368,6 +368,7 @@ export default {
                 start_time : this.subject_start_time,
                 hint : this.dialog.edit_subject_hint,
                 subject_type : this.dialog.edit_subject_type,
+                image : this.dialog.edit_subject_image
             })
             if (!data) {
                 openErrorMessageBox('错误', '网络错误')

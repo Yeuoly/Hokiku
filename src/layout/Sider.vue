@@ -60,7 +60,7 @@
 import { ui_trans_bus, openInfoMessageBox } from '../concat/bus'
 import { isTeacher } from '../util/index'
 import routes from '../router/routes'
-import { api_logout } from '../interface/api'
+import { setAuthToken } from '../util/auth'
 
 export default {
     name : "Sider",
@@ -80,7 +80,7 @@ export default {
                 && ( !item.meta.required.teacher || isTeacher(this.$store.getters.getUserStatus) )
         },
         async logout(){
-            await api_logout()
+            setAuthToken('')
             await openInfoMessageBox('消息', '登出成功', '确定')
             window.location.href = '/'
         }

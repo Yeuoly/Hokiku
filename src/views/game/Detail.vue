@@ -7,7 +7,6 @@
                     <h1 class="font-weight-bold text-h2 basil--text">
                         {{ competition.title }}
                     </h1>
-
                 </v-card-title>
                 <div class="px5 py5">
                     <p style="text-align: center">
@@ -43,7 +42,7 @@
                             v-for="item in subjects_tabs"
                             :key="item"
                         >
-                            <v-row class="px2 pt2"> 
+                            <v-row class="px2 pt5"> 
                                 <v-col md="3" lg="3" xl="2" sm="2" 
                                     v-for="i in subjects[item]" 
                                     :key="i.id"
@@ -51,9 +50,11 @@
                                     <SubjectCard
                                         :title="i.title"
                                         :comment="i.comment"
-                                        :resolved="true"
+                                        :resolved="i.r_resolved != null"
                                         :resolves="i.resolved"
                                         :origin_score="i.origin_score"
+                                        :subject_id="i.id"
+                                        :competition_id="competition.id"
                                     />
                                 </v-col>
                             </v-row>
@@ -136,8 +137,10 @@ export default {
                                 clearInterval(timer)
                             }
                         }, 1000)
-                        this.loadSubject()
                     }
+                    if (current_time <= end_time + 3600 * 24 * 2){
+                        this.loadSubject()
+                     }
                 }
             }
         },

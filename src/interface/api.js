@@ -277,3 +277,13 @@ export const api_competition_game_subject_admin_delete = cid => api_base('comp/g
 export const api_competition_game_subject_list = competition_id => api_base('comp/game/subject/list', 'get', stringify({ competition_id }))
 
 export const api_competition_game_subject_detail = subject_id => api_base('comp/game/subject/detail', 'get', stringify({ subject_id }))
+
+export const api_competition_game_subject_launch = (competition_id, subject_id) => api_base('comp/game/subject/launch', 'post', stringify({ competition_id, subject_id }))
+
+export const api_competition_game_subject_stop = () => api_base('comp/game/subject/stop', 'post', '')
+
+export const api_competition_game_subject_status = () => api_base('comp/game/subject/status', 'get', '')
+
+export const api_competition_game_subject_request_result = request_id => api_base('comp/game/subject/result', 'get', stringify({ request_id }))
+
+export const api_competition_game_subject_commit_flag = (subject_id, flag) => api_base('comp/game/subject/commit-flag', 'post', stringify({ subject_id, flag }))
