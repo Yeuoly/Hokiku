@@ -42,7 +42,7 @@
                             v-for="item in subjects_tabs"
                             :key="item"
                         >
-                            <v-row class="px2 pt5"> 
+                            <v-row class="px2 pt5" v-if="item != 'RANK'"> 
                                 <v-col md="3" lg="3" xl="2" sm="2" 
                                     v-for="i in subjects[item]" 
                                     :key="i.id"
@@ -58,6 +58,17 @@
                                     />
                                 </v-col>
                             </v-row>
+                            <v-row class="px2 pt5" v-else-if="item == 'RANK'">
+                                <p></p>
+                                <v-col cols="12">
+                                    <v-data-table
+                                        :headers="rank_header"
+                                        calculate-widths
+                                        :items="rank"
+                                    >
+                                    </v-data-table>
+                                </v-col>
+                            </v-row>
                         </v-tab-item>
                     </v-tabs>
                     <p></p>
@@ -70,8 +81,14 @@
 
 <script>
 import { openErrorMessageBox } from '../../concat/bus'
-import { api_competition_game_detail, api_competition_game_subject_list } from '../../interface/api'
+import { 
+    api_competition_game_detail, 
+    api_competition_game_subject_list,
+    api_competition_game_rank
+} from '../../interface/api'
 import SubjectCard from '../../components/game/SubjectCard.vue'
+
+import { GenerateUserGameScore } from '../../util/game'
 
 export default {
     components : {
@@ -88,8 +105,17 @@ export default {
         subjects_tabs : [],
         subjects : {},
         subject_types : ['DEFAULT', 'WEB', 'PWN', 'MISC', 'REVERSE', 'CRYPTO', 'MOBILE'],
-        subject_tab : 0
+        subject_tab : 0,
+        rank_header : [],
+        rank : []
     }),
+    watch : {
+        subject_tab(val) {
+            if (this.subjects_tabs[val] == 'RANK') {
+                this.loadRank()
+            }
+        }
+    },
     computed : {
         continue_time() {
             return this.getTimeText(this.competition_process.current_time)
@@ -122,14 +148,18 @@ export default {
                     const start_time = this.competition.game_start_time
                     const end_time = this.competition.game_end_time
                     const current_time = parseInt(new Date().getTime() / 1000)
-                    this.competition_process.total_time = end_time - start_time
-                    this.competition_process.current_time = current_time - start_time
                     if (current_time < start_time) {
                         this.competition_process.status = '未开始'
+                        this.competition_process.current_time = 0
+                        this.competition_process.total_time = end_time - start_time
                     } else if (current_time > end_time) {
                         this.competition_process.status = '已结束'
+                        this.competition_process.current_time = end_time - start_time
+                        this.competition_process.total_time = end_time - start_time
                     } else {
                         this.competition_process.status = '进行中'
+                        this.competition_process.total_time = end_time - start_time
+                        this.competition_process.current_time = current_time - start_time
                         const timer = setInterval(() => {
                             this.competition_process.current_time += 1
                             if (this.competition_process.current_time >= this.competition_process.total_time) {
@@ -138,9 +168,6 @@ export default {
                             }
                         }, 1000)
                     }
-                    if (current_time <= end_time + 3600 * 24 * 2){
-                        this.loadSubject()
-                     }
                 }
             }
         },
@@ -149,7 +176,24 @@ export default {
             if (!data) {
                 openErrorMessageBox('错误', '网络错误')
             } else {
-                if (data['data'] != null) {
+                if (data['res'] != 0 ){
+                    openErrorMessageBox('错误', data['err'])
+                } else if (data['data'] != null) {
+                    this.rank_header = [{
+                        text : '排名',
+                        align : 'center',
+                        value : 'rank'
+                    }, {
+                        text : '用户名',
+                        align : 'center',
+                        value : 'game_name'
+                    }, {
+                        text : '总得分',
+                        align : 'center',
+                        value : 'score'
+                    }]
+                    this.subjects_tabs = []
+                    this.subjects = {}
                     data['data'].map(v => {
                         const type = this.getSubjectType(v['type'])
                         if (!this.subjects_tabs.includes(type)) {
@@ -158,6 +202,59 @@ export default {
                         } else {
                             this.subjects[type].push(v)
                         }
+                        this.rank_header.push({
+                            text : v['title'],
+                            value : 'v_' + v['id'],
+                            align : 'center'
+                        })
+                    })
+                    this.subjects_tabs.push('RANK')
+                }
+            }
+        },
+        async loadRank() {
+            const { data } = await api_competition_game_rank(this.competition_id)
+            if (!data) {
+                openErrorMessageBox('错误', '网络错误')
+            } else {
+                if (data['res'] != 0) {
+                    openErrorMessageBox('错误', data['err'])
+                } else {
+                    this.rank = []
+                    data['data'].forEach((i, v) => {
+                        const player = {
+                            rank : v + 1,
+                            game_name : i['game_name'],
+                            score : i['score']
+                        }
+                        const solves = i['solves'].split(';')
+                        solves.forEach(solve => {
+                            const parts = solve.split(':')
+                            const pos = parseInt(parts[1])
+                            const origin_score = parseInt(parts[2])
+                            const first_solve_time = parseInt(parts[3])
+                            const solve_time = parseInt(parts[4]) - this.competition.game_start_time
+                            const total_time = this.competition.game_end_time - this.competition.game_start_time
+                            const score = GenerateUserGameScore(
+                                origin_score, pos, total_time, solve_time, first_solve_time
+                            )
+                            const getIcon = (idx) => {
+                                switch(idx) {
+                                    case 1:
+                                        return '①'
+                                    case 2:
+                                        return '②'
+                                    case 3:
+                                        return '③'
+                                }
+                            }
+                            if (parseInt(parts[1]) < 4){
+                                player['v_' + parts[0]] = getIcon(parseInt(parts[1])) + ' - ' + score
+                            } else {
+                                player['v_' + parts[0]] = '√ - ' + score
+                            }
+                        })
+                        this.rank.push(player)
                     })
                 }
             }
@@ -168,6 +265,7 @@ export default {
         if (competition_id) {
             this.competition_id = competition_id;
             this.load();
+            this.loadSubject()
         }
     }
 }
