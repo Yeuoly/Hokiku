@@ -101,6 +101,38 @@
                         label="动态flag"
                         v-model="new_train.dynamic_flag"
                     ></v-switch>
+                    <v-layout>
+                        <v-chip
+                            class="ma-2"
+                            color="pink"
+                            label
+                            text-color="white"
+                        >
+                            <v-icon left>
+                                mdi-label
+                            </v-icon>
+                            标签：
+                        </v-chip>
+                        <v-chip
+                            class="ma-2"
+                            color="green"
+                            label
+                            text-color="white"
+                            v-for="(i, k) in new_train.tags"
+                            :key="k"
+                        >
+                            <v-icon left>
+                                mdi-label
+                            </v-icon>
+                            {{ new_train.tags[k].name }}
+                        </v-chip>
+                    </v-layout>
+                    <v-text-field
+                        label="标签 - 回车添加"
+                        placeholder="标签名"
+                        v-model="new_train.tag_text"
+                        @keypress.enter="appendTag"
+                    ></v-text-field>
                     <v-radio-group
                         row
                         v-model="new_train.type"
@@ -149,7 +181,17 @@
 
 <script>
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_competition_train_add, api_competition_train_delete, api_competition_train_list, api_competition_train_update, api_docker_image_delete, api_docker_image_get, api_docker_image_insert, api_docker_image_insert_check } from '../../interface/api'
+import { 
+    api_competition_train_add, 
+    api_competition_train_delete, 
+    api_competition_train_list, 
+    api_competition_train_update, 
+    api_docker_image_delete,
+    api_docker_image_get, 
+    api_docker_image_insert, 
+    api_docker_image_insert_check,
+    api_competition_train_tag_create 
+} from '../../interface/api'
 import { isFlagDynamic, sleep } from '../../util'
 export default {
     data : () => ({
@@ -217,7 +259,9 @@ export default {
             is_new : true,
             train_id : 0,
             flag_path: '',
-            flag_type: 1
+            flag_type: 1,
+            tags : [],
+            tag_text : ''
         },
         new_image : {
             open : false,
@@ -284,6 +328,7 @@ export default {
             this.new_train.train_id = item.id
             this.new_train.flag_path = item.flag_path
             this.new_train.flag_type = item.flag_type
+            this.new_train.tags = item.r_tags
         },
         async deleteTrain(item){
             const result = await openInfoMessageBox('提示', '您确定要删除吗')
@@ -335,7 +380,8 @@ export default {
                 type : this.new_train.type,
                 train_id : this.new_train.train_id,
                 flag_path : this.new_train.flag_path,
-                flag_type : this.new_train.flag_type
+                flag_type : this.new_train.flag_type,
+                tags : this.new_train.tags.map(item => item.id).join(',')
             })
             if(!data){
                 openErrorMessageBox('错误', '网络错误')
@@ -383,6 +429,23 @@ export default {
             }
             this.new_image.downloading = false
         },
+        async appendTag() {
+            const name = this.new_train.tag_text
+            const { data } = await api_competition_train_tag_create(name)
+            if(!data){
+                openErrorMessageBox('错误', '网络错误')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    this.new_train.tags.push({
+                        id : data['data'],
+                        name : name
+                    })
+                    this.new_train.tag_text = ''
+                }
+            }
+        },
         openAddTrainDialog(){
             this.new_train.is_new = true
             this.new_train.title = ''
@@ -395,6 +458,7 @@ export default {
             this.new_train.type = 0
             this.new_train.dynamic_flag = false
             this.new_train.open = true
+            this.new_train.tags = []
         },
         openAddImageDialog(){
             this.new_image.name = ''

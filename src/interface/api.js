@@ -289,3 +289,7 @@ export const api_competition_game_subject_request_result = request_id => api_bas
 export const api_competition_game_subject_commit_flag = (subject_id, flag) => api_base('comp/game/subject/commit-flag', 'post', stringify({ subject_id, flag }))
 
 export const api_competition_game_rank = competition_id => api_base('comp/game/rank', 'get', stringify({ competition_id }))
+
+export const api_competition_train_tag_create = tag => api_base('comp/train/tag/create', 'post', stringify({ tag }))
+
+export const api_competition_train_tag_search = (tag, page, size) => api_base('comp/train/tag/search', 'get', stringify({ tag, page, size }))

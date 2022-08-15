@@ -12,6 +12,49 @@
             >{{ i.label }}</v-tab>
         </v-tabs>
         <v-row class="px2 py2">
+            <v-col cols="12">
+                <div class="px2">
+                    <v-expansion-panels accordion>
+                        <v-expansion-panel>
+                            <v-expansion-panel-header>搜索</v-expansion-panel-header>
+                            <v-expansion-panel-content>
+                                <v-row>
+                                    <v-col>
+                                        <v-select
+                                            :items="search_methods"
+                                            v-model="search_method"
+                                            label="按……搜索"
+                                            dense
+                                            outlined
+                                        ></v-select>
+                                    </v-col>
+                                    <v-col>
+                                        <v-text-field
+                                            label="搜索内容"
+                                            v-model="keyword"
+                                            dense
+                                            outlined
+                                        >
+                                            <template slot="append">
+                                                <v-btn
+                                                    small
+                                                    color="primary"
+                                                    dark
+                                                    @click="startSearch"
+                                                >
+                                                搜索
+                                                </v-btn>
+                                            </template>
+                                        </v-text-field>
+                                    </v-col>
+                                </v-row>
+
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
+                    <v-divider></v-divider>
+                </div>
+            </v-col>
             <v-col
                 v-for="(i, k) in trains"
                 :key="k"
@@ -32,6 +75,19 @@
                     </v-card-title>
                     <div style="text-align: center" class="text-16 text-grey px5 pb5 w100">
                         {{ i.comment }}
+                    </div>
+                    <div>
+                        <v-chip-group>
+                            <v-chip
+                                v-for="(j, l) in i.r_tags"
+                                :key="l"
+                                color="primary"
+                                label
+                                text-color="white"
+                                class="ma-1"
+                                small
+                            >{{ j.name }}</v-chip>
+                        </v-chip-group>
                     </div>
                 </v-card>
             </v-col>
@@ -93,7 +149,14 @@
 
 <script>
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_competition_train_commit_flag, api_competition_train_shutdown, api_competition_train_start, api_competition_train_start_check, api_competition_train_status } from '../../interface/api'
+import { 
+    api_competition_train_commit_flag, 
+    api_competition_train_shutdown, 
+    api_competition_train_start, 
+    api_competition_train_start_check, 
+    api_competition_train_status,
+    api_competition_train_tag_search
+} from '../../interface/api'
 import { loadCompetitions } from '../../store/index'
 import { sleep } from '../../util'
 export default {
@@ -129,7 +192,11 @@ export default {
             remainder : 0
         },
         timer : 0,
-        flag : ''
+        flag : '',
+        keyword : '',
+        search_method : '标签',
+        search_methods : ['标签'],
+        searching : false
     }),
     methods : {
         toSolvedList() {
@@ -197,6 +264,7 @@ export default {
             this.launching = false
         },
         async load(type, page){
+            this.searching = false
             const data = await loadCompetitions(type, page)
             if(!data){
                 openErrorMessageBox('错误', '网络错误')
@@ -212,6 +280,27 @@ export default {
                 this.tm_info.port = data['data']['port']
                 this.tm_info.remainder = data['data']['remainder']
             }
+        },
+        async search(keyword, page, size) {
+            if (keyword == '') {
+                this.searching = false
+                return
+            }
+            this.searching = true
+            const { data } = await api_competition_train_tag_search(keyword, page, size)
+            if(!data){
+                openErrorMessageBox('错误', '网络错误')
+            }else{
+                if(data['res'] != 0){
+                    openErrorMessageBox('错误', data['err'])
+                }else{
+                    this.trains = data['data']
+                }
+            }
+        },
+        startSearch() {
+            this.searching = true
+            this.search(this.keyword, this.page, 32)
         }
     },
     watch : {
@@ -223,7 +312,11 @@ export default {
         },
         page : {
             handler(v){
-                this.load(this.type, v)
+                if (this.searching) {
+                    this.search(this.keyword, v, 32)
+                } else {
+                    this.load(this.type, v)
+                }
             },
             immediate : true
         }

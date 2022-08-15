@@ -69,7 +69,7 @@ export default {
             path : 'train',
             sa : false
         },{
-            text : '管理',
+            text : '练习管理',
             path : 'manager',
             sa : true
         }, {
