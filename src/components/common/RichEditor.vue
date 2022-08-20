@@ -12,6 +12,8 @@ import { api_resource_upload_image } from '../../interface/api'
 import { closeLoadingOverlay, openErrorMessageBox, openLoadingOverlay } from '../../concat/bus'
 import LoadingOverlay from './LoadingOverlay.vue'
 
+import PreviewMenu from './lib/PreviewMenu'
+
 export default {
     components : { LoadingOverlay },
     name : 'RichEditor',
@@ -49,7 +51,16 @@ export default {
             }
             closeLoadingOverlay()
         }
+
+        //博客预览扩展
+        editor.menus.extend('PreviewMenu', PreviewMenu);
+        editor.config.menus = editor.config.menus.concat('PreviewMenu');   
         editor.create()
+        if(this.$vuetify.breakpoint.mdAndUp){
+            editor.config.onPreviewCallBack( res => {
+                this.$emit('change-preview', res);
+            });
+        }
         let active = false
         let timer_over = true
         let current_html = ''

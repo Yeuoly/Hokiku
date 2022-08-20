@@ -16,7 +16,7 @@
                                     v-for="(i, k) in navs"
                                     :key="k" 
                                     link 
-                                    @click="$router.push(`/home/${i.path}`)"
+                                    @click="$router.push(`/admin/${i.path}`)"
                                 >
                                     {{ i.text }}
                                 </v-list-item>
@@ -51,7 +51,13 @@
 
 export default {
     data : () => ({
-        navs : [{
+        navs : [ {
+            text : '服务器',
+            path : 'server'
+        }, {
+            text : 'docker',
+            path : 'docker'
+        }, {
             text : '课程',
             path : 'course'
         }]

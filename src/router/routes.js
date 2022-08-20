@@ -12,6 +12,8 @@ const Admin = () => import('../views/Admin.vue')
 const About = () => import('../views/About.vue')
 
 const AdminCourse = () => import('../views/admin/Course.vue')
+const AdminServer = () => import('../views/admin/Server.vue')
+const AdminDocker = () => import('../views/admin/Docker.vue')
 
 const MessageSystem = () => import('../views/message/System.vue')
 
@@ -33,6 +35,7 @@ const CompetitionTrain = () => import('../views/competition/Train.vue')
 const CompetitionRank = () => import('../views/competition/Rank.vue')
 const CompetitionHome = () => import('../views/competition/Home.vue')
 const CompetitionTrainSolved = () => import('../views/competition/TrainSolved.vue')
+const CompetitionTrainNote = () => import('../views/competition/Note.vue')
 const CompetitionGameEditor = () => import('../views/game/Editor.vue')
 const CompetitionGameDetail = () => import('../views/game/Detail.vue')
 
@@ -45,8 +48,16 @@ const admin_pages = [{
     path : '/admin/course',
     component : AdminCourse
 }, {
+    name : 'admin-server',
+    path : '/admin/server',
+    component : AdminServer
+}, {
+    name : 'admin-docker',
+    path : '/admin/docker',
+    component : AdminDocker
+}, {
     path : '/admin/',
-    redirect : '/admin/course'
+    redirect : '/admin/server'
 }]
 
 const knowledge_pages = [{
@@ -142,6 +153,10 @@ const competition_pages = [{
     name : 'competition-train-solved',
     path : '/competition/train/solved/:train_id',
     component : CompetitionTrainSolved
+}, {
+    name : 'competition-train-note',
+    path : '/competition/train/note/:train_id',
+    component : CompetitionTrainNote
 }, {
     name : 'competition-game-edit',
     path : '/competition/game/edit/:competition_id',

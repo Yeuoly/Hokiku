@@ -293,3 +293,17 @@ export const api_competition_game_rank = competition_id => api_base('comp/game/r
 export const api_competition_train_tag_create = tag => api_base('comp/train/tag/create', 'post', stringify({ tag }))
 
 export const api_competition_train_tag_search = (tag, page, size) => api_base('comp/train/tag/search', 'get', stringify({ tag, page, size }))
+
+export const api_native_server_param = () => api_base('native/server', 'get', '')
+
+export const api_docker_container_list = () => api_base('docker/admin/container/list', 'get', '')
+
+export const api_docker_container_stop = container_id => api_base('docker/admin/container/stop', 'post', stringify({ container_id }))
+
+export const api_competition_train_note_get = (train_id) => api_base('comp/train/note/get', 'get', stringify({ train_id }))
+
+export const api_competition_train_note_update = (train_id, content, content_type, is_wp) => api_base('comp/train/note/update', 'post', stringify({ train_id, content, content_type, is_wp }))
+
+export const api_competition_train_wp_list = (train_id) => api_base('comp/train/wp/list', 'get', stringify({ train_id }))
+
+export const api_competition_train_wp_get = (writeup_id) => api_base('comp/train/wp/get', 'get', stringify({ writeup_id }))
