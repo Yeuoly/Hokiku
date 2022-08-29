@@ -307,3 +307,13 @@ export const api_competition_train_note_update = (train_id, content, content_typ
 export const api_competition_train_wp_list = (train_id) => api_base('comp/train/wp/list', 'get', stringify({ train_id }))
 
 export const api_competition_train_wp_get = (writeup_id) => api_base('comp/train/wp/get', 'get', stringify({ writeup_id }))
+
+export const api_docker_image_list = () => api_base('docker/admin/image/list', 'get', '')
+
+export const api_docker_image_core_delete = image_id => api_base('docker/admin/image/delete', 'post', stringify({ image_id }))
+
+export const api_docker_sync = () => api_base('docker/admin/image/sync', 'post', '')
+
+export const api_docker_sync_check = () => api_base('docker/admin/image/sync/check', 'get', '')
+
+export const api_docker_container_history = (page, size) => api_base('docker/admin/container/history', 'get', stringify({ page, size }))

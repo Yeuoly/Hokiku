@@ -6,7 +6,7 @@
                     title="得分情况"
                     subtext="具体解题情况"
                     :model="history"
-                    style="width: 100%"
+                    style="width: 100%; height: 200px"
                 />
             </v-col>
             <v-col cols="12" sm="12" md="6" lg="6" xl="6" style="height : 300px">
