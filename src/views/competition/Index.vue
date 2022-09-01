@@ -78,9 +78,6 @@
                                 </tbody>
                             </v-simple-table>
                         </v-card-text>
-                        <div v-for="(i, k) in statistics_indicator" :key="k">
-                            
-                        </div>
                     </v-card>
                 </v-col>
                 <v-col v-else>
