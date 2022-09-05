@@ -27,6 +27,23 @@
             <v-col cols="12">
                 <v-divider></v-divider>
             </v-col>
+            <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
+                <!-- coin info, like i owned 3.5 coins -->
+                <NormalInfoCard 
+                    title="可用金币"
+                    :content="profile.coin.value.toString() + '￥'"
+                />
+            </v-col>
+            <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
+                <!-- coin info, like i owned 3.5 coins -->
+                <NormalInfoCard 
+                    title="冻结金币"
+                    :content="profile.coin.frezzen.toString() + '￥'"
+                />
+            </v-col>
+            <v-col cols="12">
+                <v-divider></v-divider>
+            </v-col>
             <v-col cols="12">
                 <span class="text-grey text-14"> 储存空间: {{ percent_text }} </span>
                 <v-progress-linear
@@ -42,8 +59,11 @@ import { openErrorMessageBox } from '../../concat/bus'
 import { api_user_profile } from '../../interface/api'
 import { isAvaliableNameFormat, visitableMemberSpace } from '../../util/index'
 
+import NormalInfoCard from '../../components/common/NormalInfoCard.vue'
+
 export default {
     name : 'Profile',
+    components : { NormalInfoCard },
     data : () => ({
         profile : {
             id: '',
@@ -52,6 +72,10 @@ export default {
                 max_space : 0,
                 current_space : 0,
                 percent_space : 0,
+            },
+            coin : {
+                value : 0,
+                frezzen : 0,
             }
         },
     }),
