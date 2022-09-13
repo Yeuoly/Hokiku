@@ -48,6 +48,17 @@
                                 (id <strong>{{ i.r_info.hid }}</strong>)
                                 请注意截止日期 <strong>{{ new Date(i.r_info.r_homework.endtime * 1000).formatDate('Y-M-D h:m:s') }}</strong>
                             </v-card>
+                            <v-card flat v-else-if="i.type === 4">
+                                您的账户余额发生变动，变动金额：
+                                <strong v-if="i.r_info.r_change.value < 0" style="color: red">{{ i.r_info.r_change.value }}￥</strong>
+                                <strong v-else style="color: green">{{ i.r_info.r_change.value }}￥</strong>
+                                ，变动来源：
+                                <strong v-if="i.r_info.r_change.from === 0">未知</strong>
+                                <strong v-else-if="i.r_info.r_change.from === 1">系统</strong>
+                                <strong v-else-if="i.r_info.r_change.from === 2">微信</strong>
+                                <strong v-else-if="i.r_info.r_change.from === 3">支付宝</strong>
+                                ，变动时间 <strong>{{ new Date(i.r_info.r_change.time * 1000).formatDate('Y-M-D h:m:s') }}</strong>
+                            </v-card>
                         </v-col>
                         <v-col cols="12" style="text-align: right">
                             <span>来自：{{ getMessageFromText(i.from) }}</span>
@@ -58,6 +69,11 @@
                     </v-row>
                 </v-list-item>
             </v-list>
+            <v-pagination
+                v-model="page"
+                :length="99999"
+                :total-visible="7"
+            ></v-pagination>
         </v-col>
     </v-row>
 </template>
@@ -77,6 +93,13 @@ export default {
         messages : [],
         page : 1
     }),
+    watch : {
+        page : {
+            handler : function () {
+                this.loadMessage()
+            },
+        }
+    },
     methods : {
         async acceptJoinApply(mid, idx){
             const { data } = await api_organization_accept_apply(mid)
@@ -110,7 +133,7 @@ export default {
                 if(data['res'] != 0){
                     openErrorMessageBox('错误', data['err'])
                 }else{
-                    this.messages = this.messages.concat(data['data'])
+                    this.messages = data['data']
                 }
             }
         },
