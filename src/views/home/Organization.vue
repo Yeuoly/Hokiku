@@ -50,7 +50,7 @@
             </v-card-actions>
         </v-col>
         <v-col cols="2">
-            <v-btn style="float: right" color="primary" @click="dialogs.org = true">申请加入</v-btn>
+            <v-btn style="float: right" color="primary" @click="apply_join_dialog.org = true">申请加入</v-btn>
         </v-col>
         <v-col cols="12">
             <v-divider></v-divider>
