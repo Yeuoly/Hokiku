@@ -27,8 +27,11 @@
                                         link 
                                         @click="$router.push(`/competition/${i.path}`)"
                                     >
-                                        <a>
-                                            {{ i.text }}
+                                        <a class="clickable text-center">
+                                            <!-- make text like a link, looks great, weight and rounded -->
+                                            <v-list-item-title>
+                                                {{ i.text }}
+                                            </v-list-item-title>
                                         </a>
                                     </v-list-item>
                                 </v-list-item-group>

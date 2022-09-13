@@ -63,6 +63,9 @@ export default {
         }, {
             text : '组织',
             path : 'org'
+        }, {
+            text : '交易',
+            path : 'trade'
         }]
     }),
     computed : {

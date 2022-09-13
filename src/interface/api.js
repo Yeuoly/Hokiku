@@ -317,3 +317,15 @@ export const api_docker_sync = () => api_base('docker/admin/image/sync', 'post',
 export const api_docker_sync_check = () => api_base('docker/admin/image/sync/check', 'get', '')
 
 export const api_docker_container_history = (page, size) => api_base('docker/admin/container/history', 'get', stringify({ page, size }))
+
+export const api_trade_list_coin_changes = (page, len) => api_base('trade/coin/list/changes', 'get', stringify({ page, len }))
+
+export const api_trade_list_trade_order = (page, len) => api_base('trade/charge/list/order', 'get', stringify({ page, len }))
+
+export const api_trade_admin_list_trade_order = (page, len) => api_base('trade/admin/charge/list/order', 'get', stringify({ page, len }))
+
+export const api_trade_admin_list_coin_changes = (page, len) => api_base('trade/admin/coin/list/changes', 'get', stringify({ page, len }))
+
+export const api_trade_admin_list_coins = (page, len) => api_base('trade/admin/coin/list', 'get', stringify({ page, len }))
+
+export const api_trade_admin_coin_change = (uid, coin) => api_base('trade/admin/coin/change', 'post', stringify({ uid, coin }))

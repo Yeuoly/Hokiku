@@ -14,6 +14,9 @@ const About = () => import('../views/About.vue')
 const AdminCourse = () => import('../views/admin/Course.vue')
 const AdminServer = () => import('../views/admin/Server.vue')
 const AdminDocker = () => import('../views/admin/Docker.vue')
+const AdminTrade = () => import('../views/admin/Trade.vue')
+
+const AdminTradeCoins = () => import('../views/admin/trade/Coins.vue')
 
 const MessageSystem = () => import('../views/message/System.vue')
 
@@ -26,6 +29,10 @@ const HomeHomework = () => import('../views/home/Homework.vue')
 const HomeCollection = () => import('../views/home/Collection.vue')
 const HomeProfile = () => import('../views/home/Profile.vue')
 const HomeOrganization = () => import('../views/home/Organization.vue')
+const HomeTrade = () => import('../views/home/Trade.vue')
+
+const HomeTradeCoins = () => import('../views/home/trade/Coins.vue')
+const HomeTradeCharge = () => import('../views/home/trade/Charge.vue')
 
 const CompetitionIndex = () => import('../views/competition/Index.vue')
 const CompetitionGame = () => import('../views/game/Index.vue')
@@ -55,6 +62,18 @@ const admin_pages = [{
     name : 'admin-docker',
     path : '/admin/docker',
     component : AdminDocker
+}, {
+    name : 'admin-trade',
+    path : '/admin/trade',
+    component : AdminTrade,
+    children : [{
+        name : 'admin-trade-coins',
+        path : '/admin/trade/coins',
+        component : AdminTradeCoins
+    }, {
+        path : '/admin/trade/',
+        redirect : '/admin/trade/coins'
+    }]
 }, {
     path : '/admin/',
     redirect : '/admin/server'
@@ -121,6 +140,22 @@ const home_pages = [{
     path : '/home/org',
     component : HomeOrganization
 }, {
+    name : 'home-trade',
+    path : '/home/trade',
+    component : HomeTrade,
+    children : [{
+        name : 'home-trade-coins',
+        path : '/home/trade/coins',
+        component : HomeTradeCoins
+    }, {
+        name : 'home-trade-charge',
+        path : '/home/trade/charge',
+        component : HomeTradeCharge
+    }, {
+        path : '/home/trade/',
+        redirect : '/home/trade/coins'
+    }]
+},{
     path : '/home/',
     redirect : '/home/profile'
 }]
@@ -259,7 +294,7 @@ export default [{
     meta : {
         inNav : true,
         icon : 'mdi-account-plus-outline',
-        title : '事件',
+        title : '收集',
         required : {
             offline : true
         }
@@ -278,8 +313,8 @@ export default [{
     component : CompetitionIndex,
     meta : {
         inNav : true,
-        icon : 'mdi-fencing',
-        title : '竞赛中心',
+        icon : 'mdi-flag-outline',
+        title : 'CTF(Capture The Flag)',
         required : {
             online : true
         }

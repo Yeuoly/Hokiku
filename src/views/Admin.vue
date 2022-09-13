@@ -60,6 +60,9 @@ export default {
         }, {
             text : '课程',
             path : 'course'
+        }, {
+            text : '交易',
+            path : 'trade'
         }]
     }),
     computed : {

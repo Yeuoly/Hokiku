@@ -38,7 +38,7 @@
                 <!-- coin info, like i owned 3.5 coins -->
                 <NormalInfoCard 
                     title="冻结金币"
-                    :content="profile.coin.frezzen.toString() + '￥'"
+                    :content="profile.coin.freeze.toString() + '￥'"
                 />
             </v-col>
             <v-col cols="12">
@@ -75,7 +75,7 @@ export default {
             },
             coin : {
                 value : 0,
-                frezzen : 0,
+                freeze : 0,
             }
         },
     }),
@@ -108,6 +108,8 @@ export default {
                 }else if(data['data']){
                     this.profile.resource.max_space = data['data']['r_resource']['max']
                     this.profile.resource.current_space = data['data']['r_resource']['current']
+                    this.profile.coin.value = data['data']['r_trade_coin']['value']
+                    this.profile.coin.freeze = data['data']['r_trade_coin']['freeze']
                 }
             }
         }
