@@ -46,6 +46,16 @@ const CompetitionTrainNote = () => import('../views/competition/Note.vue')
 const CompetitionGameEditor = () => import('../views/game/Editor.vue')
 const CompetitionGameDetail = () => import('../views/game/Detail.vue')
 
+const AcmIndex = () => import('../views/acm/Index.vue')
+const AcmAdminIndex = () => import('../views/acm/admin/Index.vue')
+const AcmAdminProblem = () => import('../views/acm/admin/Problem.vue')
+const AcmAdminEditProblem = () => import('../views/acm/admin/EditProblem.vue')
+
+const AcmUserIndex = () => import('../views/acm/user/Index.vue')
+const AcmUserProblem = () => import('../views/acm/user/Problem.vue')
+const AcmUserHome = () => import('../views/acm/user/Home.vue')
+const AcmUserProblemDetail = () => import('../views/acm/user/Detail.vue')
+
 const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
 const KnowledgePublic = () => import('../views/knowledge/Public.vue')
 const KnowledgeCourse = () => import('../views/knowledge/Course.vue')
@@ -201,6 +211,44 @@ const competition_pages = [{
     redirect : '/competition/game'
 }]
 
+const acm_pages = [{
+    name : 'acm-admin',
+    path : '/acm/admin',
+    component : AcmAdminIndex,
+    children : [{
+        name : 'acm-admin-problem',
+        path : '/acm/admin/problem',
+        component : AcmAdminProblem
+    }, {
+        name : 'acm-admin-edit-problem',
+        path : '/acm/admin/edit-problem/:pid',
+        component : AcmAdminEditProblem
+    }, {
+        path : '/acm/admin/',
+        redirect : '/acm/admin/problem'
+    }]
+}, {
+    name : 'acm-user',
+    path : '/acm/user',
+    component : AcmUserIndex,
+    children : [{
+            name : 'acm-user-problem',
+            path : '/acm/user/problem',
+            component : AcmUserProblem
+        }, {
+            name : 'acm-user-home',
+            path : '/acm/user/home',
+            component : AcmUserHome
+        }, {
+            name : 'acm-user-problem-detail',
+            path : '/acm/user/problem/detail/:pid',
+            component : AcmUserProblemDetail
+        }, {
+            path : '/acm/',
+            redirect : '/acm/user/home'
+        }]
+}, ]
+
 export default [{
     name : 'home',
     path : '/home',
@@ -321,6 +369,19 @@ export default [{
     },
     children : competition_pages
 }, {
+    name : 'acm',
+    path : '/acm',
+    component : AcmIndex,
+    meta : {
+        inNav : true,
+        icon : 'mdi-microsoft-visual-studio-code',
+        title : 'ACM(Algorithm Contest)',
+        required : {
+            online : true
+        }
+    },
+    children : acm_pages
+},{
     name : 'knowledge',
     path : '/knowledge',
     component : Knowledge,

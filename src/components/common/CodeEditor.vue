@@ -7,13 +7,17 @@
 <script>
 require('vue2-ace-editor')
 require('brace/ext/language_tools');              
+require('brace/mode/c_cpp')
 require('brace/mode/javascript')
 require('brace/mode/html')
+require('brace/mode/markdown')
 require('brace/mode/css')
 require('brace/theme/monokai')
 require('brace/snippets/javascript') //snippet
 require('brace/snippets/html') //snippet
 require('brace/snippets/css') //snippet
+require('brace/snippets/c_cpp') //snippet
+require('brace/snippets/markdown') //snippet
 
 export default {
     components : { 

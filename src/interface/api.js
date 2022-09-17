@@ -329,3 +329,39 @@ export const api_trade_admin_list_coin_changes = (page, len) => api_base('trade/
 export const api_trade_admin_list_coins = (page, len) => api_base('trade/admin/coin/list', 'get', stringify({ page, len }))
 
 export const api_trade_admin_coin_change = (uid, coin) => api_base('trade/admin/coin/change', 'post', stringify({ uid, coin }))
+
+export const api_acm_admin_question_create = (title, comment_type, comment, score, author, price, difficulty, language, time_limit, memory_limit, type) => api_base('acm/admin/question/create', 'post', stringify({ title, comment_type, comment, score, author, price, difficulty, language, time_limit, memory_limit, type }))
+
+export const api_acm_admin_question_edit = (question_id, title, comment_type, comment, author, price, difficulty, language, time_limit, memory_limit, type) => api_base('acm/admin/question/edit', 'post', stringify({ question_id, title, comment_type, comment, author, price, difficulty, language, time_limit, memory_limit, type }))
+
+export const api_acm_admin_question_delete = (question_id) => api_base('acm/admin/question/delete', 'post', stringify({ question_id }))
+
+export const api_acm_admin_testcase_create = (question_id, input, output, _public) => api_base('acm/admin/testcase/create', 'post', stringify({ question_id, input, output, public: _public }));
+
+export const api_acm_admin_testcase_edit = (testcase_id, input, output, _public) => api_base('acm/admin/testcase/edit', 'post', stringify({ testcase_id, input, output, public: _public }));
+
+export const api_acm_admin_testcase_delete = (testcase_id) => api_base('acm/admin/testcase/delete', 'post', stringify({ testcase_id }))
+
+export const api_acm_admin_question_list = (page, len) => api_base('acm/admin/question/list', 'get', stringify({ page, len }))
+
+export const api_acm_admin_testcase_list = (question_id) => api_base('acm/admin/testcase/list', 'get', stringify({ question_id }))
+
+export const api_acm_admin_testing_list = (question_id) => api_base('acm/admin/testing/list', 'get', stringify({ question_id }))
+
+export const api_acm_admin_testing_list_user = (user_id) => api_base('acm/admin/testing/list/user', 'get', stringify({ user_id }))
+
+export const api_acm_admin_question_get = (question_id) => api_base('acm/admin/question/get', 'get', stringify({ question_id }))
+
+export const api_acm_user_question_list = (page, len) => api_base('acm/user/question/list', 'get', stringify({ page, len }))
+
+export const api_acm_user_testing_list = () => api_base('acm/user/testing/list', 'get')
+
+export const api_acm_user_testing_submit = (question_id, code, language) => api_base('acm/user/testing/submit', 'post', stringify({ question_id, code, language }))
+
+export const api_acm_user_testing_list_question = (question_id) => api_base('acm/user/testing/list/question', 'get', stringify({ question_id }))
+
+//export const api_acm_user_ranklist = () => api_base('acm/user/ranklist', 'get')
+
+export const api_acm_user_question_detail = (question_id) => api_base('acm/user/question/detail', 'get', stringify({ question_id }))
+
+export const api_acm_user_testing_submit_check = (request_id) => api_base('acm/user/testing/submit/check', 'get', stringify({ request_id }))
