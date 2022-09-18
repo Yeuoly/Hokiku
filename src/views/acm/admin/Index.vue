@@ -32,9 +32,6 @@ export default {
         navs : [{
             path : 'problem',
             text : '题目'
-        }, {
-            path : 'commits',
-            text : '提交记录'
         }],
         selected_link : 0
     }),

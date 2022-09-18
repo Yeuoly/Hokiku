@@ -199,6 +199,78 @@
                         <v-divider></v-divider>
                     </v-col>
                     <v-col :cols="12">
+                        题解（Writeup）：
+                        <v-btn @click="addWriteup" color="primary"> 添加 </v-btn>
+                    </v-col>
+                    <v-col :cols="12" v-if="problem.writeup.length == 0">
+                         <v-card flat>
+                            <v-card-title>
+                                <v-icon>mdi-alert-circle</v-icon> 提示
+                            </v-card-title>
+                            <v-card-text>
+                                暂无题解
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                    <v-col v-else :cols="12">
+                        <v-row>
+                            <v-col :cols="12">
+                                <v-tabs
+                                    v-model="problem.current_writeup"
+                                    grow
+                                    show-arrows
+                                >
+                                    <v-tab
+                                        v-for="(i, k) in problem.writeup"
+                                        :key="k"
+                                    >
+                                        题解{{ problem.writeup[k].id }}
+                                        <v-icon v-if="problem.writeup[k].syncing" style="color: green">
+                                            mdi-sync
+                                        </v-icon>
+                                        <v-icon v-else-if="problem.writeup[k].sync" style="color: green">
+                                            mdi-check
+                                        </v-icon>
+                                        <v-icon v-else style="color: red">
+                                            mdi-close
+                                        </v-icon>
+                                    </v-tab>
+                                </v-tabs>
+                            </v-col>
+                            <v-col :cols="12">
+                                <v-text-field 
+                                    v-model.number="problem.writeup[problem.current_writeup].price" 
+                                    label="价格"
+                                    @input="tempUpdateWriteup"
+                                >
+                                    <template v-slot:append>
+                                        CNY
+                                    </template>
+                                    <template v-slot:prepend>
+                                        <v-icon>mdi-currency-usd</v-icon>
+                                    </template>
+                                </v-text-field>
+                            </v-col>
+                            <v-col :cols="12" :sm="12" :md="12" :lg="6" :xl="6">
+                                <div class="px1">
+                                    <CodeEditor
+                                        :language="'markdown'"
+                                        v-model="problem.writeup[problem.current_writeup].content"
+                                        @input="tempUpdateWriteup"
+                                    ></CodeEditor>
+                                </div>
+                            </v-col>
+                            <v-col :cols="6" v-if="$vuetify.breakpoint.lgAndUp">
+                                <Markdown
+                                    :content="problem.writeup[problem.current_writeup].content"
+                                />
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                    <v-col :cols="12">
+                        <v-divider></v-divider>
+                    </v-col>
+                    <v-col :cols="12">
                         <v-btn color="primary" @click="submit"> 提交 </v-btn>
                     </v-col>
                 </v-row>
@@ -222,7 +294,8 @@ import { openErrorMessageBox } from '../../../concat/bus'
 
 import {
     api_acm_admin_question_create, api_acm_admin_question_edit, api_acm_admin_question_get,
-    api_acm_admin_testcase_create, api_acm_admin_testcase_list, api_acm_admin_testcase_delete, api_acm_admin_testcase_edit
+    api_acm_admin_testcase_create, api_acm_admin_testcase_list, api_acm_admin_testcase_delete, api_acm_admin_testcase_edit,
+    api_acm_admin_question_writeup_list, api_acm_admin_question_writeup_create, api_acm_admin_question_writeup_delete, api_acm_admin_question_writeup_edit,
 } from '../../../interface/api'
 
 export default {
@@ -243,7 +316,9 @@ export default {
             language : 'c',
             lazy_comment : '',
             testcase : [],
-            current_testcase : 0
+            writeup : [],
+            current_testcase : 0,
+            current_writeup : 0,
         },
         message_bar : false,
         message_content : '',
@@ -252,7 +327,7 @@ export default {
         difficulty : ['default', '有手就行', '简单', '中等', '难', '逆天'],
         problem_types : ['default', '字符串', '数学', '图论', '动态规划', '贪心', '数据结构', '搜索', '模拟', '其他'],
         update_timer : null,
-        testcase_update_timer : null,
+        thirdpart_update_timer : null,
         global_update_mutex : false,
     }),
     watch : {
@@ -273,6 +348,59 @@ export default {
         },
         tempUpdateTestcase() {
             this.problem.testcase[this.problem.current_testcase].sync = false
+        },
+        tempUpdateWriteup() {
+            console.log('temp update')
+            this.problem.writeup[this.problem.current_writeup].sync = false
+        },
+        async addWriteup() {
+            //check if current question has been created
+            if (this.current_question_id === 0) {
+                await this.submit()
+                if (this.current_question_id === 0) {
+                    return
+                }
+                this.snackMessage('创建题目成功')
+            }
+            let { data } = await api_acm_admin_question_writeup_create(this.current_question_id, '## ' + this.problem.title + ' 题解', 0)
+            if (data && data['res'] == 0){
+                const writeup = data['data']['writeup']
+                this.problem.writeup.push({
+                    id : writeup['id'],
+                    content : writeup['content'],
+                    price : writeup['price'],
+                })
+                this.problem.current_writeup = this.problem.writeup.length - 1
+                this.snackMessage('添加writeup成功')
+            } else {
+                openErrorMessageBox('错误', data ? data['err'] : '未知错误')
+            }
+        },
+        async delWriteup(writeup_id) {
+            let { data } = await api_acm_admin_question_writeup_delete(writeup_id)
+            if (data && data['res'] == 0){
+                this.problem.writeup.splice(this.problem.current_writeup, 1)
+                this.problem.current_writeup = 0
+                this.snackMessage('删除writeup成功')
+            } else {
+                openErrorMessageBox('错误', data ? data['err'] : '未知错误')
+            }
+        },
+        async updateWriteup(writeup_id) {
+            for (let i = 0; i < this.problem.writeup.length; i++) {
+                if (this.problem.writeup[i].id == writeup_id) {
+                    this.problem.writeup[i].syncing = true
+                    let { data } = await api_acm_admin_question_writeup_edit(writeup_id, this.problem.writeup[i].content, this.problem.writeup[i].price)
+                    if (data && data['res'] == 0){
+                        this.problem.writeup[i].sync = true
+                        this.snackMessage('更新writeup成功')
+                    } else {
+                        openErrorMessageBox('错误', data ? data['err'] : '未知错误')
+                    }
+                    this.problem.writeup[i].syncing = false
+                    break
+                }
+            }
         },
         async addTestcase () {
             //check if current question has been created
@@ -360,7 +488,7 @@ export default {
             }
             // update testcase
             for (let i = 0; i < this.problem.testcase.length; i++) {
-                if (!this.problem.testcase[i].sync) {
+                if (!this.problem.testcase[i].sync && this.problem.testcase[i].input != '' && this.problem.testcase[i].output != '') {
                     this.problem.testcase[i].syncing = true
                     const { data } = await api_acm_admin_testcase_edit(
                         this.problem.testcase[i].id,
@@ -410,11 +538,28 @@ export default {
                         input : v['input'],
                         output : v['output'],
                         public : (v['flag'] & 2) !== 2,
+                        sync : true,
+                        syncing : false,
+                    }
+                })
+            }
+
+            const { data : writeup_data } = await api_acm_admin_question_writeup_list(this.current_question_id)
+            if (!writeup_data || writeup_data['res'] != 0) {
+                openErrorMessageBox('错误', writeup_data ? writeup_data['err'] : '未知错误')
+                return
+            }
+            if (writeup_data['data']['writeups']) {
+                this.problem.writeup = writeup_data['data']['writeups'].map(v => {
+                    return {
+                        id : v['id'],
+                        content : v['content'],
+                        price : v['price'],
                         sync : true
                     }
                 })
             }
-        }
+        },
     },
     mounted() {
         //get current question id
@@ -427,13 +572,13 @@ export default {
             this.loadQuestion()
         }
 
-        this.testcase_update_timer = setInterval(async () => {
+        this.thirdpart_update_timer = setInterval(async () => {
             //walk through all testcase
             if (this.global_update_mutex) {
                 return
             }
             for (let i = 0; i < this.problem.testcase.length; i++) {
-                if (!this.problem.testcase[i].sync) {
+                if (!this.problem.testcase[i].sync && this.problem.testcase[i].input != '' && this.problem.testcase[i].output != '') {
                     //update testcase
                     this.problem.testcase[i].syncing = true
                     const { data } = await api_acm_admin_testcase_edit(
@@ -448,6 +593,13 @@ export default {
                         return
                     }
                     this.problem.testcase[i].sync = true
+                }
+            }
+            //walk through all writeup
+            for (let i = 0; i < this.problem.writeup.length; i++) {
+                if (!this.problem.writeup[i].sync && this.problem.writeup[i].content != '') {
+                    //update writeup
+                    this.updateWriteup(this.problem.writeup[i].id)
                 }
             }
         }, 2000)

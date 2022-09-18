@@ -23,6 +23,11 @@
                             color="error"
                             @click="deleteProblem(item.id)"
                         >删除</v-btn>
+                        <v-btn
+                            color="green"
+                            @click="to(`/acm/admin/commit/${item.id}`)"
+                            dark
+                        >查看提交</v-btn>
                     </template>
                 </v-data-table>
                 <v-pagination

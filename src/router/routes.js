@@ -49,6 +49,7 @@ const CompetitionGameDetail = () => import('../views/game/Detail.vue')
 const AcmIndex = () => import('../views/acm/Index.vue')
 const AcmAdminIndex = () => import('../views/acm/admin/Index.vue')
 const AcmAdminProblem = () => import('../views/acm/admin/Problem.vue')
+const AcmAdminCommits = () => import('../views/acm/admin/Commit.vue')
 const AcmAdminEditProblem = () => import('../views/acm/admin/EditProblem.vue')
 
 const AcmUserIndex = () => import('../views/acm/user/Index.vue')
@@ -223,6 +224,10 @@ const acm_pages = [{
         name : 'acm-admin-edit-problem',
         path : '/acm/admin/edit-problem/:pid',
         component : AcmAdminEditProblem
+    }, {
+        name : 'acm-admin-commit',
+        path : '/acm/admin/commit/:pid',
+        component : AcmAdminCommits
     }, {
         path : '/acm/admin/',
         redirect : '/acm/admin/problem'

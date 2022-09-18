@@ -352,6 +352,14 @@ export const api_acm_admin_testing_list_user = (user_id) => api_base('acm/admin/
 
 export const api_acm_admin_question_get = (question_id) => api_base('acm/admin/question/get', 'get', stringify({ question_id }))
 
+export const api_acm_admin_question_writeup_list = (question_id) => api_base('acm/admin/question/writeup/list', 'get', stringify({ question_id }))
+
+export const api_acm_admin_question_writeup_create = (question_id, content, price) => api_base('acm/admin/question/writeup/create', 'post', stringify({ question_id, content, price }))
+
+export const api_acm_admin_question_writeup_edit = (writeup_id, content, price) => api_base('acm/admin/question/writeup/edit', 'post', stringify({ writeup_id, content, price }))
+
+export const api_acm_admin_question_writeup_delete = (writeup_id) => api_base('acm/admin/question/writeup/delete', 'post', stringify({ writeup_id }))
+
 export const api_acm_user_question_list = (page, len) => api_base('acm/user/question/list', 'get', stringify({ page, len }))
 
 export const api_acm_user_testing_list = () => api_base('acm/user/testing/list', 'get')
@@ -365,3 +373,5 @@ export const api_acm_user_testing_list_question = (question_id) => api_base('acm
 export const api_acm_user_question_detail = (question_id) => api_base('acm/user/question/detail', 'get', stringify({ question_id }))
 
 export const api_acm_user_testing_submit_check = (request_id) => api_base('acm/user/testing/submit/check', 'get', stringify({ request_id }))
+
+export const api_acm_user_question_writeup_list = (question_id) => api_base('acm/user/question/writeup/list', 'get', stringify({ question_id }))

@@ -22,7 +22,7 @@
                             <v-icon v-if="question.language == 'c'">
                                 mdi-language-c
                             </v-icon>
-                            <v-icon v-if="question.language == 'cpp'">
+                            <v-icon v-if="question.language == 'c++'">
                                 mdi-language-cpp
                             </v-icon>
                             <v-icon v-if="question.language == 'java'">
@@ -106,9 +106,80 @@
                                 </v-card-text>
                             </v-card>
                         </div>
+                        <div v-else>
+                            <v-card flat>
+                                <v-card-title>
+                                    <v-icon>mdi-history</v-icon> 提交记录
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-simple-table>
+                                        <thead>
+                                            <tr>
+                                                <th>测试ID</th>
+                                                <th>提交时间</th>
+                                                <th>提交结果</th>
+                                                <th>通过率</th>
+                                                <th>占用内存</th>
+                                                <th>运行时间</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(i, k) in commits" :key="k">
+                                                <td>
+                                                    <v-chip color="primary" dark>{{ i.id }}</v-chip>
+                                                </td>
+                                                <td>
+                                                    {{ new Date(i.time * 1000).toLocaleString() }}
+                                                </td>
+                                                <td>
+                                                    <div v-if="i.status == 1">
+                                                        <v-chip color="grey" dark>未测试</v-chip>
+                                                    </div>
+                                                    <div v-else-if="i.status == 2">
+                                                        <v-progress-circular
+                                                            :size="20"
+                                                            :width="2"
+                                                            indeterminate
+                                                        ></v-progress-circular>
+                                                    </div>
+                                                    <div v-else-if="i.status == 3">
+                                                        <div v-if="i.err == 0">
+                                                            <v-chip color="green" v-if="i.pass == i.total_case" dark>通过</v-chip>
+                                                            <v-chip color="red" v-else dark>未通过</v-chip>
+                                                        </div>
+                                                        <div v-else>
+                                                            <v-chip v-if="i.err == 1" color="orange" dark>传输错误</v-chip>
+                                                            <v-chip v-if="i.err == 2" color="orange" dark>编译/运行错误</v-chip>
+                                                            <v-chip v-if="i.err == 3" color="orange" dark>编译/运行错误</v-chip>
+                                                            <v-chip v-if="i.err == 4" color="orange" dark>超时</v-chip>
+                                                            <v-chip v-if="i.err == 5" color="orange" dark>内存超限</v-chip>
+                                                            <v-chip v-if="i.err == 6" color="orange" dark>未知</v-chip>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {{ i.pass }} / {{ i.total_case }}
+                                                </td>
+                                                <td>
+                                                    {{ i.exe_mem / 1024}} KB
+                                                </td>
+                                                <td>
+                                                    {{ i.exe_time / 1000000 }} ms
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </v-simple-table>
+                                </v-card-text>
+                            </v-card>
+                        </div>
                     </v-col>
                     <v-col :cols="12">
-                        <v-btn color="primary">提交</v-btn>
+                        <v-btn color="primary" @click="submit">
+                            <v-icon>
+                                mdi-send
+                            </v-icon>
+                            提交测试
+                            </v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -122,7 +193,9 @@ import CodeEditor from '../../../components/common/CodeEditor.vue'
 import { openErrorMessageBox } from '../../../concat/bus'
 
 import {
-    api_acm_user_question_detail
+    api_acm_user_question_detail,
+    api_acm_user_testing_submit,
+    api_acm_user_testing_submit_check,
 } from '../../../interface/api'
 
 export default {
@@ -178,7 +251,43 @@ export default {
                 this.question.memory_limit = question['memory_limit']
                 this.question.author = question['author']
                 this.question.language = question['target_language']
+
                 this.testcases = data['data']['testcases']
+                this.commits = data['data']['testings']
+            } else {
+                openErrorMessageBox('错误', data ? data['err'] : '未知错误')
+            }
+        },
+        async submit() {
+            const { data } = await api_acm_user_testing_submit(this.current_question_id, this.code, this.question.language)
+            if (data && data['res'] == 0) {
+                const response_id = data['data']['response_id']
+                let check = false
+                this.commits = [{
+                    id : 0,
+                    time : Math.floor(Date.now() / 1000),
+                    status : 2,
+                    pass : 0,
+                    total_case : 0,
+                    exe_mem : 0,
+                    exe_time : 0,
+                    err : 0
+                }, ...this.commits]
+                while(!check) {
+                    const { data : check_data } = await api_acm_user_testing_submit_check(response_id)
+                    if (check_data && check_data['res'] == 0) {
+                        const _continue = check_data['data']['continue']
+                        if (_continue) {
+                            await new Promise(resolve => setTimeout(resolve, 1000))
+                        } else {
+                            check = true
+                        }
+                    } else {
+                        openErrorMessageBox('错误', check_data ? check_data['err'] + '，若未引发关键错误，后台将继续测试' : '未知错误，若未引发关键错误，后台将继续测试')
+                        check = true
+                    }
+                }
+                this.loadQuestion()
             } else {
                 openErrorMessageBox('错误', data ? data['err'] : '未知错误')
             }
