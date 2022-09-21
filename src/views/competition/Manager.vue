@@ -71,7 +71,7 @@
                         v-model="new_train.image"
                     ></v-text-field>
                     <v-text-field
-                        label="备注"
+                        label="描述"
                         v-model="new_train.comment"
                     ></v-text-field>
                     <v-text-field
@@ -133,6 +133,22 @@
                         v-model="new_train.tag_text"
                         @keypress.enter="appendTag"
                     ></v-text-field>
+                    <v-row>
+                        <v-col :cols="12" class="text-grey">
+                            附件：
+                        </v-col>
+                        <v-col :cols="3" v-for="(i, k) in new_train.attachments" :key="k">
+                            <v-card color="green" dark :title="i.r_resource.extra" class="clickable">
+                                <v-card-title>
+                                    <!-- final 10 chars -->
+                                    {{ i.r_resource.extra.substr(-12) }}
+                                </v-card-title>
+                            </v-card>
+                        </v-col>
+                        <v-col :cols="2">
+                            <UploadAttachment :size="32" @change="hookUploadAttachment" v-model="new_train.tmp_attchement_rid" />
+                        </v-col>
+                    </v-row>
                     <v-radio-group
                         row
                         v-model="new_train.type"
@@ -190,10 +206,15 @@ import {
     api_docker_image_get, 
     api_docker_image_insert, 
     api_docker_image_insert_check,
-    api_competition_train_tag_create 
+    api_competition_train_tag_create, 
+    api_competition_train_attachemnt_list,
+    api_competition_train_attachemnt_upload
 } from '../../interface/api'
 import { isFlagDynamic, sleep } from '../../util'
+import UploadAttachment from '../../components/common/UploadAttachment.vue'
+
 export default {
+    components : { UploadAttachment },
     data : () => ({
         headers_train : [{
             text : 'ID',
@@ -261,7 +282,9 @@ export default {
             flag_path: '',
             flag_type: 1,
             tags : [],
-            tag_text : ''
+            tag_text : '',
+            attachments : [],
+            tmp_attchement_rid : 0,
         },
         new_image : {
             open : false,
@@ -329,6 +352,30 @@ export default {
             this.new_train.flag_path = item.flag_path
             this.new_train.flag_type = item.flag_type
             this.new_train.tags = item.r_tags
+            this.loadAttchments(item.id)
+        },
+        async loadAttchments(id) {
+            //load attachments
+            const { data } = await api_competition_train_attachemnt_list(id)
+            if (data && data['res'] == 0) {
+                if (data['data'] != null) {
+                    this.new_train.attachments = data['data']
+                }
+            } else {
+                openErrorMessageBox('错误', data ? data['err'] : '网络错误')
+            }
+        },
+        async uploadAttchment(train_id, rid) {
+            const { data } = await api_competition_train_attachemnt_upload(train_id, rid)
+            if (data && data['res'] == 0) {
+                this.loadAttchments(train_id)
+            } else {
+                openErrorMessageBox('错误', data ? data['err'] : '网络错误')
+            }
+            this.new_train.tmp_attchement_rid = 0
+        },
+        hookUploadAttachment(rid) {
+            this.uploadAttchment(this.new_train.train_id, rid)
         },
         async deleteTrain(item){
             const result = await openInfoMessageBox('提示', '您确定要删除吗')

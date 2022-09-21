@@ -114,6 +114,12 @@ export const api_competition_train_solved_user = id => api_base('comp/train/solv
 
 export const api_competition_train_user_solved = uid => api_base('comp/train/solved/user', 'get', stringify({ uid }))
 
+export const api_competition_train_attachemnt_upload = (train_id, rid) => api_base('comp/train/attachment/upload', 'post', stringify({ train_id, rid }))
+
+export const api_competition_train_attachemnt_list = train_id => api_base('comp/train/attachment/list', 'get', stringify({ train_id }))
+
+export const api_competition_train_attachemnt_delete = attchment_id => api_base('comp/train/attachment/delete', 'post', stringify({ attchment_id }))
+
 export const api_organization_accept_apply = mid => api_base('org/apply/join/accept', 'post', stringify({ mid }))
 
 export const api_organization_reject_apply = mid => api_base('org/apply/join/reject', 'post', stringify({ mid }))

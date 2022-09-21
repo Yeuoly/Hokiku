@@ -34,6 +34,7 @@
                                             v-model="keyword"
                                             dense
                                             outlined
+                                            @keypress.enter="startSearch"
                                         >
                                             <template slot="append">
                                                 <v-btn
@@ -127,6 +128,18 @@
                         <v-card-text>
                             备注：{{ trains[current_index].comment }}
                         </v-card-text>
+                        <v-card-text>
+                            <v-row>
+                                <v-col :cols="3" v-for="(i, k) in attachments" :key="k">
+                                    <v-card color="green" dark :title="i.r_resource.extra" class="clickable" @click="downloadAttachment(i.r_resource.extra)">
+                                        <v-card-text>
+                                            <!-- final 10 chars -->
+                                            附件{{k + 1}}
+                                        </v-card-text>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
                         <v-text-field
                             class="px5"
                             label="flag"
@@ -213,7 +226,8 @@ import {
     api_competition_train_status,
     api_competition_train_tag_search,
     api_competition_train_wp_list,
-    api_competition_train_wp_get
+    api_competition_train_wp_get,
+    api_competition_train_attachemnt_list
 } from '../../interface/api'
 import { loadCompetitions } from '../../store/index'
 import { sleep } from '../../util'
@@ -265,9 +279,22 @@ export default {
             id : 0,
             content : '',
             type : 0
-        }
+        },
+        attachments : []
     }),
     methods : {
+        async loadAttachments(train_id) {
+            const { data } = await api_competition_train_attachemnt_list(train_id)
+            if(data && data['res'] == 0) {
+                if (data['data'] != null ){
+                    this.attachments = data['data']
+                } else {
+                    this.attachments = []
+                }
+            }else {
+                openErrorMessageBox('错误', data ? data['err'] : '未知错误')
+            }
+        },
         toSolvedList() {
             this.$router.push(`/competition/train/solved/${this.trains[this.current_index].id}`)
         },
@@ -283,6 +310,8 @@ export default {
             this.current_index = index
             if (this.tab == 1) {
                 this.loadWpList()
+            } else {
+                this.loadAttachments(this.trains[index].id)
             }
         },
         openWp(id) {
@@ -403,6 +432,9 @@ export default {
                     this.wp_dialog.type = data['data']['r_rich_content']['type']
                 }
             }
+        },
+        downloadAttachment(url) {
+            window.open(url)
         },
         startSearch() {
             this.searching = true

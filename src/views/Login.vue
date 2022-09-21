@@ -25,6 +25,7 @@
                                     v-model="user.password"
                                     :counter="64"
                                     label="密码"
+                                    @keypress.enter="login"
                                     required
                                     :rules="regx.password"
                                 ></v-text-field>
@@ -33,6 +34,7 @@
                                     v-model="captcha"
                                     :counter="64"
                                     label="数学验证码"
+                                    @keypress.enter="login"
                                     required
                                     :rules="regx.captcha"
                                 >

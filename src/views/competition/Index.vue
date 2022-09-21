@@ -195,7 +195,7 @@ export default {
                     this.statistics_indicator.forEach(e => { e.max = max })
                 }
             }
-        }
+        },
     },
     mounted(){
         this.getScore()

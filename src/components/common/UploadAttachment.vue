@@ -1,12 +1,12 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="4" v-if="src">
+            <v-col v-if="src && id">
                 <v-icon @click="upload">mdi-clipboard-file-outline</v-icon>
             </v-col>
-            <v-col cols="4" v-else>
+            <v-col  v-else>
                 <v-btn icon @click="upload">
-                    <v-icon>mdi-upload</v-icon>
+                    <v-icon :style="{fontSize:size + 'px'}">mdi-plus</v-icon>
                 </v-btn>
             </v-col>
         </v-row>
@@ -18,7 +18,16 @@
 import { openErrorMessageBox } from '../../concat/bus'
 import { api_resource_upload_any } from '../../interface/api'
 export default {
-    props : ['height'],
+    props : {
+        size : {
+            type : Number,
+            default : 24
+        },
+        id : {
+            type : Number,
+            default : 0
+        },
+    },
     data : () => ({
         src : ''
     }),
