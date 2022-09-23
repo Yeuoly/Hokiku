@@ -155,8 +155,8 @@
                         <v-card-text v-show="launching">
                             容器近期初次启动可能较慢
                         </v-card-text>
-                        <v-card-text v-if="tm_info.port != 0">
-                            地址：iotshield.srmxy.cn:{{ tm_info.port }}
+                        <v-card-text v-if="tm_info.host_port != ''">
+                            地址：:{{ tm_info.host_port }}
                         </v-card-text>
                         <v-card-text v-if="tm_info.remainder != 0">
                             当前靶机剩余时间：{{ tm_info.remainder }}秒左右
@@ -166,8 +166,8 @@
                             indeterminate
                             color="cyan"
                         ></v-progress-linear>
-                        <v-btn @click="run" :disabled="tm_info.port != 0">启动</v-btn>
-                        <v-btn @click="shutdown" :disabled="tm_info.port == 0" type="error">关闭</v-btn>
+                        <v-btn @click="run" :disabled="tm_info.host_port != ''">启动</v-btn>
+                        <v-btn @click="shutdown" :disabled="tm_info.host_port == ''" type="error">关闭</v-btn>
                         <v-btn @click="toSolvedList">查看排行榜</v-btn>
                         <v-btn @click="toNote">编写笔记</v-btn>
                     </v-card>
@@ -263,7 +263,7 @@ export default {
         launching : false,
         slow : false,
         tm_info : {
-            port : 0,
+            host_port : '',
             remainder : 0
         },
         timer : 0,
@@ -326,7 +326,7 @@ export default {
                     openErrorMessageBox('错误', data['err'])
                 }else{
                     openInfoMessageBox('成功', '靶机已关闭')
-                    this.tm_info.port = 0
+                    this.tm_info.host_port = ''
                     this.tm_info.remainder = 0
                 }
             }
@@ -362,7 +362,7 @@ export default {
                         const { data } = await api_competition_train_start_check(request_id)
                         if(data && data['data'] != 0){
                             finish = true
-                            this.tm_info.port = data['data']['port']
+                            this.tm_info.host_port = data['data']['host_port']
                             this.tm_info.remainder = 3600
                         }
                     }
@@ -397,7 +397,7 @@ export default {
         async init(){
             const { data } = await api_competition_train_status()
             if(data && data['res'] == 0){
-                this.tm_info.port = data['data']['port']
+                this.tm_info.host_port = data['data']['host_port']
                 this.tm_info.remainder = data['data']['remainder']
             }
         },

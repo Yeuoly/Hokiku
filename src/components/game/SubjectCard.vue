@@ -53,7 +53,7 @@
                 <v-card-text>
                     靶机状态：{{ status.status ? '运行中' : '已关闭' }}
                     <div v-if="status.status">
-                        靶机地址：iotshield.srmxy.cn:{{ status.port }} <br>
+                        靶机地址：{{ status.host_port }} <br>
                         靶机剩余时间：{{ status.remainder }}秒左右 <br>
                         当前靶机：{{ status.current_subject.title }}
                     </div>
@@ -114,7 +114,7 @@ export default {
         },
         status : {
             status : 0,
-            port : 0,
+            host_port : '',
             remainder : 0,
             launching : false,
             timer : null,
@@ -178,7 +178,7 @@ export default {
             } else {
                 if (data['data'] != null) {
                     this.status.status = true
-                    this.status.port = data['data']['port']
+                    this.status.host_port = data['data']['host_port']
                     this.status.remainder = data['data']['max_duration'] - data['data']['duration']
                     this.status.current_subject.title = data['data']['r_subject']['title']
                     if (this.status.timer) {
@@ -193,7 +193,7 @@ export default {
                     }, 1000)
                 } else {
                     this.status.status = false
-                    this.status.port = 0
+                    this.status.host_port = ''
                     this.status.remainder = 0
                     this.status.current_subject.title = ''
                 }

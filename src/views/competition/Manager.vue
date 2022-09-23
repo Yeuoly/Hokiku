@@ -505,7 +505,8 @@ export default {
             this.new_train.type = 0
             this.new_train.dynamic_flag = false
             this.new_train.open = true
-            this.new_train.tags = []
+            this.new_train.tags = [],
+            this.new_train.attachments = []
         },
         openAddImageDialog(){
             this.new_image.name = ''
