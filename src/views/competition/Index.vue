@@ -118,7 +118,7 @@ export default {
         navs : [{
             text : '比赛',
             path : 'game',
-            sa : true
+            sa : false
         }, {
             text : '我的',
             path : 'home',

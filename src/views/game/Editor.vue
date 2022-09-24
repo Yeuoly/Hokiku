@@ -159,6 +159,22 @@
                         v-model="dialog.edit_subject_hint"
                         label="提示"
                     ></v-text-field>
+                    <v-row>
+                        <v-col :cols="12" class="text-grey">
+                            附件：
+                        </v-col>
+                        <v-col :cols="3" v-for="(i, k) in dialog.edit_subject_attachments" :key="k">
+                            <v-card color="green" dark :title="i.r_resource.extra" class="clickable">
+                                <v-card-title>
+                                    <!-- final 10 chars -->
+                                    {{ i.r_resource.extra.substr(-12) }}
+                                </v-card-title>
+                            </v-card>
+                        </v-col>
+                        <v-col :cols="2">
+                            <UploadAttachment :size="32" @change="hookUploadAttachment" v-model="dialog.tmp_attchement_rid" />
+                        </v-col>
+                    </v-row>
                     <v-radio-group
                         row
                         v-model="dialog.edit_subject_type"
@@ -185,12 +201,15 @@ import {
     api_competition_game_subject_admin_create,
     api_competition_game_subject_admin_update,
     api_competition_game_subject_admin_delete,
+    api_competition_game_attachemnt_list,
+    api_competition_game_attachemnt_upload,
 } from '../../interface/api'
 import CodeEditor from '../../components/common/CodeEditor'
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
+import UploadAttachment from '../../components/common/UploadAttachment.vue'
 
 export default {
-    components : { CodeEditor },
+    components : { CodeEditor, UploadAttachment },
     computed : {
         subject_start_time () {
             return parseInt(new Date(this.dialog.edit_subject_start_date + ' ' + this.dialog.edit_subject_start_time).getTime() / 1000)
@@ -244,7 +263,9 @@ export default {
             edit_subject_is_dynamic : false,
             edit_subject_start_date : '',
             edit_subject_start_time : '',
-            edit_subject_hint : ''
+            edit_subject_hint : '',
+            edit_subject_attachments : [],
+            tmp_attchement_rid : 0
         },
         subject_types : ['DEFAULT', 'WEB', 'PWN', 'MISC', 'REVERSE', 'CRYPTO', 'MOBILE'],
         flag_types: ['DEFAULT', '文件flag', '模板指令', '环境变量'],
@@ -317,6 +338,7 @@ export default {
             this.dialog.edit_subject_start_time = start_time.split(' ')[1]
             this.dialog.edit_subject_hint = subject['hint']
             this.dialog.edit_subject_image = subject['image']
+            this.loadAttachments()
         },
         commitSubject() {
             if (this.dialog.is_new) {
@@ -325,8 +347,29 @@ export default {
                 this.updateSubject()
             }
         },
+        async loadAttachments() {
+            const { data } = await api_competition_game_attachemnt_list(this.dialog.edit_subject_id)
+            if (!data) {
+                openErrorMessageBox('错误', '网络错误')
+            } else {
+                if (data['data'] != null) {
+                    this.dialog.edit_subject_attachments = data['data']
+                }
+            }
+        },
+        async uploadAttchment(train_id, rid) {
+            const { data } = await api_competition_game_attachemnt_upload(train_id, rid)
+            if (data && data['res'] == 0) {
+                this.loadAttachments()
+            } else {
+                openErrorMessageBox('错误', data ? data['err'] : '网络错误')
+            }
+            this.dialog.tmp_attchement_rid = 0
+        },
+        hookUploadAttachment(rid) {
+            this.uploadAttchment(this.dialog.edit_subject_id, rid)
+        },
         async createSubject() {
-            console.log(123321)
             const { data } = await api_competition_game_subject_admin_create(
                 this.dialog.edit_subject_image,
                 this.dialog.edit_subject_comment,

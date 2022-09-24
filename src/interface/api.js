@@ -296,6 +296,12 @@ export const api_competition_game_subject_commit_flag = (subject_id, flag) => ap
 
 export const api_competition_game_rank = competition_id => api_base('comp/game/rank', 'get', stringify({ competition_id }))
 
+export const api_competition_game_attachemnt_upload = (subject_id, rid) => api_base('comp/game/attachment/upload', 'post', stringify({ subject_id, rid }))
+
+export const api_competition_game_attachemnt_list = subject_id => api_base('comp/game/attachment/list', 'get', stringify({ subject_id }))
+
+export const api_competition_game_attachemnt_delete = attchment_id => api_base('comp/game/attachment/delete', 'post', stringify({ attchment_id }))
+
 export const api_competition_train_tag_create = tag => api_base('comp/train/tag/create', 'post', stringify({ tag }))
 
 export const api_competition_train_tag_search = (tag, page, size) => api_base('comp/train/tag/search', 'get', stringify({ tag, page, size }))

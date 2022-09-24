@@ -380,7 +380,7 @@ export default [{
     meta : {
         inNav : true,
         icon : 'mdi-microsoft-visual-studio-code',
-        title : 'ACM(Algorithm Contest)',
+        title : 'OJ(Open Judge)',
         required : {
             online : true
         }

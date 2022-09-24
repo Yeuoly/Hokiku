@@ -21,14 +21,24 @@
     </v-card>
     <v-dialog v-model="dialog.show" max-width="800">
         <v-card>
-            <v-toolbar color="primary">
-                <v-toolbar-title class="text-white">
-                    {{ title }}
-                </v-toolbar-title>
-            </v-toolbar>
             <div class="py2 px2">
+                <v-card-title>
+                        {{ title }}
+                </v-card-title>
                 <v-card-text>
-                    {{ comment }}
+                    题目描述：{{ comment }}
+                </v-card-text>
+                <v-card-text>
+                    <v-row>
+                        <v-col :cols="3" v-for="(i, k) in attachments" :key="k">
+                            <v-card color="green" dark :title="i.r_resource.extra" class="clickable" @click="downloadAttachment(i.r_resource.extra)">
+                                <v-card-text>
+                                    <!-- final 10 chars -->
+                                    附件{{k + 1}}
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
                 <v-text-field
                     class="px5"
@@ -71,7 +81,8 @@ import {
     api_competition_game_subject_launch,
     api_competition_game_subject_stop,
     api_competition_game_subject_request_result,
-    api_competition_game_subject_commit_flag
+    api_competition_game_subject_commit_flag,
+    api_competition_game_attachemnt_list
 } from '../../interface/api'
 import { sleep } from '../../util'
 
@@ -122,6 +133,7 @@ export default {
                 title : ''
             }
         },
+        attachments : [],
         flag : ''
     }),
     methods : {
@@ -199,9 +211,18 @@ export default {
                 }
             }
         },
+        async loadAttachments() {
+            const { data } = await api_competition_game_attachemnt_list(this.subject_id)
+            if (!data) {
+                openErrorMessageBox('错误', '网络错误')
+            } else {
+                this.attachments = data['data']
+            }
+        },
         openDialog() {
             this.dialog.show = true
             this.loadStatus()
+            this.loadAttachments()
         },
         async commit() {
             const { data } = await api_competition_game_subject_commit_flag(this.subject_id, this.flag)
@@ -214,7 +235,10 @@ export default {
                     openInfoMessageBox('成功', 'flag正确')
                 }
             }
-        }
+        },
+        downloadAttachment(url) {
+            window.open(url)
+        },
     }
 }
 </script>
