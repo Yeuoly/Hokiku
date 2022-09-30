@@ -42,7 +42,7 @@
                                         7. 请在竞赛结束后，请将writeup（详细解题过程）以PDF或者WORD的形式在24小时内提交至邮箱admin@srmxy.cn，附件命名为【参赛ID WRITEUP】.docx/pdf，我们会审核writeup，如果writeup质量较高，我们会给予积分奖励，对于不合格的writeup，我们会取消比赛资格。 <br>
                                         8. 在比赛结束24小时后，我们会公布答案，以供大家学习。 <br>
                                         9. 对于排名靠前或者writeup质量较高、某一方向突出的选手，我们会给予积分奖励。 <br>
-                                        10. 因为是动态积分制，希望大家积极参与，积极解题，积极交流，积极分享。 <br>
+                                        10. 因为是动态积分制，希望大家积极参与，积极解题，赛后积极交流，积极分享。 <br>
                                     </div>
                                 </v-card-text>
                             </v-col>
@@ -78,9 +78,25 @@
                             v-for="item in subjects_tabs"
                             :key="item"
                         >
-                            <v-row class="px2 pt5" v-if="item != 'RANK'"> 
+                            <v-row class="px2 pt5" v-if="item != 'RANK' && item != 'ALL'"> 
                                 <v-col md="3" lg="3" xl="2" sm="2" 
                                     v-for="i in subjects[item]" 
+                                    :key="i.id"
+                                >
+                                    <SubjectCard
+                                        :title="i.title"
+                                        :comment="i.comment"
+                                        :resolved="i.r_resolved != null"
+                                        :resolves="i.resolved"
+                                        :origin_score="i.origin_score"
+                                        :subject_id="i.id"
+                                        :competition_id="competition.id"
+                                    />
+                                </v-col>
+                            </v-row>
+                            <v-row class="px2 pt5" v-else-if="item == 'ALL'">
+                                <v-col md="3" lg="3" xl="2" sm="2" 
+                                    v-for="i in all_subjects" 
                                     :key="i.id"
                                 >
                                     <SubjectCard
@@ -140,6 +156,7 @@ export default {
         },
         subjects_tabs : [],
         subjects : {},
+        all_subjects : [],
         subject_types : ['DEFAULT', 'WEB', 'PWN', 'MISC', 'REVERSE', 'CRYPTO', 'MOBILE'],
         subject_tab : 0,
         rank_header : [],
@@ -231,7 +248,9 @@ export default {
                         value : 'score'
                     }]
                     this.subjects_tabs = []
+                    this.subjects_tabs.push('ALL')
                     this.subjects = {}
+                    this.all_subjects = data['data']
                     data['data'].map(v => {
                         const type = this.getSubjectType(v['type'])
                         if (!this.subjects_tabs.includes(type)) {

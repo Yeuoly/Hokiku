@@ -61,6 +61,11 @@ const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
 const KnowledgePublic = () => import('../views/knowledge/Public.vue')
 const KnowledgeCourse = () => import('../views/knowledge/Course.vue')
 
+const ToolsIndex = () => import('../views/tools/Index.vue')
+const ToolsRoutes = () => import('../views/tools/Routes.vue')
+const ToolsKurumi = () => import('../views/tools/Kurumi.vue')
+const ToolsBaseSerial = () => import('../views/tools/BaseSerial.vue')
+
 const admin_pages = [{
     name : 'admin-course',
     path : '/admin/course',
@@ -254,6 +259,23 @@ const acm_pages = [{
         }]
 }, ]
 
+const tools_pages = [{
+    name : 'tools-routes',
+    path : '/tools/routes',
+    component : ToolsRoutes
+}, {
+    name : 'tools-kurumi',
+    path : '/tools/kurumi',
+    component : ToolsKurumi
+}, {
+    name : 'tools-baseserial',
+    path : '/tools/baseserial',
+    component : ToolsBaseSerial
+}, {
+    path : '/tools/',
+    redirect : '/tools/routes'
+}]
+
 export default [{
     name : 'home',
     path : '/home',
@@ -386,7 +408,20 @@ export default [{
         }
     },
     children : acm_pages
-},{
+}, {
+    name : '安全工具',
+    path : '/tools',
+    component : ToolsIndex,
+    meta : {
+        inNav : true,
+        icon : 'mdi-security',
+        title : '安全工具',
+        required : {
+            online : true
+        }
+    },
+    children : tools_pages
+}, {
     name : 'knowledge',
     path : '/knowledge',
     component : Knowledge,

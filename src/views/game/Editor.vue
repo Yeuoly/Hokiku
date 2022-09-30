@@ -40,6 +40,7 @@
                 >删除</v-btn>
             </template>
         </v-data-table>
+        <v-btn @click="publish_message_dialog.open = true" color="primary">发布比赛动态</v-btn>
         <v-dialog v-model="dialog.open" max-width="800">
             <v-card>
                 <v-toolbar color="primary">
@@ -190,6 +191,14 @@
                 </div>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="publish_message_dialog.open" width="600">
+            <v-card>
+                <v-card-text>
+                    <v-textarea v-model="publish_message_dialog.message"></v-textarea>
+                    <v-btn color="primary" @click="publishMessage">发布</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -203,6 +212,7 @@ import {
     api_competition_game_subject_admin_delete,
     api_competition_game_attachemnt_list,
     api_competition_game_attachemnt_upload,
+    api_competition_game_message_publish,
 } from '../../interface/api'
 import CodeEditor from '../../components/common/CodeEditor'
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
@@ -267,6 +277,10 @@ export default {
             edit_subject_attachments : [],
             tmp_attchement_rid : 0
         },
+        publish_message_dialog : {
+            open : false,
+            message : ''
+        },
         subject_types : ['DEFAULT', 'WEB', 'PWN', 'MISC', 'REVERSE', 'CRYPTO', 'MOBILE'],
         flag_types: ['DEFAULT', '文件flag', '模板指令', '环境变量'],
     }),
@@ -299,6 +313,19 @@ export default {
                     openErrorMessageBox('错误', data['err'])
                 } else {
                     openInfoMessageBox('成功', '提交成功')
+                }
+            }
+        },
+        async publishMessage() {
+            const { data } = await api_competition_game_message_publish(this.competition_id, this.publish_message_dialog.message)
+            if (!data) {
+                openErrorMessageBox('错误', '网络错误')
+            } else {
+                if (data['res'] != 0) {
+                    openErrorMessageBox('错误', data['err'])
+                } else {
+                    openInfoMessageBox('成功', '发布成功')
+                    this.publish_message_dialog.message = ''
                 }
             }
         },

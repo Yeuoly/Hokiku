@@ -242,6 +242,30 @@ export const api_resource_upload_stream = (id, file) => new Promise(resolve => {
 
 export const api_resource_upload_stream_end = id => api_base('resource/upload/stream/end', 'post', stringify({ id }))
 
+export const api_tools_shell_list = () => api_base('tools/shell/list', 'get', '')
+
+export const api_tools_shell_apply = (method, mixer, anti_debugger, file) => new Promise(resolve => {
+    (async function(){
+        const form_data = new FormData()
+        form_data.append('file', file, file.name)
+        form_data.append('method', method)
+        form_data.append('mixer', mixer)
+        form_data.append('anti_debugger', anti_debugger)
+        try{
+            const data = await axios.post('tools/shell/apply', form_data, {
+                headers: {
+                    'Start-Dash': getAuthToken()
+                }
+            })
+            resolve(typeof data === 'string' ? false : data)
+        }catch(e){
+            resolve(false)
+        }
+    })()
+})
+
+export const api_tools_shell_check = response_id => api_base('tools/shell/check', 'get', stringify({ response_id }))
+
 export const api_user_profile = () => api_base('user/profile', 'get', '')
 
 export const api_course_update_unit = (id, cover_rid, media_rid, ppt_rid, name) => api_base('course/unit/update', 'post', stringify({
@@ -301,6 +325,8 @@ export const api_competition_game_attachemnt_upload = (subject_id, rid) => api_b
 export const api_competition_game_attachemnt_list = subject_id => api_base('comp/game/attachment/list', 'get', stringify({ subject_id }))
 
 export const api_competition_game_attachemnt_delete = attchment_id => api_base('comp/game/attachment/delete', 'post', stringify({ attchment_id }))
+
+export const api_competition_game_message_publish = (game_id, message) => api_base('comp/game/message/push', 'post', stringify({ game_id, message }))
 
 export const api_competition_train_tag_create = tag => api_base('comp/train/tag/create', 'post', stringify({ tag }))
 
@@ -387,3 +413,24 @@ export const api_acm_user_question_detail = (question_id) => api_base('acm/user/
 export const api_acm_user_testing_submit_check = (request_id) => api_base('acm/user/testing/submit/check', 'get', stringify({ request_id }))
 
 export const api_acm_user_question_writeup_list = (question_id) => api_base('acm/user/question/writeup/list', 'get', stringify({ question_id }))
+
+export const api_tmpfile_download = token => {
+    //download a file through axios with token in url and START-DASH in header
+    return axios({
+        url: '/tmpfile/download?token=' + token,
+        method: 'GET',
+        responseType: 'blob',
+        headers: {
+            'START-DASH': getAuthToken(),
+        },
+    }).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'file');
+        document.body.appendChild(link);
+        link.click();
+        //remove the link after download
+        link.parentNode.removeChild(link);
+    })
+}
