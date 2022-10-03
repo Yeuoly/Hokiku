@@ -74,6 +74,21 @@ export default {
                 name: '莫斯电码',
                 path: '/tools/morse'
             }]
+        }, {
+            module : 'en/encrypt',
+            name : '加密解密',
+            comment : '一些常见的加密解密操作，当然，需要不断完善',
+            sub : [{
+                name : 'Rot系列编/解码（凯撒）',
+                path : '/tools/rot'
+            }, {
+                name : '维吉尼亚密码',
+                path : '/tools/vigenere'
+            }]
+            // }, {
+            //     name : '仿射密码',
+            //     path : '/tools/affine'
+            // }]
         }]
     }),
     methods :{

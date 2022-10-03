@@ -69,6 +69,7 @@ const ToolsHex = () => import('../views/tools/Hex.vue')
 const Tools01 = () => import('../views/tools/01.vue')
 const ToolsUrl = () => import('../views/tools/Url.vue')
 const ToolsMorse = () => import('../views/tools/Morse.vue')
+const ToolsVigenere = () => import('../views/tools/Vigenere.vue')
 
 const admin_pages = [{
     name : 'admin-course',
@@ -291,6 +292,18 @@ const tools_pages = [{
     name : 'tools-morse',
     path : '/tools/morse',
     component : ToolsMorse
+}, {
+    name : 'tools-vigenere',
+    path : '/tools/vigenere',
+    component : ToolsVigenere
+}, {
+    name : 'tools-rot',
+    path : '/tools/rot',
+    component : () => import('../views/tools/Rot.vue')
+}, {
+    name : 'tools-affine',
+    path : '/tools/affine',
+    component : () => import('../views/tools/Affine.vue')
 }, {
     path : '/tools/',
     redirect : '/tools/routes'
