@@ -117,6 +117,9 @@
                                         :headers="rank_header"
                                         calculate-widths
                                         :items="rank"
+                                        :items-per-page="100"
+                                        :server-items-length="99999999"
+                                        hide-default-footer
                                     >
                                     </v-data-table>
                                 </v-col>
@@ -270,7 +273,7 @@ export default {
             }
         },
         async loadRank() {
-            const { data } = await api_competition_game_rank(this.competition_id)
+            const { data } = await api_competition_game_rank(this.competition_id, 1, 100)
             if (!data) {
                 openErrorMessageBox('错误', '网络错误')
             } else {

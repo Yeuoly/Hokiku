@@ -318,7 +318,7 @@ export const api_competition_game_subject_request_result = request_id => api_bas
 
 export const api_competition_game_subject_commit_flag = (subject_id, flag) => api_base('comp/game/subject/commit-flag', 'post', stringify({ subject_id, flag }))
 
-export const api_competition_game_rank = competition_id => api_base('comp/game/rank', 'get', stringify({ competition_id }))
+export const api_competition_game_rank = (competition_id, page, page_size) => api_base('comp/game/rank', 'get', stringify({ competition_id, page, page_size }))
 
 export const api_competition_game_attachemnt_upload = (subject_id, rid) => api_base('comp/game/attachment/upload', 'post', stringify({ subject_id, rid }))
 
