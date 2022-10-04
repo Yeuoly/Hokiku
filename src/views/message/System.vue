@@ -57,6 +57,7 @@
                                 <strong v-else-if="i.r_info.r_change.from === 1">系统</strong>
                                 <strong v-else-if="i.r_info.r_change.from === 2">微信</strong>
                                 <strong v-else-if="i.r_info.r_change.from === 3">支付宝</strong>
+                                <strong v-else-if="i.r_info.r_change.from === 4">签到</strong>
                                 ，变动时间 <strong>{{ new Date(i.r_info.r_change.time * 1000).formatDate('Y-M-D h:m:s') }}</strong>
                             </v-card>
                         </v-col>

@@ -34,7 +34,23 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        
+        <v-snackbar
+            timeout="3000"
+            v-model="snackbar"
+            :color="snackbar_color"
+        >
+            {{ snackbar_text }}
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                dark
+                text
+                v-bind="attrs"
+                @click="snackbar = false"
+                >
+                Close
+                </v-btn>
+            </template>
+        </v-snackbar>
         <v-slide-y-transition mode="out-in">
             <router-view></router-view>
         </v-slide-y-transition>
@@ -53,7 +69,10 @@ export default {
         btn1 : '',
         color : '',
         btncb : null,
-        status : 0
+        status : 0,
+        snackbar: false,
+        snackbar_text : '',
+        snackbar_color : 'info'
     }),
     computed : {
         style(){
@@ -93,6 +112,12 @@ export default {
             this.content = content
             this.btn1 = btn1 || '确定'
             this.dialog = true
+        })
+
+        ui_trans_bus.$on('open-snackbar', (text, color) => {
+            this.snackbar_text = text
+            this.snackbar_color = color || 'info'
+            this.snackbar = true
         })
     }
 }

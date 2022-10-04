@@ -37,3 +37,15 @@ export const openLoadingOverlay = () => {
 export const closeLoadingOverlay = () => {
     ui_trans_bus.$emit('close-loading-overlay');
 };
+
+export const openSnackbar = (message, color) => {
+    ui_trans_bus.$emit('open-snackbar', message, color);
+};
+
+export const openSuccessSnackbar = (message) => {
+    openSnackbar(message, 'success');
+}
+
+export const openErrorSnackbar = (message) => {
+    openSnackbar(message, 'error');
+}

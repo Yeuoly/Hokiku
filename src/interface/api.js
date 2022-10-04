@@ -434,3 +434,7 @@ export const api_tmpfile_download = token => {
         link.parentNode.removeChild(link);
     })
 }
+
+export const api_signin = () => api_base('statistics/signin', 'get')
+
+export const api_signin_list = () => api_base('statistics/signin/list', 'get')

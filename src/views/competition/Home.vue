@@ -172,32 +172,34 @@ export default {
                 if(data['res'] != 0){
                     openErrorMessageBox('错误', data['err'])
                 }else{
-                    this.list = data['data']
-                    let total = 0
-                    let last_day = null
-                    let last_value
-                    for(const i of data['data']){
-                        this.rate_of_type[i['type']].value++
-                        const index = parseInt((i['score'] - 1) / 100)
-                        this.rate_of_score[index].value++
-                        const time_day = (i['time'] - i['time'] % 86400) / 86400
-                        if(last_day){
-                            const distance = time_day - last_day
-                            for(let i = 1; i < distance; i++){
-                                const date = new Date((last_day + i) * 86400000).formatDate('Y-M-D')
-                                this.history.date.push(date)
-                                this.history.value[0].push(last_value)
+                    if (data['data']) {
+                        this.list = data['data']
+                        let total = 0
+                        let last_day = null
+                        let last_value
+                        for(const i of data['data']){
+                            this.rate_of_type[i['type']].value++
+                            const index = parseInt((i['score'] - 1) / 100)
+                            this.rate_of_score[index].value++
+                            const time_day = (i['time'] - i['time'] % 86400) / 86400
+                            if(last_day){
+                                const distance = time_day - last_day
+                                for(let i = 1; i < distance; i++){
+                                    const date = new Date((last_day + i) * 86400000).formatDate('Y-M-D')
+                                    this.history.date.push(date)
+                                    this.history.value[0].push(last_value)
+                                }
+                                total += i['score']
+                                last_value = total
+                                this.history.date.push(new Date(i['time'] * 1000).formatDate('Y-M-D'))
+                                this.history.value[0].push(total)
+                            }else{
+                                total = i['score']
+                                last_value = total
+                                last_day = time_day
+                                this.history.date.push(new Date(i['time'] * 1000).formatDate('Y-M-D'))
+                                this.history.value[0].push(total)
                             }
-                            total += i['score']
-                            last_value = total
-                            this.history.date.push(new Date(i['time'] * 1000).formatDate('Y-M-D'))
-                            this.history.value[0].push(total)
-                        }else{
-                            total = i['score']
-                            last_value = total
-                            last_day = time_day
-                            this.history.date.push(new Date(i['time'] * 1000).formatDate('Y-M-D'))
-                            this.history.value[0].push(total)
                         }
                     }
                 }
@@ -210,7 +212,9 @@ export default {
                 if (data2['res'] != 0) {
                     openErrorMessageBox('错误', data2['err'])
                 } else {
-                    this.signups = data2['data']
+                    if (data2['data']) {
+                        this.signups = data2['data']
+                    }
                 }
             }
         },
