@@ -46,16 +46,16 @@ const CompetitionTrainNote = () => import('../views/competition/Note.vue')
 const CompetitionGameEditor = () => import('../views/game/Editor.vue')
 const CompetitionGameDetail = () => import('../views/game/Detail.vue')
 
-const AcmIndex = () => import('../views/acm/Index.vue')
-const AcmAdminIndex = () => import('../views/acm/admin/Index.vue')
-const AcmAdminProblem = () => import('../views/acm/admin/Problem.vue')
-const AcmAdminCommits = () => import('../views/acm/admin/Commit.vue')
-const AcmAdminEditProblem = () => import('../views/acm/admin/EditProblem.vue')
+// //const AcmIndex = () => import('../views/acm/Index.vue')
+// const AcmAdminIndex = () => import('../views/acm/admin/Index.vue')
+// const AcmAdminProblem = () => import('../views/acm/admin/Problem.vue')
+// const AcmAdminCommits = () => import('../views/acm/admin/Commit.vue')
+// const AcmAdminEditProblem = () => import('../views/acm/admin/EditProblem.vue')
 
-const AcmUserIndex = () => import('../views/acm/user/Index.vue')
-const AcmUserProblem = () => import('../views/acm/user/Problem.vue')
-const AcmUserHome = () => import('../views/acm/user/Home.vue')
-const AcmUserProblemDetail = () => import('../views/acm/user/Detail.vue')
+// const AcmUserIndex = () => import('../views/acm/user/Index.vue')
+// const AcmUserProblem = () => import('../views/acm/user/Problem.vue')
+// const AcmUserHome = () => import('../views/acm/user/Home.vue')
+// const AcmUserProblemDetail = () => import('../views/acm/user/Detail.vue')
 
 const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
 const KnowledgePublic = () => import('../views/knowledge/Public.vue')
@@ -70,6 +70,9 @@ const Tools01 = () => import('../views/tools/01.vue')
 const ToolsUrl = () => import('../views/tools/Url.vue')
 const ToolsMorse = () => import('../views/tools/Morse.vue')
 const ToolsVigenere = () => import('../views/tools/Vigenere.vue')
+
+const BlogIndex = () => import('../views/blog/Index.vue')
+const BlogSpace = () => import('../views/blog/Space.vue')
 
 const admin_pages = [{
     name : 'admin-course',
@@ -222,47 +225,47 @@ const competition_pages = [{
     redirect : '/competition/game'
 }]
 
-const acm_pages = [{
-    name : 'acm-admin',
-    path : '/acm/admin',
-    component : AcmAdminIndex,
-    children : [{
-        name : 'acm-admin-problem',
-        path : '/acm/admin/problem',
-        component : AcmAdminProblem
-    }, {
-        name : 'acm-admin-edit-problem',
-        path : '/acm/admin/edit-problem/:pid',
-        component : AcmAdminEditProblem
-    }, {
-        name : 'acm-admin-commit',
-        path : '/acm/admin/commit/:pid',
-        component : AcmAdminCommits
-    }, {
-        path : '/acm/admin/',
-        redirect : '/acm/admin/problem'
-    }]
-}, {
-    name : 'acm-user',
-    path : '/acm/user',
-    component : AcmUserIndex,
-    children : [{
-            name : 'acm-user-problem',
-            path : '/acm/user/problem',
-            component : AcmUserProblem
-        }, {
-            name : 'acm-user-home',
-            path : '/acm/user/home',
-            component : AcmUserHome
-        }, {
-            name : 'acm-user-problem-detail',
-            path : '/acm/user/problem/detail/:pid',
-            component : AcmUserProblemDetail
-        }, {
-            path : '/acm/',
-            redirect : '/acm/user/home'
-        }]
-}, ]
+// const acm_pages = [{
+//     name : 'acm-admin',
+//     path : '/acm/admin',
+//     component : AcmAdminIndex,
+//     children : [{
+//         name : 'acm-admin-problem',
+//         path : '/acm/admin/problem',
+//         component : AcmAdminProblem
+//     }, {
+//         name : 'acm-admin-edit-problem',
+//         path : '/acm/admin/edit-problem/:pid',
+//         component : AcmAdminEditProblem
+//     }, {
+//         name : 'acm-admin-commit',
+//         path : '/acm/admin/commit/:pid',
+//         component : AcmAdminCommits
+//     }, {
+//         path : '/acm/admin/',
+//         redirect : '/acm/admin/problem'
+//     }]
+// }, {
+//     name : 'acm-user',
+//     path : '/acm/user',
+//     component : AcmUserIndex,
+//     children : [{
+//             name : 'acm-user-problem',
+//             path : '/acm/user/problem',
+//             component : AcmUserProblem
+//         }, {
+//             name : 'acm-user-home',
+//             path : '/acm/user/home',
+//             component : AcmUserHome
+//         }, {
+//             name : 'acm-user-problem-detail',
+//             path : '/acm/user/problem/detail/:pid',
+//             component : AcmUserProblemDetail
+//         }, {
+//             path : '/acm/',
+//             redirect : '/acm/user/home'
+//         }]
+// }, ]
 
 const tools_pages = [{
     name : 'tools-routes',
@@ -307,6 +310,15 @@ const tools_pages = [{
 }, {
     path : '/tools/',
     redirect : '/tools/routes'
+}]
+
+const blog_pages = [{
+    name : 'blog-space',
+    path : '/blog/space/:uid',
+    component : BlogSpace
+}, {
+    path : '/blog/',
+    redirect : '/blog/space/0'
 }]
 
 export default [{
@@ -428,20 +440,21 @@ export default [{
         }
     },
     children : competition_pages
-}, {
-    name : 'acm',
-    path : '/acm',
-    component : AcmIndex,
-    meta : {
-        inNav : true,
-        icon : 'mdi-microsoft-visual-studio-code',
-        title : 'OJ(Open Judge)',
-        required : {
-            online : true
-        }
-    },
-    children : acm_pages
-}, {
+}, //{
+    // name : 'acm',
+    // path : '/acm',
+    // component : AcmIndex,
+    // meta : {
+    //     inNav : true,
+    //     icon : 'mdi-microsoft-visual-studio-code',
+    //     title : 'OJ(Open Judge)',
+    //     required : {
+    //         online : true
+    //     }
+    // },
+    // children : acm_pages
+//}, 
+{
     name : '安全工具',
     path : '/tools',
     component : ToolsIndex,
@@ -514,6 +527,27 @@ export default [{
             online : false,
             teacher : false
         }
+    }
+}, {
+    name : 'blog',
+    path : '/blog',
+    component : BlogIndex,
+    meta : {
+        inNav : true,
+        icon : 'mdi-book-open-page-variant-outline',
+        title : '博客',
+        required : {
+            online : false,
+            teacher : false
+        }
+    },
+    children : blog_pages
+}, {
+    name : 'blog-redirection',
+    path : '/blog/space',
+    redirect : '/blog/space/0',
+    meta : {
+        inNav : false,
     }
 }, {
     path : '*',

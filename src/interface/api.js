@@ -60,6 +60,8 @@ export const api_auth_register = (username, password, emailcode) => api_base('au
 
 export const api_auth_login = (email, password, captcha) => api_base('auth/login', 'post', stringify({email, password, captcha}))
 
+export const api_user_info = uid => api_base('user/info', 'get', stringify({uid}))
+
 export const api_get_math_captcha = method => api_base('captcha/math', 'get', stringify({ method }))
 
 export const api_get_email_captcha = (captcha, method, email) => api_base('captcha/email', 'post', stringify({captcha, method, email}))
@@ -438,3 +440,13 @@ export const api_tmpfile_download = token => {
 export const api_signin = () => api_base('statistics/signin', 'get')
 
 export const api_signin_list = () => api_base('statistics/signin/list', 'get')
+
+export const api_create_blog = (title, content, content_type) => api_base('blog/create', 'post', stringify({ title, content, content_type }))
+
+export const api_update_blog = (blog_id, title, content, content_type) => api_base('blog/update', 'post', stringify({ id: blog_id, title, content, content_type }))
+
+export const api_delete_blog = (blog_id) => api_base('blog/delete', 'post', stringify({ id: blog_id }))
+
+export const api_blog_list = (uid, page, len) => api_base('blog/list', 'get', stringify({ uid, page, len }))
+
+export const api_blog_detail = (blog_id) => api_base('blog/get', 'get', stringify({ id: blog_id }))
