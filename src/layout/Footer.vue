@@ -39,7 +39,7 @@
                                     <a href="#">论坛（开发中）</a>
                                 </div>
                                 <div class="text-15 pb2">
-                                    <a href="#">博客（开发中）</a>
+                                    <a href="/blog">博客</a>
                                 </div>
                             </v-col>
                         </v-row>

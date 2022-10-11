@@ -95,7 +95,8 @@ const XSSFilterXSS = new XSS.FilterXSS({
         small : [],
         big : [],
         mark : [],
-        hr : []
+        hr : [],
+        article : [],
     }
 });
 
