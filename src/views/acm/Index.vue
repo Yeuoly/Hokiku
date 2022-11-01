@@ -45,42 +45,6 @@
                         <v-card-text>
                             总分：{{ score }}
                         </v-card-text>
-                        <!-- <RadarCharts
-                            title="统计"
-                            subtext="你是什么多边形战士！"
-                            :indicator="statistics_indicator"
-                            :model="{ data: [{ value : statistics_category_value, name : $store.getters.getUserName }] }"
-                            style="width: 100%; height: 500px"
-                        />
-                        <v-card-text>
-                            <v-simple-table>
-                                <thead>
-                                    <tr>
-                                        <th>分类</th>
-                                        <th>已解决/总量</th>
-                                        <th>进度</th>
-                                        <th>%</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(i, k) in statistics_indicator" :key="k">
-                                        <td>{{ i.name }}</td>
-                                        <td>{{ statistics_category_value[k] }} / {{ i.total }}</td>
-                                        <td>
-                                            <v-progress-circular
-                                                :width="3"
-                                                :value="(statistics_category_value[k]/i.total) * 100"
-                                                color="green"
-                                            >
-                                            </v-progress-circular>
-                                        </td>
-                                        <td>
-                                            %{{(statistics_category_value[k]/i.total*100).toFixed(2)}}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </v-simple-table>
-                        </v-card-text> -->
                     </v-card>
                 </v-col>
                 <v-col v-else>

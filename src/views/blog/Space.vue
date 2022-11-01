@@ -137,11 +137,6 @@ export default {
         async getBlogs(){
             const { data } = await api_blog_list(this.uid, this.page, 20)
             if (data && data['res'] == 0 && data['data']['blogs']) {
-                data['data']['blogs'].forEach(i => {
-                    i['likes'] = 0
-                    i['views'] = 0
-                    i['comments'] = 0
-                })
                 this.blogs = data['data']['blogs']
             }
         },

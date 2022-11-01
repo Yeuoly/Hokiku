@@ -450,3 +450,19 @@ export const api_delete_blog = (blog_id) => api_base('blog/delete', 'post', stri
 export const api_blog_list = (uid, page, len) => api_base('blog/list', 'get', stringify({ uid, page, len }))
 
 export const api_blog_detail = (blog_id) => api_base('blog/get', 'get', stringify({ id: blog_id }))
+
+/**
+ * 	beego.Router("/prodesign/vm/launch", &controllers.LanuchVmController{})
+	beego.Router("/prodesign/vm/launch/check", &controllers.LanuchVmCheckController{})
+	beego.Router("/prodesign/vm/stop", &controllers.StopVmController{})
+	beego.Router("/prodesign/vm/status", &controllers.GetVmStatusController{})
+ * 
+ */
+
+export const api_prodesign_vm_launch = () => api_base('prodesign/vm/launch', 'post', '')
+
+export const api_prodesign_vm_launch_check = (response_id) => api_base('prodesign/vm/launch/check', 'post', stringify({ response_id }))
+
+export const api_prodesign_vm_stop = () => api_base('prodesign/vm/stop', 'post', '')
+
+export const api_prodesign_vm_status = () => api_base('prodesign/vm/status', 'get', '')

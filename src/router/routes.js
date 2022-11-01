@@ -76,6 +76,9 @@ const BlogSpace = () => import('../views/blog/Space.vue')
 const BlogCreate = () => import('../views/blog/Create.vue')
 const BlogDetail = () => import('../views/blog/Detail.vue')
 
+const ProdesignIndex = () => import('../views/prodesign/Index.vue')
+const ProdesignVm = () => import('../views/prodesign/Vm.vue')
+
 const admin_pages = [{
     name : 'admin-course',
     path : '/admin/course',
@@ -331,6 +334,15 @@ const blog_pages = [{
     component : BlogDetail
 }]
 
+const prodesign_pages = [{
+    name : 'prodesign-vm',
+    path : '/prodesign/vm',
+    component : ProdesignVm
+}, {
+    path : '/prodesign/',
+    redirect : '/prodesign/vm'
+}]
+
 export default [{
     name : 'home',
     path : '/home',
@@ -559,6 +571,20 @@ export default [{
     meta : {
         inNav : false,
     }
+}, {
+    name : 'prodesign',
+    path : '/prodesign',
+    component : ProdesignIndex,
+    meta : {
+        inNav : true,
+        // terminal icon is mdi-console-line
+        icon : 'mdi-console-line',
+        title : '程序设计',
+        required : {
+            online : true,
+        },
+    },
+    children : prodesign_pages
 }, {
     path : '*',
     redirect : '/about',
