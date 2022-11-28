@@ -37,22 +37,23 @@ export default {
     data : () => ({
         navs : [{
             path : 'vm',
+            name : 'prodesign-vm',
             text : '虚拟机'
+        }, {
+            path : 'code',
+            name : 'prodesign-code',
+            text : '代码'
         }],
         selected_link : 0
     }),
-    watch : {
-        $route : {
-            handler : function (to) {
-                this.selected_link = this.navs.findIndex(i => i.path === to.name)
-            },
-            immediate : true
-        }
-    },
     methods : {
         to(path) {
             this.$router.push(`/prodesign/${path}`)
+            this.selected_link = this.navs.findIndex(i => i.path === path)
         }
+    },
+    mounted() {
+        this.to(this.navs[0].path)
     }
 }
 </script>

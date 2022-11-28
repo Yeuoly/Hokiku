@@ -8,7 +8,7 @@
 
 <script>
     import ECharts from 'vue-echarts';
-    import 'echarts/lib/chart/line';
+    import 'echarts/lib/chart/bar';
     import 'echarts/lib/component/title';
     import 'echarts/lib/component/tooltip';
     import 'echarts/lib/component/markLine';
@@ -17,7 +17,7 @@
     import 'echarts/lib/component/dataZoom';
 
     export default {
-        name: "DateValueSmoothCharts",
+        name: "HorizontalBarCharts",
         components : { ECharts },
         computed : {
             options(){
@@ -34,14 +34,11 @@
             refreshData(){
                 this.model.value.forEach((e, i) => {
                     this.$set(this.polar.series, i, {
-                        type : 'line',
-                        smooth : true,
-                        markLine : {data : [{ type : 'average' , name : '平均值' }]},
-                        markPoint : {data : [{ type : 'max', name : '峰值' }]},
-                        data : e
+                        type : 'bar',
+                        data : e,
                     });
                 });
-                this.polar.xAxis.data = this.model.date;
+                this.polar.yAxis.data = this.model.category;
             }
         },
         watch : {
@@ -68,11 +65,22 @@
         data(){
             return {
                 polar : {
+                    color : [
+                        '#5470c6',
+                        '#91cc75',
+                        '#fac858',
+                        '#ee6666',
+                        '#73c0de',
+                        '#3ba272',
+                        '#fc8452',
+                        '#9a60b4',
+                    ],
                     xAxis : {
-                        type : 'category',
+                        type : 'value',
                     },
                     yAxis : {
-                        type : 'value',
+                        type : 'category',
+                        scale: true
                     },
                     grid : {
                         left : 73,
@@ -88,23 +96,9 @@
                     tooltip : {
                         trigger : 'axis',
                         formatter(params){
-                            return `分类：${params[0].axisValue}<br>时值：${params[0].data}`
+                            return `${params[0].axisValue}<br>时值：${params[0].data}`
                         }
                     },
-                    dataZoom : [{
-                        type : 'inside',
-                        realtime : true,
-                        start : 0,
-                        end : 100
-                    }, {
-                        type : 'slider',
-                        handleSize : '80%',
-                        handleStyle: {
-                            color: '#fff',
-                            shadowBlur: 3,
-                            shadowColor: 'rgba(0, 0, 0, 0.6)',
-                        }
-                    }]
                 }
             }
         },
@@ -130,5 +124,6 @@
 <style scoped>
     .charts-items__fl{
         width: 100%;
+        height: 100%;
     }
 </style>

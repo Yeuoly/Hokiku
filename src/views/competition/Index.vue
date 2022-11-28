@@ -25,7 +25,7 @@
                                         v-show="avaliable(i)"
                                         :key="k" 
                                         link 
-                                        @click="$router.push(`/competition/${i.path}`)"
+                                        @click="to(i.path)"
                                     >
                                         <a class="clickable text-center">
                                             <!-- make text like a link, looks great, weight and rounded -->
@@ -117,27 +117,35 @@ export default {
     data : () => ({
         navs : [{
             text : '比赛',
-            path : 'game',
+            path : '/competition/game',
             sa : false
         }, {
             text : '我的',
-            path : 'home',
+            path : '/competition/home',
             sa : false
         },{
             text : '练习',
-            path : 'train',
+            path : '/competition/train',
             sa : false
         },{
             text : '练习管理',
-            path : 'manager',
+            path : '/competition/manager',
             sa : true
         }, {
             text : '比赛管理',
-            path : 'game/manager',
+            path : '/competition/game/manager',
             sa : true
         }, {
+            text : 'AWD',
+            path : '/competition/awd',
+            sa : false
+        }, {
+            text : 'AWD管理',
+            path : '/awd/admin',
+            sa : true
+        },{
             text : '排名',
-            path : 'rank',
+            path : '/competition/rank',
             sa : false
         }],
         score : 0,
@@ -196,6 +204,9 @@ export default {
                 }
             }
         },
+        to(path) {
+            this.$router.push(path)
+        }
     },
     mounted(){
         this.getScore()

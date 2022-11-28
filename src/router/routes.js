@@ -78,6 +78,14 @@ const BlogDetail = () => import('../views/blog/Detail.vue')
 
 const ProdesignIndex = () => import('../views/prodesign/Index.vue')
 const ProdesignVm = () => import('../views/prodesign/Vm.vue')
+const ProdesignCode = () => import('../views/prodesign/CodeServer.vue')
+
+const AwdGameIndex = () => import('../views/awd/Index.vue')
+const AwdGameEditor = () => import('../views/awd/Editor.vue')
+const AwdGameAdmin = () => import('../views/awd/Admin.vue')
+const AwdGameList = () => import('../views/awd/List.vue')
+const AwdGameSenso = () => import('../views/awd/Senso.vue')
+const AwdGameMonitor = () => import('../views/awd/Monitor.vue')
 
 const admin_pages = [{
     name : 'admin-course',
@@ -226,6 +234,10 @@ const competition_pages = [{
     path : '/competition/game/edit/:competition_id',
     component : CompetitionGameEditor
 }, {
+    name : 'competition-awd',
+    path : '/competition/awd',
+    component : AwdGameList,
+}, {
     path : '/competition/',
     redirect : '/competition/game'
 }]
@@ -339,8 +351,38 @@ const prodesign_pages = [{
     path : '/prodesign/vm',
     component : ProdesignVm
 }, {
+    name : 'prodesign-code',
+    path : '/prodesign/code',
+    component : ProdesignCode
+}, {
     path : '/prodesign/',
     redirect : '/prodesign/vm'
+}]
+
+const awd_pages = [{
+    name : 'awd-editor',
+    path : '/awd/editor/:game_id',
+    component : AwdGameEditor,
+}, {
+    name : 'awd-admin',
+    path : '/awd/admin',
+    component : AwdGameAdmin,
+}, {
+    name :' awd-list',
+    path : '/awd/list',
+    component : AwdGameList,
+}, {
+    name : 'awd-senso',
+    path : '/awd/senso/:game_id',
+    component : AwdGameSenso,
+}, {
+    name : 'awd-monitor',
+    path : '/awd/monitor/:game_id',
+    component : AwdGameMonitor,
+}, {
+    name : 'awd-index',
+    path : '/awd/',
+    redirect : '/awd/list'
 }]
 
 export default [{
@@ -585,6 +627,17 @@ export default [{
         },
     },
     children : prodesign_pages
+}, {
+    name : 'awd',
+    path : '/awd',
+    component : AwdGameIndex,
+    meta : {
+        inNav : false,
+        required : {
+            online : true,
+        },
+    },
+    children : awd_pages
 }, {
     path : '*',
     redirect : '/about',

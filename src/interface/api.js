@@ -459,10 +459,118 @@ export const api_blog_detail = (blog_id) => api_base('blog/get', 'get', stringif
  * 
  */
 
-export const api_prodesign_vm_launch = () => api_base('prodesign/vm/launch', 'post', '')
+export const api_prodesign_vm_launch = (vm_type) => api_base('prodesign/vm/launch', 'post', stringify({ vm_type }))
 
 export const api_prodesign_vm_launch_check = (response_id) => api_base('prodesign/vm/launch/check', 'post', stringify({ response_id }))
 
 export const api_prodesign_vm_stop = () => api_base('prodesign/vm/stop', 'post', '')
 
 export const api_prodesign_vm_status = () => api_base('prodesign/vm/status', 'get', '')
+
+export const api_prodesign_vm_overtime = () => api_base('prodesign/vm/overtime', 'post', '')
+
+/**
+ * beego.Router("/comp/awd/game/create", &controllers.AwdCreateGameController{})
+	beego.Router("/comp/awd/game/list", &controllers.AwdGetGameListController{})
+	beego.Router("/comp/awd/game/delete", &controllers.AwdDeleteGameController{})
+	beego.Router("/comp/awd/game/update", &controllers.AwdUpdateGameController{})
+	beego.Router("/comp/awd/game/get", &controllers.AwdGetGameController{})
+	beego.Router("/comp/awd/subject/create", &controllers.CreateAwdSubjectController{})
+	beego.Router("/comp/awd/subject/list", &controllers.AdminListAwdSubjectController{})
+	beego.Router("/comp/awd/subject/delete", &controllers.DeleteAwdSubjectController{})
+	beego.Router("/comp/awd/subject/update", &controllers.UpdateAwdSubjectController{})
+	beego.Router("/comp/awd/subject/get", &controllers.AdminGetAwdSubjectController{})
+	beego.Router("/comp/awd/team/create", &controllers.AwdJoinGameController{})
+	beego.Router("/comp/awd/team/containers", &controllers.AwdGetGameListController{})
+	beego.Router("/comp/awd/team/container", &controllers.AwdGetGameController{})
+	beego.Router("/comp/awd/team/members", &controllers.ListAwdTeamMemberController{})
+	beego.Router("/comp/awd/team/info", &controllers.GetAwdTeamInfoController{})
+	beego.Router("/comp/awd/team/list", &controllers.AdminListAwdTeamController{})
+	beego.Router("/comp/awd/rank/team", &controllers.RankAwdTeamController{})
+	beego.Router("/comp/awd/rank/player", &controllers.RankAwdPlayerController{})
+	beego.Router("/comp/awd/flag/commit", &controllers.AwdCommitFlagController{})
+	beego.Router("/comp/awd/player/token", &controllers.GetAwdPlayerToken{})
+ * 
+ */
+
+export const api_competition_awd_game_create = (name, start_time, end_time, description) => api_base('comp/awd/game/create', 'post', stringify({ name, start_time, end_time, description }))
+
+export const api_competition_awd_game_list = () => api_base('comp/awd/game/list', 'get', '')
+
+export const api_competition_awd_game_delete = (game_id) => api_base('comp/awd/game/delete', 'post', stringify({ game_id }))
+
+export const api_competition_awd_game_update = (game_id, name, start_time, end_time, description) => api_base('comp/awd/game/update', 'post', stringify({ game_id, name, start_time, end_time, description }))
+
+export const api_competition_awd_game_get = (game_id) => api_base('comp/awd/game/get', 'get', stringify({ game_id }))
+
+/**
+ * GameId              int    `json:"game_id" valid:"Required" form:"game_id"`
+		Name                string `json:"name" valid:"Required;MaxSize(64)" form:"name"`
+		Comment             string `json:"comment" valid:"Required;MaxSize(256)" form:"comment"`
+		AttackInitialScore  int    `json:"attack_initial_score" valid:"Required;Min(100)" form:"attack_initial_score"`
+		DefenseInitialScore int    `json:"defense_initial_score" valid:"Required;Min(100)" form:"defense_initial_score"`
+		DockerImage         string `json:"docker_image" valid:"Required;MaxSize(256)" form:"docker_image"`
+		ExposePorts         string `json:"expose_ports" valid:"Required;MaxSize(256)" form:"expose_ports"`
+		DefaultUser         string `json:"default_user" valid:"Required;MaxSize(64)" form:"default_user"`
+		StartTime           int64  `json:"start_time" valid:"Required" form:"start_time"`
+		EndTime             int64  `json:"end_time" valid:"Required" form:"end_time"`
+		FlagType            int    `json:"flag_type" valid:"Required;Min(0);Max(3)" form:"flag_type"`
+		FlagPath            string `json:"flag_path" valid:"Required;MaxSize(256)" form:"flag_path"`
+		FlagRefreshInterval int    `json:"flag_refresh_interval" valid:"Required;Min(120)" form:"flag_refresh_interval"`
+		Checker             string `json:"checker" valid:"Required;MaxSize(256)" form:"checker"`
+ */
+export const api_competition_awd_subject_create = (
+    game_id, name, comment, attack_initial_score, defense_initial_score, docker_image, expose_ports, 
+    default_user, start_time, end_time, flag_type, flag_path, flag_refresh_interval, checker, environment
+) => api_base('comp/awd/subject/create', 'post', stringify({
+    game_id, name, comment, attack_initial_score, defense_initial_score, docker_image, expose_ports,
+    default_user, start_time, end_time, flag_type, flag_path, flag_refresh_interval, checker, environment
+}))
+
+export const api_competition_awd_subject_list = (game_id) => api_base('comp/awd/subject/list', 'get', stringify({ game_id }))
+
+export const api_competition_awd_subject_delete = (subject_id) => api_base('comp/awd/subject/delete', 'post', stringify({ subject_id }))
+
+export const api_competition_awd_subject_update = (
+    subject_id, name, comment, attack_initial_score, defense_initial_score, docker_image, expose_ports,
+    default_user, start_time, end_time, flag_type, flag_path, flag_refresh_interval, checker, environment
+) => api_base('comp/awd/subject/update', 'post', stringify({
+    subject_id, name, comment, attack_initial_score, defense_initial_score, docker_image, expose_ports,
+    default_user, start_time, end_time, flag_type, flag_path, flag_refresh_interval, checker, environment
+}))
+
+export const api_competition_awd_subject_get = (subject_id) => api_base('comp/awd/subject/get', 'get', stringify({ subject_id }))
+
+/**
+ * 
+ * @param {*} game_id 
+ * @param {*} team_name 
+ * @param {*} leader_name 
+ * @param {*} players JSON string which is an array , e.g. [{"name":"player1","email":"aaa@xxx.com","uid":123456,"token":"abc"}]
+ * @returns 
+ */
+export const api_competition_awd_team_create = (game_id, team_name, leader_name, players) => api_base('comp/awd/team/create', 'post', stringify({ game_id, team_name, leader_name, players }))
+
+export const api_competition_awd_team_get_containers = (game_id) => api_base('comp/awd/team/containers', 'get', stringify({ game_id }))
+
+export const api_competition_awd_team_get_container = (game_id, container_id) => api_base('comp/awd/team/container', 'get', stringify({ container_id, game_id }))
+
+export const api_competition_awd_team_get_members = (game_id, team_id) => api_base('comp/awd/team/members', 'get', stringify({ game_id, team_id }))
+
+export const api_competition_awd_team_get_info = (game_id) => api_base('comp/awd/team/info', 'get', stringify({ game_id }))
+
+export const api_competition_awd_team_list = (game_id) => api_base('comp/awd/team/list', 'get', stringify({ game_id }))
+
+export const api_competition_awd_rank_team = (game_id, page, page_size, order) => api_base('comp/awd/rank/team', 'get', stringify({ game_id, page, page_size, order }))
+
+export const api_competition_awd_rank_player = (game_id, page, page_size, order) => api_base('comp/awd/rank/player', 'get', stringify({ game_id, page, page_size, order }))
+
+export const api_competition_awd_commit_flag = (game_id, team_id, flag) => api_base('comp/awd/flag/commit', 'post', stringify({ game_id, team_id, flag }))
+
+export const api_competition_awd_player_get_token = () => api_base('comp/awd/player/token', 'get', '')
+
+export const api_competition_awd_boardcast_list = (game_id) => api_base('comp/awd/boardcast/list', 'get', stringify({ game_id }))
+
+export const api_competition_awd_boardcast_commit = (game_id, content) => api_base('comp/awd/boardcast/commit', 'post', stringify({ game_id, content }))
+
+export const api_competition_awd_admin_list_containers = (game_id) => api_base('/comp/awd/admin/containers/list', 'get', stringify({ game_id }))
