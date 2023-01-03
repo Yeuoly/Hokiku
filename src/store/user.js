@@ -5,7 +5,8 @@ export const state_user = {
     uid : Number(),
     status : Number(),
     powers : Number(),
-    login_time : Number()
+    login_time : Number(),
+    avatar : String(),
 };
 
 export default {
@@ -31,6 +32,9 @@ export default {
         },
         setUserEmail(state,email){
             state.email = email;
+        },
+        setUserAvatar(state,avatar){
+            state.avatar = avatar;
         }
     },
     getters : {
@@ -54,6 +58,9 @@ export default {
         },
         getUserEmail(state){
             return state.email;
+        },
+        getUserAvatar(state){
+            return state.avatar;
         }
     },
 }

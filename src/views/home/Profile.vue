@@ -3,9 +3,9 @@
         <v-row class="px5">
             <v-col cols="11" style="padding-top: 20px" class="pl5">
                 <v-avatar size="72" class="mr5">
-                    <v-img src="https://yeuoly.oss-cn-beijing.aliyuncs.com/irina/static/default_avatar.jpg"></v-img>
+                    <v-img :src="profile.avatar"></v-img>
                 </v-avatar>
-                <v-btn disabled>更换头像</v-btn>
+                <v-btn dark color="primary" @click="uploadAvatar">更换头像</v-btn>
             </v-col>
             <v-col cols="12" class="pl5">
                 <v-text-field
@@ -71,19 +71,35 @@
                 ></v-progress-linear>
             </v-col>
         </v-row>
+        <v-dialog v-model="dialog.changeAvatar" width="800px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">上传头像</span>
+                </v-card-title>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <div class="upload-avatar">
+                        <UploadImage :height="200" v-model="profile.upload_avatar_mid" /> 
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" dark @click="commitAvatar">确定</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-row>
 </template>
 
 <script>
 import { openErrorMessageBox, openErrorSnackbar, openSuccessSnackbar } from '../../concat/bus'
-import { api_signin, api_signin_list, api_user_profile } from '../../interface/api'
+import { api_signin, api_signin_list, api_user_profile, api_user_change_avatar } from '../../interface/api'
 import { isAvaliableNameFormat, visitableMemberSpace } from '../../util/index'
 
 import NormalInfoCard from '../../components/common/NormalInfoCard.vue'
+import UploadImage from '../../components/common/UploadImage.vue'
 
 export default {
     name : 'Profile',
-    components : { NormalInfoCard },
+    components : { NormalInfoCard, UploadImage },
     data : () => ({
         profile : {
             id: '',
@@ -93,12 +109,17 @@ export default {
                 current_space : 0,
                 percent_space : 0,
             },
+            avatar : '',
+            upload_avatar_mid : '',
             coin : {
                 value : 0,
                 freeze : 0,
             },
             signins : []
         },
+        dialog : {
+            changeAvatar : false,
+        }
     }),
     watch : {
         'profile.resource.current_space' : {
@@ -159,6 +180,17 @@ export default {
             } else {
                 openErrorSnackbar(data ? data['err'] : '签到失败')
             }
+        },
+        uploadAvatar() {
+            this.dialog.changeAvatar = true
+        },
+        async commitAvatar() {
+            const { data } = await api_user_change_avatar(this.profile.upload_avatar_mid)
+            if(data && data['res'] == 0) {
+                location.href = '/home/profile'
+            } else {
+                openErrorSnackbar(data ? data['err'] : '上传失败')
+            }
         }
     },
     computed : {
@@ -186,6 +218,7 @@ export default {
     mounted(){
         this.profile.id = this.$store.getters.getUserName
         this.profile.uid = this.$store.getters.getUserUid
+        this.profile.avatar = this.$store.getters.getUserAvatar
 
         this.loadProfile()
         this.loadSignin()
@@ -194,5 +227,13 @@ export default {
 </script>
 
 <style scoped>
-
+.upload-avatar {
+    width: 100%;
+    height: 200px;
+    background-color: #eee;
+    border-radius: 5px;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
 </style>

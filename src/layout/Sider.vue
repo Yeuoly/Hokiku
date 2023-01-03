@@ -13,7 +13,7 @@
                 <v-list>
                     <v-list-item class="px-2">
                         <v-list-item-avatar>
-                            <v-img src="https://yeuoly.oss-cn-beijing.aliyuncs.com/irina/static/default_avatar.jpg"></v-img>
+                            <v-img :src="avatar"></v-img>
                         </v-list-item-avatar>
                     </v-list-item>
 
@@ -67,7 +67,8 @@ export default {
     data : () => ({
         avaliable_nav : true,
         open : false,
-        routes : routes
+        routes : routes,
+        avatar : ''
     }),
     methods : {
         router(to){
@@ -93,6 +94,8 @@ export default {
         ui_trans_bus.$on('disable-navigation', () => {
             this.avaliable_nav = false
         })
+
+        this.avatar = this.$store.getters.getUserAvatar
     }
 }
 </script>

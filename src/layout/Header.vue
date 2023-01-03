@@ -1,7 +1,7 @@
 <template>
     <v-app-bar dense dark style="flex: none" v-show="avaliable">
         <v-app-bar-nav-icon @click.stop="changeNavigationStatus"></v-app-bar-nav-icon>
-        <v-app-bar-title>IrinaCTF</v-app-bar-title>
+        <v-app-bar-title>IrinaGame</v-app-bar-title>
     </v-app-bar>
 </template>
 

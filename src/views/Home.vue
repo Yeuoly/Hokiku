@@ -20,6 +20,12 @@
                                 >
                                     {{ i.text }}
                                 </v-list-item>
+                                <v-list-item
+                                    link 
+                                    @click="$router.push(`/repassword`)"
+                                >
+                                    重置密码
+                                </v-list-item>
                             </v-list>
                         </v-navigation-drawer>
                     </v-card>

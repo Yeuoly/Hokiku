@@ -10,6 +10,7 @@ const HomeworkCommits = () => import('../views/HomeworkCommits.vue')
 const Knowledge = () => import('../views/Knowledge.vue')
 const Admin = () => import('../views/Admin.vue')
 const About = () => import('../views/About.vue')
+const Repassword = () => import('../views/Repassword.vue')
 
 const AdminCourse = () => import('../views/admin/Course.vue')
 const AdminServer = () => import('../views/admin/Server.vue')
@@ -639,6 +640,15 @@ export default [{
     },
     children : awd_pages
 }, {
+    name : 'repassword',
+    path : '/repassword',
+    component : Repassword,
+    meta : {
+        inNav : false,
+        required : {
+        }
+    }
+},{
     path : '*',
     redirect : '/about',
     meta : {

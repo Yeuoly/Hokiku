@@ -62,6 +62,8 @@ export const api_auth_login = (email, password, captcha) => api_base('auth/login
 
 export const api_user_info = uid => api_base('user/info', 'get', stringify({uid}))
 
+export const api_user_repassword = (emailcode, password) => api_base('auth/repass', 'post', stringify({ emailcode, password }))
+
 export const api_get_math_captcha = method => api_base('captcha/math', 'get', stringify({ method }))
 
 export const api_get_email_captcha = (captcha, method, email) => api_base('captcha/email', 'post', stringify({captcha, method, email}))
@@ -269,6 +271,8 @@ export const api_tools_shell_apply = (method, mixer, anti_debugger, file) => new
 export const api_tools_shell_check = response_id => api_base('tools/shell/check', 'get', stringify({ response_id }))
 
 export const api_user_profile = () => api_base('user/profile', 'get', '')
+
+export const api_user_change_avatar = (mid) => api_base('user/info/avatar/update', 'post', stringify({ mid }))
 
 export const api_course_update_unit = (id, cover_rid, media_rid, ppt_rid, name) => api_base('course/unit/update', 'post', stringify({
     id, cover_rid, media_rid, ppt_rid, name

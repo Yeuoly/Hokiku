@@ -76,9 +76,15 @@ import { disableHeader, disableSideMenu, launchHeader, launchSideMenu } from './
       store.commit('setUserPowers', data['data']['powers'])
       store.commit('setUserStatus', data['data']['status'])
       store.commit('setUserEmail', data['data']['email'])
+      if (data['data']['avatar'] == '') {
+        store.commit('setUserAvatar', 'https://yeuoly.oss-cn-beijing.aliyuncs.com/irina/static/default_avatar.jpg')
+      } else {
+        store.commit('setUserAvatar', data['data']['avatar'])
+      }
     }
   }catch(e){
     store.commit('setOnlineState', false)
+    store.commit('setUserAvatar', 'https://yeuoly.oss-cn-beijing.aliyuncs.com/irina/static/default_avatar.jpg')
   }
 
   const router = new VueRouter(route)

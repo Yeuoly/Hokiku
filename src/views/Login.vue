@@ -55,6 +55,10 @@
                                         <v-btn @click="toRegister" block >注册</v-btn>
                                     </v-col>
                                     <v-col cols="1" sm="1" lg="2" md="2" xl="4"></v-col>
+                                    <v-col :cols="12">
+                                        <v-divider></v-divider>
+                                        <v-btn text small color="primary" @click="$router.push('/repassword')">忘记密码</v-btn>
+                                    </v-col>
                                 </v-row>
                             </v-container>
                         </v-form>
