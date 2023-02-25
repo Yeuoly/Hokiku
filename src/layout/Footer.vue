@@ -51,7 +51,7 @@
             </v-layout>
             <p class="content has-text-centered text-center">
             <a href="http://www.beian.miit.gov.cn" target="_blank">湘ICP备17021409号-3</a> <br>
-            <a href="#"> © 2020 - {{ new Date().getFullYear() }} IrinaCTF</a>
+            <a href="#"> © 2020 - {{ new Date().getFullYear() }} 西安……</a>
             </p>
         </div>
         </div>

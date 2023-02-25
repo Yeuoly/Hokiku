@@ -374,7 +374,7 @@ export const api_trade_admin_list_coins = (page, len) => api_base('trade/admin/c
 
 export const api_trade_admin_coin_change = (uid, coin) => api_base('trade/admin/coin/change', 'post', stringify({ uid, coin }))
 
-export const api_acm_admin_question_create = (title, comment_type, comment, score, author, price, difficulty, language, time_limit, memory_limit, type) => api_base('acm/admin/question/create', 'post', stringify({ title, comment_type, comment, score, author, price, difficulty, language, time_limit, memory_limit, type }))
+export const api_acm_admin_question_create = (title, comment_type, comment, score, author, price, difficulty, language, time_limit, memory_limit, type, exam_id) => api_base('acm/admin/question/create', 'post', stringify({ title, comment_type, comment, score, author, price, difficulty, language, time_limit, memory_limit, type, exam_id }))
 
 export const api_acm_admin_question_edit = (question_id, title, comment_type, comment, author, price, difficulty, language, time_limit, memory_limit, type) => api_base('acm/admin/question/edit', 'post', stringify({ question_id, title, comment_type, comment, author, price, difficulty, language, time_limit, memory_limit, type }))
 
@@ -419,6 +419,22 @@ export const api_acm_user_question_detail = (question_id) => api_base('acm/user/
 export const api_acm_user_testing_submit_check = (request_id) => api_base('acm/user/testing/submit/check', 'get', stringify({ request_id }))
 
 export const api_acm_user_question_writeup_list = (question_id) => api_base('acm/user/question/writeup/list', 'get', stringify({ question_id }))
+
+export const api_acm_user_statistics = (page, size) => api_base('acm/user/statistics', 'get', stringify({ page, size }))
+
+export const api_acm_exam_create = (title, description, start_time, end_time, gid) => api_base('acm/exam/create', 'post', stringify({ title, description, start_time, end_time, gid }))
+
+export const api_acm_exam_update = (exam_id, title, description, start_time, end_time) => api_base('acm/exam/update', 'post', stringify({ id : exam_id, title, description, start_time, end_time }))
+
+export const api_acm_exam_delete = (exam_id) => api_base('acm/exam/delete', 'post', stringify({ id: exam_id }))
+
+export const api_acm_exam_list = (page, size) => api_base('acm/exam/list', 'get', stringify({ page, size }))  
+
+export const api_acm_exam_get = (exam_id) => api_base('acm/exam/get', 'get', stringify({ id: exam_id }))
+
+export const api_acm_exam_question_list = (exam_id) => api_base('acm/exam/problems', 'get', stringify({ id : exam_id }))
+
+export const api_acm_exam_statistics = (exam_id) => api_base('acm/exam/statistics', 'get', stringify({ id : exam_id }))
 
 export const api_tmpfile_download = token => {
     //download a file through axios with token in url and START-DASH in header

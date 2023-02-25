@@ -1,7 +1,7 @@
 <template>
     <v-app-bar dense dark style="flex: none" v-show="avaliable">
         <v-app-bar-nav-icon @click.stop="changeNavigationStatus"></v-app-bar-nav-icon>
-        <v-app-bar-title>IrinaGame</v-app-bar-title>
+        <v-app-bar-title>湖南烟草技能培训训练平台</v-app-bar-title>
     </v-app-bar>
 </template>
 

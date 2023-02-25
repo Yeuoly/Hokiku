@@ -5,29 +5,28 @@
                 <!-- 新建 -->
                 <v-btn
                     color="primary"
-                    @click="to('/acm/admin/edit-problem/0')"
+                    @click="to('/acm/admin/edit-exam/0')"
                 >新建</v-btn>
             </v-col>
             <v-col :cols="12">
                 <v-data-table
-                    :headers="problem_headers"
-                    :items="problems"
+                    :headers="exams_headers"
+                    :items="exams"
                     class="elevation-1"
                 >
                     <template v-slot:item.action="{ item }">
                         <v-btn
                             color="primary"
-                            @click="to(`/acm/admin/edit-problem/${item.id}`)"
+                            @click="to(`/acm/admin/edit-exam/${item.id}`)"
                         >编辑</v-btn>
                         <v-btn
                             color="error"
-                            @click="deleteProblem(item.id)"
+                            @click="editExam(item.id)"
                         >删除</v-btn>
                         <v-btn
-                            color="green"
-                            @click="to(`/acm/admin/commit/${item.id}`)"
-                            dark
-                        >查看提交</v-btn>
+                            color="primary"
+                            @click="to(`/acm/admin/exam_staistics/${item.id}@${item.gid}`)"
+                        >详情</v-btn>
                     </template>
                 </v-data-table>
                 <v-pagination
@@ -44,13 +43,14 @@
 import { openErrorMessageBox, openInfoMessageBox } from '../../../concat/bus'
 
 import { 
-    api_acm_admin_question_list, api_acm_admin_question_delete
+  api_acm_exam_delete,
+    api_acm_exam_list
 } from '../../../interface/api'
 
 export default {
     data : () => ({
-        problem_headers : [{
-            text : '题号',
+        exams_headers : [{
+            text : '考试号',
             value : 'id'
         },{
             text : '标题',
@@ -59,22 +59,19 @@ export default {
             text : '通过率',
             value : 'ac_rate'
         },{
-            text : '难度',
-            value : 'difficulty'
-        },{
-            text : '类型',
-            value : 'type'
-        },{
             text : '提交数',
-            value : 'commited'
+            value : 'commits'
         },{
             text : '通过数',
-            value : 'accepted'
-        }, {
+            value : 'accepts'
+        },{
+            text : '发布在',
+            value : 'organization_name'
+        },{
             text : '操作',
             value : 'action'
         }],
-        problems : [],
+        exams : [],
         page : 1
         
     }),
@@ -82,7 +79,7 @@ export default {
     watch : {
         page : {
             handler(){
-                this.load_problems()
+                this.load_exams()
             },
             immediate : true
         }
@@ -91,23 +88,23 @@ export default {
         to(path) {
             this.$router.push(path)
         },
-        async load_problems() {
-            let { data } = await api_acm_admin_question_list(this.page, 25)
+        async load_exams() {
+            let { data } = await api_acm_exam_list(this.page, 25)
             if (data && data['res'] == 0){
-                if(data['data']['questions']){
-                    for (let i = 0; i < data['data']['questions'].length; i++) {
-                        data['data']['questions'][i]['ac_rate'] = `${data['data']['questions'][i]['accepted']}/${data['data']['questions'][i]['commited']}`
+                if(data['data']['exams']){
+                    for (let i = 0; i < data['data']['exams'].length; i++) {
+                        data['data']['exams'][i]['ac_rate'] = `${data['data']['exams'][i]['accepts']}/${data['data']['exams'][i]['commits']}`
                     }
-                    this.problems = data['data']['questions']
+                    this.exams = data['data']['exams']
                 }
             } else {
                 openErrorMessageBox('错误', data ? data['err'] : '未知错误')
             }
         },
         async deleteProblem(id) {
-            let { data } = await api_acm_admin_question_delete(id)
+            let { data } = await api_acm_exam_delete(id)
             if (data && data['res'] == 0){
-                this.load_problems()
+                this.load_exams()
                 openInfoMessageBox('提示', '删除成功')
             } else {
                 openErrorMessageBox('错误', data ? data['err'] : '未知错误')

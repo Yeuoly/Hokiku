@@ -82,11 +82,15 @@ export default {
         },{
             text : '管理',
             path : 'admin',
-            sa : false
+            sa : true
         },{
             text : '练习',
             path : 'user/problem',
-            sa : true
+            sa : false
+        },{
+            text : '考试',
+            path : 'user/exam',
+            sa : false
         }],
         score : 0,
         selected_link : 1,

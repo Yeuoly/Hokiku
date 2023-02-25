@@ -320,6 +320,8 @@ export default {
             current_testcase : 0,
             current_writeup : 0,
         },
+        is_exam : false,
+        exam_id : 0,
         message_bar : false,
         message_content : '',
         comment_types : ['default', 'html', 'markdown'],
@@ -459,6 +461,7 @@ export default {
                 this.problem.time_limit,
                 this.problem.memory_limit,
                 this.problem.type,
+                this.exam_id
             )
             if (!data || data['res'] != 0) {
                 openErrorMessageBox('错误', data ? data['err'] + '，请确保题目参数（非测试集）如标题等不为空' : '未知错误')
@@ -563,6 +566,15 @@ export default {
     },
     mounted() {
         //get current question id
+        const pid = this.$route.params.pid
+        // check if @ is in pid
+        if (pid.indexOf('@') !== -1) {
+            this.current_question_id = parseInt(pid.split('@')[0])
+            this.exam_id = parseInt(pid.split('@')[1])
+            this.is_exam = true
+        } else {
+            this.current_question_id = parseInt(pid)
+        }
         this.current_question_id = parseInt(this.$route.params.pid)
         //test current question id is valid
         if (isNaN(this.current_question_id)) {

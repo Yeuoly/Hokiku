@@ -35,7 +35,7 @@
 
 <script>
 import { openErrorMessageBox } from '../../../concat/bus'
-import { api_acm_user_question_list } from '../../../interface/api'
+import { api_acm_exam_question_list } from '../../../interface/api'
 
 export default {
     data : () => ({
@@ -72,17 +72,16 @@ export default {
             handler() {
                 this.loadProblems()
             },
-            immediate : true
         }
     },
     methods :{
         async loadProblems() {
-            const { data } = await api_acm_user_question_list(this.page, 50)
+            const { data } = await api_acm_exam_question_list(this.exam_id)
             if (data && data['res'] == 0) {
-                for (let i = 0; i < data['data']['question'].length; i++) {
-                    data['data']['question'][i]['ac_rate'] = `${data['data']['question'][i]['accepted']}/${data['data']['question'][i]['commited']}`
+                for (let i = 0; i < data['data']['problems'].length; i++) {
+                    data['data']['problems'][i]['ac_rate'] = `${data['data']['problems'][i]['accepted']}/${data['data']['problems'][i]['commited']}`
                 }
-                this.problems = data['data']['question']
+                this.problems = data['data']['problems']
             } else {
                 openErrorMessageBox('错误', data ? data['err'] : '未知错误')
             }
@@ -90,6 +89,13 @@ export default {
         to(path) {
             this.$router.push(path)
         }
+    },
+    mounted() {
+        this.exam_id = parseInt(this.$route.params.exam_id)
+        if (!this.exam_id) {
+            this.$router.push('/acm/user/exam')
+        }
+        this.loadProblems()
     }
 }
 </script>

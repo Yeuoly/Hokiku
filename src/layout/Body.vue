@@ -80,7 +80,7 @@ export default {
                 backgroundImage : '',
                 width : '100%',
                 height : '100%',
-                backgroundSize :'100%'
+                backgroundSize :'75%'
             }
             if(['login', 'reg'].includes(this.$route.name) && this.$vuetify.breakpoint.mdAndUp){
                 style.backgroundImage = `url(${index_background_lg_and_up})`

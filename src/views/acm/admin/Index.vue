@@ -32,6 +32,9 @@ export default {
         navs : [{
             path : 'problem',
             text : '题目'
+        }, {
+            path : 'exam',
+            text : '考试'
         }],
         selected_link : 0
     }),

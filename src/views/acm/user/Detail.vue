@@ -121,6 +121,7 @@
                                                 <th>通过率</th>
                                                 <th>占用内存</th>
                                                 <th>运行时间</th>
+                                                <th>操作</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -166,6 +167,17 @@
                                                 <td>
                                                     {{ i.exe_time / 1000000 }} ms
                                                 </td>
+                                                <td>
+                                                    <v-btn
+                                                        color="primary"
+                                                        @click="showCommit(i.id)"
+                                                    >
+                                                        <v-icon>
+                                                            mdi-eye
+                                                        </v-icon>
+                                                        查看
+                                                    </v-btn>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </v-simple-table>
@@ -184,6 +196,19 @@
                 </v-row>
             </v-card-text>
         </v-card>
+        <v-dialog v-model="dialog.show" max-width="800">
+            <v-card>
+                <v-card-title>
+                    <v-icon>mdi-eye</v-icon> 提交测试
+                </v-card-title>
+                <v-card-text>
+                    <CodeEditor
+                        v-model="dialog.code"
+                        :language="dialog.language"
+                    ></CodeEditor>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -217,7 +242,12 @@ export default {
         },
         testcases : [],
         commits : [],
-        code : ''
+        code : '',
+        dialog : {
+            show : false,
+            code : '',
+            language : ''
+        }
     }),
     computed : {
         language () {
@@ -236,6 +266,12 @@ export default {
         }
     },
     methods : {
+        showCommit (id) {
+            const commit = this.commits.find(i => i.id == id)
+            this.dialog.code = commit.code
+            this.dialog.language = this.language
+            this.dialog.show = true
+        },
         async loadQuestion() {
             const { data } = await api_acm_user_question_detail(this.current_question_id)
             if (data && data['res'] == 0) {

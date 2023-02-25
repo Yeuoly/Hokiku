@@ -63,6 +63,10 @@
         <v-col :cols="6">
             <v-btn style="float: right" @click="createOrganization" color="primary">创建新组织</v-btn>
         </v-col>
+        <v-col>
+            <v-btn style="float: left" @click="to('/acm/admin/edit-exam/0')" color="primary">去创建ACM考试</v-btn>
+            <v-btn style="float: left" @click="to('/acm/admin/exam')" color="green" dark>查看考场</v-btn>
+        </v-col>
         <v-col :cols="12">
             <v-sheet elevation="6">
                 <v-tabs
@@ -315,6 +319,9 @@ export default {
                     }
                 }
             }
+        },
+        to(path) {
+            this.$router.push(path)
         }
     },
     mounted(){
