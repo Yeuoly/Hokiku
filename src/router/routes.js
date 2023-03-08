@@ -76,6 +76,7 @@ const Tools01 = () => import('../views/tools/01.vue')
 const ToolsUrl = () => import('../views/tools/Url.vue')
 const ToolsMorse = () => import('../views/tools/Morse.vue')
 const ToolsVigenere = () => import('../views/tools/Vigenere.vue')
+const ToolsMetatoy = () => import('../views/tools/MetaToy.vue')
 
 const BlogIndex = () => import('../views/blog/Index.vue')
 const BlogSpace = () => import('../views/blog/Space.vue')
@@ -342,6 +343,10 @@ const tools_pages = [{
     name : 'tools-vigenere',
     path : '/tools/vigenere',
     component : ToolsVigenere
+},{
+    name : 'tools-metatoy',
+    path : '/tools/metatoy',
+    component : ToolsMetatoy
 }, {
     name : 'tools-rot',
     path : '/tools/rot',

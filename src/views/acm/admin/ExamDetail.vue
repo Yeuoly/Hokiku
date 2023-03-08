@@ -56,6 +56,12 @@
                         >
                             导出Excel
                         </v-btn>
+                        <v-btn
+                            color="primary"
+                            @click="openCommitsDialog"
+                        >
+                            查看学生提交
+                        </v-btn>
                     </v-col>
                     <v-col :cols="12">
                         <v-data-table
@@ -71,20 +77,73 @@
                 </v-row>
             </v-card-text>
         </v-card>
+        <v-dialog v-model="commits_dialog" max-width="1400">
+            <v-card>
+                <v-card-title>
+                    <v-icon>mdi-account</v-icon>
+                    <span class="ml-2">学生提交</span> - {{ 
+                        commits[current_user] && commits[current_user][current_commit] ? 
+                        `通过率：${commits[current_user][current_commit].pass}/${commits[current_user][current_commit].total_case}`
+                        : '无'
+                    }}
+                </v-card-title>
+                <v-card-text>
+                    <v-row>
+                        <v-col>
+                            <v-card-title>
+                                学生
+                            </v-card-title>
+                            <v-radio-group v-model="current_user">
+                                <v-radio
+                                    v-for="member in members"
+                                    :key="member.uid"
+                                    :label="member.name"
+                                    :value="member.uid"
+                                ></v-radio>
+                            </v-radio-group>
+                        </v-col>
+                        <v-divider
+                            vertical
+                        ></v-divider>
+                        <v-col>
+                            <v-card-title>
+                                提交
+                            </v-card-title>
+                            <v-radio-group v-model="current_commit" v-if="commits[current_user]">
+                                <v-radio
+                                    v-for="commit in commits[current_user]"
+                                    :key="commit.id"
+                                    :label="commit.title"
+                                    :value="commit.id"
+                                ></v-radio>
+                            </v-radio-group>
+                        </v-col>
+                        <v-col :cols="8">
+                            <CodeEditor
+                                v-if="commits[current_user] && commits[current_user][current_commit]"
+                                :language="language(commits[current_user][current_commit].language)"
+                                v-model="commits[current_user][current_commit].code"
+                            />
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
 <script>
 import PieCharts from '../../../components/charts/PieCharts.vue'
+import CodeEditor from '../../../components/common/CodeEditor.vue'
 
-import { api_acm_exam_statistics, api_organization_manage_list_member, api_acm_exam_question_list } from '../../../interface/api'
+import { api_acm_exam_statistics, api_organization_manage_list_member, api_acm_exam_question_list, api_acm_exam_manager_commits_list } from '../../../interface/api'
 import { openErrorMessageBox } from '../../../concat/bus'
 
 import XLSX from 'xlsx'
 
 export default {
     name: "ExamDetail",
-    components : { PieCharts },
+    components : { PieCharts, CodeEditor },
     data : () => ({
         exam_id : 0,
         gid : 0,
@@ -157,9 +216,18 @@ export default {
             ],
             data : [],
         },
+        commits_dialog : false,
+        current_user : 0,
+        current_commit : 0,
+        commits : {},
         difficulty : ['default', '有手就行', '简单', '中等', '难', '逆天'],
         problem_types : ['default', '字符串', '数学', '图论', '动态规划', '贪心', '数据结构', '搜索', '模拟', '其他'],
     }),
+    watch : {
+        current_user() {
+            this.loadCommits(this.current_user)
+        }
+    },
     mounted() {
         //load user info
         this.exam_id = parseInt(this.$route.params.exam_id.split('@')[0])
@@ -252,6 +320,21 @@ export default {
 
             }
         },
+        async loadCommits(uid) {
+            if (this.commits[uid]) {
+                return
+            }
+            let { data } = await api_acm_exam_manager_commits_list(this.exam_id, uid, 1, 20)
+            if (data && data['res'] == 0){
+                this.commits[uid] = {}
+                for (const commit of data['data']['commits']) {
+                    this.commits[uid][commit.id] = commit
+                }
+                this.refersh++
+            } else {
+                openErrorMessageBox('错误', data ? data['err'] : '未知错误')
+            }
+        },
         exportToExcel() {
             const table = this.$refs.table.$el.children[0].children[0]
             let workbook = XLSX.utils.table_to_book(table)
@@ -261,6 +344,30 @@ export default {
                 bookSST : false,
                 type : 'base64'
             })
+        },
+        openCommitsDialog() {
+            this.commits_dialog = true
+            if (this.current_user == 0) {
+                if (this.members.length > 0) {
+                    this.current_user = this.members[0].uid
+                }
+            }
+        },
+        language (language) {
+            if (language == 'c') {
+                return 'c_cpp'
+            } else if (language == 'cpp') {
+                return 'c_cpp'
+            } else if (language == 'java') {
+                return 'java'
+            } else if (language == 'python2') {
+                return 'python'
+            } else if (language == 'python3') {
+                return 'python'
+            } else if (language == 'golang') {
+                return 'golang'
+            }
+            return 'plain'
         }
     },
 }

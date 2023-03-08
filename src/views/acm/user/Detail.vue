@@ -34,6 +34,9 @@
                             <v-icon v-if="question.language == 'python3'">
                                 mdi-language-python
                             </v-icon>
+                            <v-icon v-if="question.language == 'golang'">
+                                mdi-language-go
+                            </v-icon>
                         </v-chip>
                     </v-col>
                     <v-col :cols="12">
@@ -261,6 +264,8 @@ export default {
                 return 'python'
             } else if (this.question.language == 'python3') {
                 return 'python'
+            } else if (this.question.language == 'golang') {
+                return 'golang'
             }
             return 'plain'
         }
@@ -287,6 +292,21 @@ export default {
                 this.question.memory_limit = question['memory_limit']
                 this.question.author = question['author']
                 this.question.language = question['target_language']
+
+                if (this.question.language == 'java') {
+                    this.code = `package cn.srmxy.chisato.main;
+public class Main {
+	public static void main(String[] args) {
+		java.util.Scanner scanner = new java.util.Scanner(System.in);
+		String line = scanner.nextLine();
+		String[] arr = line.split(",");
+		int a = Integer.parseInt(arr[0]);
+		int b = Integer.parseInt(arr[1]);
+		System.out.println(a + b);
+	}
+}
+`
+                }
 
                 this.testcases = data['data']['testcases']
                 this.commits = data['data']['testings']

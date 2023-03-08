@@ -13,6 +13,8 @@ require('brace/mode/html')
 require('brace/mode/markdown')
 require('brace/mode/css')
 require('brace/mode/python')
+require('brace/mode/golang')
+require('brace/mode/java')
 require('brace/theme/monokai')
 require('brace/snippets/javascript') //snippet
 require('brace/snippets/html') //snippet
@@ -20,6 +22,8 @@ require('brace/snippets/css') //snippet
 require('brace/snippets/c_cpp') //snippet
 require('brace/snippets/markdown') //snippet
 require('brace/snippets/python') //snippet
+require('brace/snippets/golang') //snippet
+require('brace/snippets/java') //snippet
 
 export default {
     components : { 

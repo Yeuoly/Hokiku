@@ -1,1 +1,1 @@
-export const index_background_lg_and_up = 'http://img.mp.itc.cn/upload/20160822/cf16167f554b4631a86dd24de8b1bfb2_th.jpg'
+export const index_background_lg_and_up = require('../assets/irinagame.png')

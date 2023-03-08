@@ -73,6 +73,9 @@ export default {
             }, {
                 name: '莫斯电码',
                 path: '/tools/morse'
+            }, {
+                name : 'Metatoy格式化',
+                path : '/tools/metatoy'
             }]
         }, {
             module : 'en/encrypt',

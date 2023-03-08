@@ -325,7 +325,7 @@ export default {
         message_bar : false,
         message_content : '',
         comment_types : ['default', 'html', 'markdown'],
-        languages : ['c', 'c++', 'python2', 'python3'],
+        languages : ['c', 'c++', 'python2', 'python3', 'golang', 'java'],
         difficulty : ['default', '有手就行', '简单', '中等', '难', '逆天'],
         problem_types : ['default', '字符串', '数学', '图论', '动态规划', '贪心', '数据结构', '搜索', '模拟', '其他'],
         update_timer : null,

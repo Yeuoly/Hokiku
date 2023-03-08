@@ -8,7 +8,7 @@
                         <v-row>
                             <v-col :cols="3">
                                 <div class="pb5">
-                                    IrinaCTF
+                                    IrinaGame
                                 </div>
                                 <div class="text-15 pb2">
                                     <a href="#">关于我们</a>
@@ -51,7 +51,7 @@
             </v-layout>
             <p class="content has-text-centered text-center">
             <a href="http://www.beian.miit.gov.cn" target="_blank">湘ICP备17021409号-3</a> <br>
-            <a href="#"> © 2020 - {{ new Date().getFullYear() }} 西安……</a>
+            <a href="#"> © 2020 - {{ new Date().getFullYear() }} IrinaGame</a>
             </p>
         </div>
         </div>

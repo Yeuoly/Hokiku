@@ -436,6 +436,8 @@ export const api_acm_exam_question_list = (exam_id) => api_base('acm/exam/proble
 
 export const api_acm_exam_statistics = (exam_id) => api_base('acm/exam/statistics', 'get', stringify({ id : exam_id }))
 
+export const api_acm_exam_manager_commits_list = (id, uid, page, page_size) => api_base('acm/exam/manager/commits/list', 'get', stringify({ id, uid, page, page_size }))
+
 export const api_tmpfile_download = token => {
     //download a file through axios with token in url and START-DASH in header
     return axios({
