@@ -1,5 +1,5 @@
 <template>
-    <v-container fill-height>
+    <v-container>
         <v-row>
             <v-col :cols="12">
                 <v-stepper v-model="step" alt-labels :vertical="true">

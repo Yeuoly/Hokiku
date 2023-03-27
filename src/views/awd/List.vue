@@ -114,7 +114,7 @@ export default {
             })
         },
         senso(game_id) {
-            this.$router.push(`/awd/senso/${game_id}`)
+            this.$router.push(`/awd/team/${game_id}`)
         },
         async getGames() {
             let { data } = await api_competition_awd_game_list()

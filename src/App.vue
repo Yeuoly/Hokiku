@@ -1,9 +1,13 @@
 <template>
   <v-app>
-    <Header></Header>
-    <Sider></Sider>
-    <Body></Body>
-    <Footer></Footer>
+    <div style="display: flex; flex-direction: row; flex-flow: row wrap">
+      <Sider></Sider>
+      <div style="background-color: rgb(238,240,248)">
+        <Header></Header>
+        <Body></Body>
+        <Footer></Footer>
+      </div>
+    </div>
   </v-app>
 </template>
 
@@ -28,3 +32,9 @@ export default {
   }),
 };
 </script>
+
+<style>
+.v-sheet.v-card:not(.v-sheet--outlined){
+  box-shadow: none !important;
+}
+</style>

@@ -2,41 +2,23 @@
     <div style="margin-top: 30px; margin-bottom: 30px; padding-left: 80px; padding-right: 80px">
         <v-flex>
             <v-row>
-                <v-col v-if="!isMobile" md="4" lg="3" xl="2" sm="0">
+                <v-col v-if="!isMobile" cols="12">
                      <v-card>
-                        <v-navigation-drawer
-                            floating
-                            permanent
+                        <v-btn-toggle
+                            v-model="text"
+                            tile
+                            color="deep-purple accent-3"
+                            group
                         >
-                            <v-list
-                                dense
-                                rounded
-                                flat
+                            <v-btn
+                                v-for="(i, k) in navs"
+                                :key="k" 
+                                link 
+                                @click="$router.push(`/acm/${i.path}`)"
                             >
-                                <v-subheader>
-                                    导航
-                                </v-subheader>
-                                <v-list-item-group
-                                    color="primary"
-                                    v-model="selected_link"
-                                >
-                                    <v-list-item
-                                        v-for="(i, k) in navs"
-                                        v-show="avaliable(i)"
-                                        :key="k" 
-                                        link 
-                                        @click="$router.push(`/acm/${i.path}`)"
-                                    >
-                                        <a class="clickable text-center">
-                                            <!-- make text like a link, looks great, weight and rounded -->
-                                            <v-list-item-title>
-                                                {{ i.text }}
-                                            </v-list-item-title>
-                                        </a>
-                                    </v-list-item>
-                                </v-list-item-group>
-                            </v-list>
-                        </v-navigation-drawer>
+                                {{ i.text }}
+                            </v-btn>
+                        </v-btn-toggle>
                     </v-card>
                     <v-card class="mt5">
                         <v-subheader>
@@ -59,7 +41,7 @@
                         </v-btn>
                     </v-bottom-navigation>
                 </v-col>
-                <v-col md="8" lg="9" xl="10" sm="12">
+                <v-col cols="12">
                     <v-card>
                         <router-view></router-view>
                         <div class="py5"></div>

@@ -11,6 +11,7 @@ const Knowledge = () => import('../views/Knowledge.vue')
 const Admin = () => import('../views/Admin.vue')
 const About = () => import('../views/About.vue')
 const Repassword = () => import('../views/Repassword.vue')
+const BigScreen = () => import('../views/BigScreen.vue')
 
 const AdminCourse = () => import('../views/admin/Course.vue')
 const AdminServer = () => import('../views/admin/Server.vue')
@@ -93,6 +94,8 @@ const AwdGameAdmin = () => import('../views/awd/Admin.vue')
 const AwdGameList = () => import('../views/awd/List.vue')
 const AwdGameSenso = () => import('../views/awd/Senso.vue')
 const AwdGameMonitor = () => import('../views/awd/Monitor.vue')
+const AwdGameTeamDetail = () => import('../views/awd/TeamDetail.vue')
+const AwdGamePilot = () => import('../views/bs/BigScreen.vue')
 
 const admin_pages = [{
     name : 'admin-course',
@@ -411,6 +414,10 @@ const awd_pages = [{
     path : '/awd/monitor/:game_id',
     component : AwdGameMonitor,
 }, {
+    name : 'awd-team-detail',
+    path : '/awd/team/:game_id/',
+    component : AwdGameTeamDetail,
+}, {
     name : 'awd-index',
     path : '/awd/',
     redirect : '/awd/list'
@@ -649,7 +656,7 @@ export default [{
     path : '/prodesign',
     component : ProdesignIndex,
     meta : {
-        inNav : true,
+        inNav : false,
         // terminal icon is mdi-console-line
         icon : 'mdi-console-line',
         title : '程序设计',
@@ -687,4 +694,19 @@ export default [{
             online : false
         }
     },
+}, {
+    name : 'bs',
+    path : '/bs',
+    component : BigScreen,
+    meta : {
+        inNav : false,
+        required : {
+            online : true
+        }
+    },
+    children : [{
+        name : 'bs-awd',
+        path : '/bs/awd/:game_id',
+        component : AwdGamePilot,
+    }]
 }]

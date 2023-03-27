@@ -1,59 +1,67 @@
 <template>
-    <v-navigation-drawer
-        v-if="avaliable_nav"
-        temporary
-        absolute
-        v-model="open"
+    <div
+        :style="{ 
+            width: width + 'px',
+        }"
     >
-        <v-list
-            dense
-            nav
+        <div
+            v-if="avaliable_nav"
+            :style="{ 
+                width: width + 'px',
+                height : '100vh',
+                backgroundColor : '#1e1e2d',
+                color: 'white',
+            }"
+            style="position: fixed;overflow: hidden;"
         >
-            <v-card color="blue">
-                <v-list>
-                    <v-list-item class="px-2">
-                        <v-list-item-avatar>
-                            <v-img :src="avatar"></v-img>
-                        </v-list-item-avatar>
-                    </v-list-item>
+            <div
+                style="height: 100%; position: relative;"
+            >
+                <v-list
+                    dense
+                    nav
+                    style="background-color: transparent;"
+                >
+                    <div style="background-color: rbg(45, 30, 30); border-bottom: 1px soild black">
+                        <v-list style="background-color: transparent; border-raduis: 8px">
+                            <v-list-item class="px-2">
+                                <div class="irina-sider-title">
+                                    IrinaGame
+                                </div>
+                            </v-list-item>
+                        </v-list>
+                    </div>
+                    
+                    <v-list-item></v-list-item>
+                    <v-list-item
+                        v-for="item in routes"
+                        v-show="avaliable(item)"
+                        :key="item.name"
+                        link
+                        @click="router(item.path)"
+                    >
+                        <v-list-item-icon>
+                            <v-icon style="color: #a2a3b7">{{ item.meta.icon }}</v-icon>
+                        </v-list-item-icon>
 
-                    <v-list-item link>
                         <v-list-item-content>
-                        <v-list-item-title class="text-h7" style="color: white;">
-                            {{ $store.getters.getUserName }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle style="color: white;">
-                            {{ $store.getters.getUserEmail }}
-                        </v-list-item-subtitle>
+                            <v-list-item-title style="color: #a2a3b7">{{ item.meta.title }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
-            </v-card>
-            
-            <v-list-item
-                v-for="item in routes"
-                v-show="avaliable(item)"
-                :key="item.name"
-                link
-                @click="router(item.path)"
-            >
-            <v-list-item-icon>
-                <v-icon>{{ item.meta.icon }}</v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-                <v-list-item-title style="color: grey">{{ item.meta.title }}</v-list-item-title>
-            </v-list-item-content>
-            </v-list-item>
-        </v-list>
-        <template v-if="$store.getters.getUserOnlineState" v-slot:append>
-            <div class="px2 py2">
-                <v-btn block color="red" class="text-white" @click="logout">
-                    登出
-                </v-btn>
+                <div 
+                    v-if="$store.getters.getUserOnlineState"
+                    style="position: absolute; bottom: 10px; width: 100%;"
+                >
+                    <div class="px2 py2">
+                        <v-btn block color="red" class="text-white" @click="logout">
+                            登出
+                        </v-btn>
+                    </div>
+                </div>
             </div>
-      </template>
-    </v-navigation-drawer>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -61,14 +69,18 @@ import { ui_trans_bus, openInfoMessageBox } from '../concat/bus'
 import { isTeacher } from '../util/index'
 import routes from '../router/routes'
 import { setAuthToken } from '../util/auth'
-
+import {
+    getSiderWidth,
+    eventBus
+} from './communicate'
 export default {
     name : "Sider",
     data : () => ({
         avaliable_nav : true,
         open : false,
         routes : routes,
-        avatar : ''
+        avatar : '',
+        width : getSiderWidth()
     }),
     methods : {
         router(to){
@@ -90,16 +102,23 @@ export default {
         ui_trans_bus.$on('change-navigation-status', () => {
             this.open = !this.open
         })
-
         ui_trans_bus.$on('disable-navigation', () => {
             this.avaliable_nav = false
         })
-
         this.avatar = this.$store.getters.getUserAvatar
+        eventBus.$on('resize::sider', (width) => {
+            this.width = width
+        })
     }
 }
 </script>
 
 <style>
-
+.irina-sider-title {
+    display: block;
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
+    width: 100%;
+}
 </style>

@@ -66,7 +66,6 @@ export default {
 
 <style>
 .footer {
-    background-color: #f6f9fa;
     padding: 1rem 0;
 }
 

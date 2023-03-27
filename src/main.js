@@ -11,7 +11,7 @@ import './style/common.css'
 import './style/hljs.css'
 import './util'
 import route from './router/router'
-import { api_auth_check } from './interface/api'
+import { api_auth_check, api_user_heartbeat } from './interface/api'
 import store from './store'
 
 import EchartsTheme from './style/echarts_theme.json'
@@ -70,6 +70,10 @@ import { disableHeader, disableSideMenu, launchHeader, launchSideMenu } from './
 
     const { data } = await api_auth_check()
     if (data['res'] > 0) {
+      api_user_heartbeat()
+      setInterval(() => {
+        api_user_heartbeat()
+      }, 60000)
       store.commit('setOnlineState', true)
       store.commit('setUsername', data['data']['nickname'])
       store.commit('setUserUid', data['data']['uid'])

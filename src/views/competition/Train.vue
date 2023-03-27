@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="irina-train">
         <v-tabs
             background-color="primary accent-4"
             center-active
@@ -481,9 +481,12 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
     .train-card {
         position: relative;
+        border: 1px solid rgb(235, 237, 243);
+        border-radius: 8px !important;
+        border-color: rgb(235, 237, 243) !important;
     }
 
     .train-card-solved {
@@ -501,5 +504,11 @@ export default {
         box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
         /* border: solid 1px rgba(0,0,0,0.2); */
         border-radius: 10px
+    }
+
+    .irina-train {
+        .v-expansion-panel::before {
+            box-shadow: none !important;
+        }
     }
 </style>

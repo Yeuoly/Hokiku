@@ -32,10 +32,63 @@
         },
         methods : {
             refreshData(){
+                let max_value = 0;
+                this.model.value.forEach(e => {
+                    e.forEach(v => {
+                        if(v > max_value){
+                            max_value = v;
+                        }
+                    });
+                });
+                let min_value = 9999999999999;
+                this.model.value.forEach(e => {
+                    e.forEach(v => {
+                        if(v < min_value){
+                            min_value = v;
+                        }
+                    });
+                });
+                const distance = (max_value - min_value) * 1.3
+
                 this.model.value.forEach((e, i) => {
                     this.$set(this.polar.series, i, {
                         type : 'bar',
                         data : e,
+                        barWidth : 30,
+                        itemStyle:{
+                            normal:{
+                                color : function(params){
+                                    function getColorByBaiFenBi(val){
+                                        val = 100 - val;
+                                        var one = (255+255) / 100;  
+                                        var r=0;
+                                        var g=0;
+                                        var b=0;
+                                    
+                                        if ( val < 50 ) { 
+                                            r = one * val;
+                                            g=180;
+                                        }
+                                        if ( val >= 50 ) {
+                                            g =  255 - ( (val - 50 ) * one) ;
+                                            r = 255;
+                                        }
+                                        r = parseInt(r);// 取整
+                                        g = parseInt(g);// 取整
+                                        b = parseInt(b);// 取整
+                                    
+                                        return "rgb("+r+","+g+","+b+")";
+                                    }
+                                    const value = params.value;
+                                    // min -> red, max -> green, use linear interpolation
+                                    if (distance == 0 ){
+                                        return getColorByBaiFenBi(100);
+                                    }
+                                    const bili = (value - min_value) / distance * 100;
+                                    return getColorByBaiFenBi(bili);
+                                }
+                            }
+                        }
                     });
                 });
                 this.polar.yAxis.data = this.model.category;

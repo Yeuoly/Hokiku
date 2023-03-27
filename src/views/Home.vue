@@ -1,39 +1,36 @@
 <template>
-    <v-container style="margin-top: 30px; margin-bottom: 30px">
+    <v-container style="margin-bottom: 30px">
         <v-flex>
             <v-row>
-                <v-col v-if="!isMobile" md="2" sm="0">
+                <v-col v-if="!isMobile" md="12">
                      <v-card>
-                        <v-navigation-drawer
-                            floating
-                            permanent
+                        <v-btn-toggle
+                            v-model="text"
+                            tile
+                            color="deep-purple accent-3"
+                            group
                         >
-                            <v-list
-                                dense
-                                rounded
+                            <v-btn
+                                v-for="(i, k) in navs"
+                                :key="k" 
+                                link 
+                                @click="$router.push(`/home/${i.path}`)"
                             >
-                                <v-list-item
-                                    v-for="(i, k) in navs"
-                                    :key="k" 
-                                    link 
-                                    @click="$router.push(`/home/${i.path}`)"
-                                >
-                                    {{ i.text }}
-                                </v-list-item>
-                                <v-list-item
-                                    link 
-                                    @click="$router.push(`/repassword`)"
-                                >
-                                    重置密码
-                                </v-list-item>
-                            </v-list>
-                        </v-navigation-drawer>
+                                {{ i.text }}
+                            </v-btn>
+                            <v-btn
+                                link 
+                                @click="$router.push(`/repassword`)"
+                            >
+                            重置密码
+                            </v-btn>
+                        </v-btn-toggle>
                     </v-card>
                 </v-col>
                 <v-col v-else>
                     <v-bottom-navigation class="home-bottom-nav">
                         <v-btn
-                           v-for="(i, k) in navs"
+                            v-for="(i, k) in navs"
                             :key="k" 
                             link 
                             @click="$router.push(`/home/${i.path}`)"
@@ -42,7 +39,7 @@
                         </v-btn>
                     </v-bottom-navigation>
                 </v-col>
-                <v-col md="10" sm="12">
+                <v-col cols="12">
                     <v-card>
                         <router-view></router-view>
                         <div class="py5"></div>

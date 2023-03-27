@@ -60,6 +60,10 @@
 <script>
 import { ui_trans_bus } from '../concat/bus'
 import { index_background_lg_and_up } from '../resouce'
+import {
+    getHeaderWidth,
+    eventBus
+} from './communicate'
 
 export default {
     data : () => ({
@@ -72,16 +76,17 @@ export default {
         status : 0,
         snackbar: false,
         snackbar_text : '',
-        snackbar_color : 'info'
+        snackbar_color : 'info',
+        width : getHeaderWidth()
     }),
     computed : {
         style(){
             const style = {
                 backgroundImage : '',
                 height : '100%',
-                width: '100%',
+                width: this.width + 'px',
                 backgroundSize :'50%',
-                backgroundPosition : '10%',
+                backgroundPosition : '10%'
             }
             if(['login', 'reg'].includes(this.$route.name) && this.$vuetify.breakpoint.mdAndUp){
                 style.backgroundImage = `url(${index_background_lg_and_up})`
@@ -119,6 +124,10 @@ export default {
             this.snackbar_text = text
             this.snackbar_color = color || 'info'
             this.snackbar = true
+        })
+
+        eventBus.$on('resize::header', (width) => {
+            this.width = width
         })
     }
 }

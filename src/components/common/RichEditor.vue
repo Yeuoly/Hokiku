@@ -13,6 +13,7 @@ import { closeLoadingOverlay, openErrorMessageBox, openLoadingOverlay } from '..
 import LoadingOverlay from './LoadingOverlay.vue'
 
 import PreviewMenu from './lib/PreviewMenu'
+import UploadAttachmentMenu from './lib/UploadAttachmentMenu'
 
 export default {
     components : { LoadingOverlay },
@@ -141,7 +142,9 @@ export default {
         }
  
         //highlight code
-        
+        //上传附件
+        editor.menus.extend('UploadAttachmentMenu', UploadAttachmentMenu);
+        editor.config.menus = editor.config.menus.concat('UploadAttachmentMenu');
 
         //博客预览扩展
         editor.menus.extend('PreviewMenu', PreviewMenu);
@@ -152,6 +155,12 @@ export default {
                 this.$emit('change-preview', res);
             });
         }
+        editor.config.onUploadAttachmentBegin(() => {
+            openLoadingOverlay()
+        })
+        editor.config.onUploadAttachmentEnd(() => {
+            closeLoadingOverlay()
+        })
         let active = false
         let timer_over = true
         let current_html = ''

@@ -217,7 +217,7 @@ export default {
 }
 
 .blog-list-container {
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    background-color: rgb(255,255,255);
     border-radius: 10px;
 }
 

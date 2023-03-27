@@ -64,6 +64,8 @@ export const api_user_info = uid => api_base('user/info', 'get', stringify({uid}
 
 export const api_user_repassword = (emailcode, password) => api_base('auth/repass', 'post', stringify({ emailcode, password }))
 
+export const api_user_heartbeat = () => api_base('user/heartbeat', 'post', stringify({}))
+
 export const api_get_math_captcha = method => api_base('captcha/math', 'get', stringify({ method }))
 
 export const api_get_email_captcha = (captcha, method, email) => api_base('captcha/email', 'post', stringify({captcha, method, email}))
@@ -582,6 +584,12 @@ export const api_competition_awd_team_get_members = (game_id, team_id) => api_ba
 export const api_competition_awd_team_get_info = (game_id) => api_base('comp/awd/team/info', 'get', stringify({ game_id }))
 
 export const api_competition_awd_team_list = (game_id) => api_base('comp/awd/team/list', 'get', stringify({ game_id }))
+
+export const api_competition_awd_team_sshpassword_logs = (game_id) => api_base('comp/awd/team/sshpassword/logs', 'get', stringify({ game_id }))
+
+export const api_competition_awd_team_sshpassword_reset = (game_id, username, password) => api_base('comp/awd/team/sshpassword/reset', 'post', stringify({ game_id, username, password }))
+
+export const api_competition_awd_team_statistics = (game_id) => api_base('comp/awd/team/statistics', 'get', stringify({ game_id }))
 
 export const api_competition_awd_rank_team = (game_id, page, page_size, order) => api_base('comp/awd/rank/team', 'get', stringify({ game_id, page, page_size, order }))
 
