@@ -97,7 +97,11 @@ const AwdGameMonitor = () => import('../views/awd/Monitor.vue')
 const AwdGameTeamDetail = () => import('../views/awd/TeamDetail.vue')
 const AwdGamePilot = () => import('../views/bs/BigScreen.vue')
 
-const admin_pages = [{
+import course_manager_routes from './course_manager'
+
+const admin_pages = [
+    ...course_manager_routes,
+    {
     name : 'admin-course',
     path : '/admin/course',
     component : AdminCourse

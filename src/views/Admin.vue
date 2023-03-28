@@ -5,7 +5,6 @@
                 <v-col v-if="!isMobile" cols="12">
                      <v-card>
                         <v-btn-toggle
-                            v-model="text"
                             tile
                             color="deep-purple accent-3"
                             group

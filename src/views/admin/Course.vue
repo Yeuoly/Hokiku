@@ -23,7 +23,7 @@
                     {{ new Date(item.time * 1000).formatDate('Y-M-D h:m:s') }}
                 </template>
                 <template v-slot:item.actions="{ item }">
-                    <!-- <v-btn small @click="openEditDialog(item)">编辑</v-btn> -->
+                    <v-btn small @click="toEdit(item)">编辑</v-btn>
                     <v-btn small color="error" @click="del(item)">删除</v-btn>
                 </template>
                 <template v-slot:expanded-item="{ headers }">
@@ -321,6 +321,9 @@ export default {
             this.update_unit_model.id = item.id
 
             this.update_unit = true
+        },
+        toEdit(item) {
+            this.$router.push(`/admin/course/edit/${item.id}`)
         }
     },
     mounted(){

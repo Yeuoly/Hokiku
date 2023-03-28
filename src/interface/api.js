@@ -158,6 +158,8 @@ export const api_message_system_list = (page, len) => api_base('message/system/l
 
 export const api_homework_publish = (org, title, endtime, desc) => api_base('homework/publish', 'post', stringify({ org, title, endtime, desc }))
 
+export const api_homework_republish = (hid) => api_base('homework/republish', 'post', stringify({ hid }))
+
 export const api_homework_list = (page, len) => api_base('homework/list', 'get', stringify({ page, len }))
 
 export const api_homework_get = hid => api_base('homework/get', 'get', stringify({ hid }))
@@ -199,9 +201,33 @@ export const api_course_public_list = (page, len) => api_base('course/list/publi
 
 export const api_course_detail = cid => api_base('course/detail', 'get', stringify({ cid }))
 
+export const api_course_get = cid => api_base('course/get', 'get', stringify({ cid }))
+
+export const api_course_update = (cid, title, desc, cover_rid) => api_base('course/update', 'post', stringify({ cid, title, desc, cover_rid }))
+
 export const api_course_subscribe = cid => api_base('course/subscribe', 'post', stringify({ cid }))
 
 export const api_course_admin_list_own = cid => api_base('course/list/admin/own', 'get', stringify({ cid }))
+
+export const api_course_search_public = (page, len, keyword) => api_base('course/search/public', 'get', stringify({ page, len, keyword }))
+
+export const api_course_challenge_create = (name, unit_id, course_id, challenge_id, challenge_type, score, desc, hint) => api_base('course/challenge/create', 'post', stringify({
+    name, unit_id, course_id, challenge_id, challenge_type, score, desc, hint
+}))
+
+export const api_course_challenge_update = (id, name, unit_id, course_id, challenge_id, challenge_type, score, desc, hint) => api_base('course/challenge/update', 'post', stringify({
+    id, name, unit_id, cid: course_id, challenge_id, challenge_type, score, desc, hint
+}))
+
+export const api_course_challenge_delete = (cid, challenge_id) => api_base('course/challenge/delete', 'post', stringify({
+    cid, challenge_id 
+}))
+
+export const api_course_challenge_unit_list = (cid, unit_id) => api_base('course/challenge/unit/list', 'get', stringify({ cid, unit_id }))
+
+export const api_course_challenge_course_list = cid => api_base('course/challenge/course/list', 'get', stringify({ cid }))
+
+export const api_course_challenge_get = (cid, challenge_id) => api_base('course/challenge/get', 'get', stringify({ cid, challenge_id }))
 
 export const api_resource_upload_any = file => new Promise(resolve => {
     (async function(){
@@ -339,6 +365,10 @@ export const api_competition_game_message_publish = (game_id, message) => api_ba
 export const api_competition_train_tag_create = tag => api_base('comp/train/tag/create', 'post', stringify({ tag }))
 
 export const api_competition_train_tag_search = (tag, page, size) => api_base('comp/train/tag/search', 'get', stringify({ tag, page, size }))
+
+export const api_competition_train_title_search = (title, page, size) => api_base('comp/train/title/search', 'get', stringify({ title, page, size }))
+
+export const api_competition_train_id_search = (id) => api_base('comp/train/id/search', 'get', stringify({ id }))
 
 export const api_native_server_param = () => api_base('native/server', 'get', '')
 

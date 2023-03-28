@@ -44,17 +44,17 @@
         <v-progress-linear :value="profile.resource.percent_space"></v-progress-linear>
       </v-col>
     </v-row>
-    <v-dialog v-model="dialog.changeAvatar" width="800px">
+    <v-dialog v-model="dialog.changeAvatar" width="500px">
       <v-card>
         <v-card-title>
           <span class="headline">上传头像</span>
         </v-card-title>
         <v-card-actions>
-          <v-spacer></v-spacer>
           <div class="upload-avatar">
             <UploadImage :height="200" v-model="profile.upload_avatar_mid" />
           </div>
-          <v-spacer></v-spacer>
+        </v-card-actions>
+        <v-card-actions>
           <v-btn color="primary" dark @click="commitAvatar">确定</v-btn>
         </v-card-actions>
       </v-card>

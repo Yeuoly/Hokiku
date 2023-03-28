@@ -116,6 +116,10 @@
                     >
                         移除
                     </v-btn>
+                    <v-btn small color="success" 
+                        v-if="isOrganizationManager(item.flag)"
+                        @click="to('/teacher-terminal')"
+                    >教师后台</v-btn>
                 </template> 
             </v-data-table>
         </v-col>

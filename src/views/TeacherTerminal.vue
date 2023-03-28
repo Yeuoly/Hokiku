@@ -1,5 +1,5 @@
 <template>
-    <v-container style="margin-top: 30px; margin-bottom: 30px">
+    <v-container style="margin-bottom: 30px">
         <v-card>
             <v-toolbar color="primary">
                 <v-toolbar-title class="text-white">
@@ -94,6 +94,14 @@
                                     mdi-chart-box-outline
                                 </v-icon>
                             </template>
+                            <template v-slot:item.send="{ item }">
+                                <v-icon
+                                    small
+                                    @click="republishHomework(item.id)"
+                                >
+                                    mdi-send
+                                </v-icon>
+                            </template>
                             <template v-slot:item.time="{ item }">
                                 {{ new Date(item.time * 1000).formatDate('Y-M-D h:m:s') }}
                             </template>
@@ -105,7 +113,7 @@
                 </v-tab-item>
                 <v-tab-item :key="2">
                     <v-container>
-                        456
+                        开发中
                     </v-container>
                 </v-tab-item>
                 <v-tab-item :key="3">
@@ -156,12 +164,13 @@
 
 <script>
 import RichEditor from '../components/common/RichEditor.vue'
-import { openErrorMessageBox, openInfoMessageBox } from '../concat/bus'
+import { closeLoadingOverlay, openErrorMessageBox, openErrorSnackbar, openInfoMessageBox, openLoadingOverlay, openSuccessSnackbar } from '../concat/bus'
 import { 
   api_homework_publish,
     api_homework_publish_list,
     api_list_collection, 
-    api_organization_manage_list_orgs 
+    api_organization_manage_list_orgs,
+    api_homework_republish
 } from '../interface/api'
 
 export default {
@@ -196,6 +205,9 @@ export default {
         }, {
             text : '提交情况',
             value : 'actions'
+        }, {
+            text : '再次推送',
+            value : 'send'
         }],
         homework_table_options : {},
         homework_table_data : [],
@@ -315,6 +327,20 @@ export default {
                     }
                 }
             }
+        },
+        async republishHomework(hid) {
+            openLoadingOverlay()
+            const { data } = await api_homework_republish(hid)
+            if(!data){
+                openErrorSnackbar('网络异常')
+            }else{
+                if(data['res'] != 0){
+                    openErrorSnackbar(data['err'])
+                }else{
+                    openSuccessSnackbar('重新推送成功')
+                }
+            }
+            closeLoadingOverlay()
         },
         collectionCharts(item){
             this.$router.push(`/coll/statistics/${item.cid}`)

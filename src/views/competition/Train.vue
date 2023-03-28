@@ -225,6 +225,8 @@ import {
     api_competition_train_start_check, 
     api_competition_train_status,
     api_competition_train_tag_search,
+    api_competition_train_title_search,
+    api_competition_train_id_search,
     api_competition_train_wp_list,
     api_competition_train_wp_get,
     api_competition_train_attachemnt_list
@@ -270,7 +272,7 @@ export default {
         flag : '',
         keyword : '',
         search_method : '标签',
-        search_methods : ['标签'],
+        search_methods : ['标签','ID','标题'],
         searching : false,
         tab : 0,
         wps : [],
@@ -406,14 +408,24 @@ export default {
                 this.searching = false
                 return
             }
+
+            let search_engine = null
+            if (this.search_method == '标签') {
+                search_engine = api_competition_train_tag_search
+            } else if (this.search_method == '标题') {
+                search_engine = api_competition_train_title_search
+            } else if (this.search_method == 'ID') {
+                search_engine = api_competition_train_id_search
+            }
+
             this.searching = true
-            const { data } = await api_competition_train_tag_search(keyword, page, size)
-            if(!data){
+            const { data } = await search_engine(keyword, page, size)
+            if (!data) {
                 openErrorMessageBox('错误', '网络错误')
-            }else{
-                if(data['res'] != 0){
+            } else {
+                if (data['res'] != 0) {
                     openErrorMessageBox('错误', data['err'])
-                }else{
+                } else {
                     this.trains = data['data']
                 }
             }
@@ -444,7 +456,9 @@ export default {
     watch : {
         type : {
             handler(v){
-                this.load(v, this.page)
+                if (!this.$route.query.id) {
+                    this.load(v, this.page)
+                }
             },
             immediate : true
         },
@@ -467,13 +481,22 @@ export default {
             immediate : true
         }
     },
-    mounted(){
+    async mounted(){
         this.init()
         this.timer = setInterval(() => {
             if(this.tm_info.remainder > 0){
                 this.tm_info.remainder--
             }
         }, 1000)
+
+        if (this.$route.query.id) {
+            this.search_method = 'ID'
+            this.keyword = this.$route.query.id
+            await this.search(this.keyword, this.page, 1)
+            this.$router.push({
+                query : {}
+            })
+        }
     },
     destroyed(){
         clearInterval(this.timer)
