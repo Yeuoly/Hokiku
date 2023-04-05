@@ -27,6 +27,10 @@ export default {
             path : 'public',
             avaliable : true
         }, {
+            text : '课程集',
+            path : 'sheet',
+            avaliable : true
+        }, {
             text : '付费课程',
             path : 'jinkela',
             avaliable : false

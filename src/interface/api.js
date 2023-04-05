@@ -13,7 +13,7 @@ export const setCsrftoken = token => {
     csrf_token = token
 }
 
-const api_base = (url, method, args) => new Promise( resolve => {
+export const api_base = (url, method, args) => new Promise( resolve => {
     (async function(){
         args = args || ''
         const auth_token = getAuthToken()
@@ -207,7 +207,7 @@ export const api_course_update = (cid, title, desc, cover_rid) => api_base('cour
 
 export const api_course_subscribe = cid => api_base('course/subscribe', 'post', stringify({ cid }))
 
-export const api_course_admin_list_own = cid => api_base('course/list/admin/own', 'get', stringify({ cid }))
+export const api_course_admin_list_unit_own = cid => api_base('course/unit/list/admin/own', 'get', stringify({ cid }))
 
 export const api_course_search_public = (page, len, keyword) => api_base('course/search/public', 'get', stringify({ page, len, keyword }))
 

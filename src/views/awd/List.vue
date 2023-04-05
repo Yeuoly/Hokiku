@@ -53,16 +53,16 @@
                         <v-col :cols="12" v-for="(i, k) in players" :key="k">
                             <v-row>
                                 <v-col :cols="3">
-                                    <v-text-field v-model="i.name" label="名称"></v-text-field>
+                                    <v-text-field v-model.trim="i.name" label="名称"></v-text-field>
                                 </v-col>
                                 <v-col :cols="1">
                                     <v-text-field v-model.number="i.uid" label="uid"></v-text-field>
                                 </v-col>
                                 <v-col :cols="4">
-                                    <v-text-field v-model="i.token" label="token"></v-text-field>
+                                    <v-text-field v-model.trim="i.token" label="token"></v-text-field>
                                 </v-col>
                                 <v-col :cols="4">
-                                    <v-text-field v-model="i.email" label="邮箱"></v-text-field>
+                                    <v-text-field v-model.trim="i.email" label="邮箱"></v-text-field>
                                 </v-col>
                             </v-row>
                         </v-col>

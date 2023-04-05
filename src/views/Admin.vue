@@ -57,6 +57,9 @@ export default {
             text : '课程',
             path : 'course'
         }, {
+            text : '课程集',
+            path : 'course-sheet'
+        }, {
             text : '交易',
             path : 'trade'
         }]

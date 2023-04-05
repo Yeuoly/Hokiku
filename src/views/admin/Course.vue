@@ -62,32 +62,6 @@
                 </template>
             </v-data-table>
         </v-col>
-        <v-dialog v-model="new_dialog" width="800">
-            <v-card>
-                <v-toolbar color="primary">
-                    <v-toolbar-title class="text-white">
-                        创建课程
-                    </v-toolbar-title>
-                </v-toolbar>
-                <div class="px5 py2">
-                    <v-text-field
-                        label="标题"
-                        v-model="new_model.title"
-                    ></v-text-field>
-                    <v-text-field
-                        label="简介"
-                        v-model="new_model.desc"
-                    ></v-text-field>
-                    <span class="text-grey">上传封面</span>
-                    <UploadImage v-model="new_model.cover_rid" :height="100" />
-                    <v-switch
-                        label="是否公开"
-                        v-model="new_model.public"
-                    ></v-switch>
-                    <v-btn color="primary" @click="commit">提交</v-btn>
-                </div>
-            </v-card>
-        </v-dialog>
         <v-dialog v-model="new_unit" width="800">
             <v-card>
                 <v-toolbar color="primary">
@@ -141,7 +115,7 @@ import UploadImage from '../../components/common/UploadImage.vue'
 import UploadAny from '../../components/common/UploadAttachment.vue'
 import UploadStream from '../../components/common/UploadStream.vue'
 import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_course_admin_list_own, api_course_create, api_course_get_admin, api_course_unit_create, api_course_update_unit } from '../../interface/api'
+import { api_course_admin_list_unit_own, api_course_create, api_course_get_admin, api_course_unit_create, api_course_update_unit } from '../../interface/api'
 
 export default {
     components : { UploadImage, UploadAny, UploadStream },
@@ -230,7 +204,7 @@ export default {
         },
         async loadUnits(v){
             this.expanded.units = []
-            const { data } = await api_course_admin_list_own(v.id)
+            const { data } = await api_course_admin_list_unit_own(v.id)
             if(!data){
                 openErrorMessageBox('错误', '网络错误')
             }else{

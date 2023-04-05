@@ -67,6 +67,8 @@ const AcmUserExamStatistics = () => import('../views/acm/admin/ExamDetail.vue')
 const KnowledgeMine = () => import('../views/knowledge/Mine.vue')
 const KnowledgePublic = () => import('../views/knowledge/Public.vue')
 const KnowledgeCourse = () => import('../views/knowledge/Course.vue')
+const KnowledgeCourseSheet = () => import('../views/knowledge/Sheet.vue')
+const KnowledgeCourseSheetDetail = () => import('../views/knowledge/SheetDetail.vue')
 
 const ToolsIndex = () => import('../views/tools/Index.vue')
 const ToolsRoutes = () => import('../views/tools/Routes.vue')
@@ -98,6 +100,7 @@ const AwdGameTeamDetail = () => import('../views/awd/TeamDetail.vue')
 const AwdGamePilot = () => import('../views/bs/BigScreen.vue')
 
 import course_manager_routes from './course_manager'
+import teacher from './teacher'
 
 const admin_pages = [
     ...course_manager_routes,
@@ -143,6 +146,14 @@ const knowledge_pages = [{
     path : '/knowledge/course/:cid',
     component : KnowledgeCourse
 }, {
+    name : 'knowledge-course-sheet',
+    path : '/knowledge/sheet',
+    component : KnowledgeCourseSheet
+}, {
+    name : 'knowledge-course-sheet-detail',
+    path : '/knowledge/course/sheet/:sheet_id',
+    component : KnowledgeCourseSheetDetail
+},{
     path : '/knowledge/',
     redirect : '/knowledge/public'
 }]
@@ -464,8 +475,8 @@ export default [{
         }
     }
 },{
-    name : 'teacher-terminal',
-    path : '/teacher-terminal',
+    name : 'teacher',
+    path : '/teacher',
     component : TeacherTerminal,
     meta : {
         inNav : true,
@@ -475,7 +486,8 @@ export default [{
             online : true,
             teacher : true
         }
-    }
+    },
+    children : teacher
 },{
     name : 'index',
     path : '/',

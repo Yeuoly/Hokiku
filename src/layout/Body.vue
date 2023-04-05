@@ -14,8 +14,6 @@
                         {{ title }}
                     </v-card-title>
                 </v-toolbar>
-                
-
                 <v-card-text style="padding-top: 17px">
                     {{ content }}
                 </v-card-text>
