@@ -73,9 +73,6 @@ export default {
             }, {
                 name: '莫斯电码',
                 path: '/tools/morse'
-            }, {
-                name : 'Metatoy格式化',
-                path : '/tools/metatoy'
             }]
         }, {
             module : 'en/encrypt',
@@ -87,11 +84,58 @@ export default {
             }, {
                 name : '维吉尼亚密码',
                 path : '/tools/vigenere'
+            }, {
+                name : '仿射密码',
+                path : '/tools/affine'
+            }, {
+                name : 'Playfair密码',
+                path : '/tools/playfair'
+            }, {
+                name : 'AES',
+                path : '/tools/aes'
+            }, {
+                name : 'DES',
+                path : '/tools/des'
+            }, {
+                name : 'RSA',
+                path : '/tools/rsa'
+            }, {
+                name : 'RC4',
+                path : '/tools/rc4'
+            }, {
+                name : 'TripleDES',
+                path : '/tools/tripledes'
             }]
             // }, {
             //     name : '仿射密码',
             //     path : '/tools/affine'
             // }]
+        }, {
+            module : 'hash',
+            name : '哈希函数',
+            comment : '一些常见的哈希函数，当然，需要不断完善',
+            sub : [{
+                name : 'MD5',
+                path : '/tools/md5'
+            }, {
+                name : 'SHA1',
+                path : '/tools/sha1'
+            }, {
+                name : 'SHA256',
+                path : '/tools/sha256'
+            }, {
+                name : 'SHA384',
+                path : '/tools/sha384'
+            }, {
+                name : 'SHA512',
+                path : '/tools/sha512'
+            }, {
+                name : 'CRC32',
+                path : '/tools/crc32'
+            }, {
+                name : 'HMAC',
+                path : '/tools/hmac'
+            }]
         }]
     }),
     methods :{

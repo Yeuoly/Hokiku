@@ -23,7 +23,7 @@
                                 mdi-network
                             </v-icon>
                         </v-chip>
-                        127.0.0.0/24
+                        {{ i.subnet }}
                     </div>
                     <div class="pb3">简介：{{ i.description }}</div>
                     <v-btn color="primary" small @click="join(i.id)">报名</v-btn>

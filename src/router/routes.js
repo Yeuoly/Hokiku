@@ -71,15 +71,6 @@ const KnowledgeCourseSheet = () => import('../views/knowledge/Sheet.vue')
 const KnowledgeCourseSheetDetail = () => import('../views/knowledge/SheetDetail.vue')
 
 const ToolsIndex = () => import('../views/tools/Index.vue')
-const ToolsRoutes = () => import('../views/tools/Routes.vue')
-const ToolsKurumi = () => import('../views/tools/Kurumi.vue')
-const ToolsBaseSerial = () => import('../views/tools/BaseSerial.vue')
-const ToolsHex = () => import('../views/tools/Hex.vue')
-const Tools01 = () => import('../views/tools/01.vue')
-const ToolsUrl = () => import('../views/tools/Url.vue')
-const ToolsMorse = () => import('../views/tools/Morse.vue')
-const ToolsVigenere = () => import('../views/tools/Vigenere.vue')
-const ToolsMetatoy = () => import('../views/tools/MetaToy.vue')
 
 const BlogIndex = () => import('../views/blog/Index.vue')
 const BlogSpace = () => import('../views/blog/Space.vue')
@@ -101,6 +92,7 @@ const AwdGamePilot = () => import('../views/bs/BigScreen.vue')
 
 import course_manager_routes from './course_manager'
 import teacher from './teacher'
+import { tools_pages } from './tool'
 
 const admin_pages = [
     ...course_manager_routes,
@@ -328,55 +320,6 @@ const acm_pages = [{
             redirect : '/acm/user/home'
         }]
 }, ]
-
-const tools_pages = [{
-    name : 'tools-routes',
-    path : '/tools/routes',
-    component : ToolsRoutes
-}, {
-    name : 'tools-kurumi',
-    path : '/tools/kurumi',
-    component : ToolsKurumi
-}, {
-    name : 'tools-baseserial',
-    path : '/tools/baseserial',
-    component : ToolsBaseSerial
-}, {
-    name : 'tools-hex',
-    path : '/tools/hex',
-    component : ToolsHex
-}, {
-    name : 'tools-01',
-    path : '/tools/01',
-    component : Tools01
-}, {
-    name : 'tools-url',
-    path : '/tools/url',
-    component : ToolsUrl
-}, {
-    name : 'tools-morse',
-    path : '/tools/morse',
-    component : ToolsMorse
-}, {
-    name : 'tools-vigenere',
-    path : '/tools/vigenere',
-    component : ToolsVigenere
-},{
-    name : 'tools-metatoy',
-    path : '/tools/metatoy',
-    component : ToolsMetatoy
-}, {
-    name : 'tools-rot',
-    path : '/tools/rot',
-    component : () => import('../views/tools/Rot.vue')
-}, {
-    name : 'tools-affine',
-    path : '/tools/affine',
-    component : () => import('../views/tools/Affine.vue')
-}, {
-    path : '/tools/',
-    redirect : '/tools/routes'
-}]
 
 const blog_pages = [{
     name : 'blog-space',

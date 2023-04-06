@@ -20,6 +20,13 @@
                             placeholder="比赛简介"
                         ></v-textarea>
                     </v-col>
+                    <v-col :cols="12">
+                        <v-text-field
+                            v-model="game.subnet"
+                            label="子网"
+                            placeholder="172.79.0.0/16"
+                        ></v-text-field>
+                    </v-col>
                     <v-col :cols="6">
                         <v-menu
                             v-model="dialog_switch.game_start_date_picker"
@@ -144,6 +151,20 @@
                         <v-btn color="primary" @click="commit">
                             {{ isNew ? '创建' : '更新' }}
                         </v-btn>
+                    </v-col>
+                    <v-card-title>节点选择</v-card-title>
+                    <v-col :cols="12">
+                        <v-radio-group v-model="current_node" row>
+                            <v-radio
+                                v-for="n in nodes"
+                                :key="n.Client.client_id"
+                                :label="`Node ${n.Client.client_ip} - ${n.Client.client_id.slice(0, 8)}`"
+                                :value="n.Client.client_id"
+                            ></v-radio>
+                        </v-radio-group>
+                    </v-col>
+                    <v-col :cols="12">
+                        <v-btn @click="selectNode()" color="primary">选择节点</v-btn>
                     </v-col>
                     <v-card-title>题目</v-card-title>
                     <v-col :cols="12">
@@ -364,13 +385,18 @@
 import { 
     api_competition_awd_game_create,
     api_competition_awd_game_update,
-    api_competition_awd_game_get,
     api_competition_awd_subject_create,
     api_competition_awd_subject_delete,
     api_competition_awd_subject_list,
     api_competition_awd_subject_update
 } from '../../interface/api'
-
+import {
+    api_get_docker_nodes
+} from '../../interface/docker'
+import {
+    api_inspect_awd_game,
+    api_awd_game_set_node
+} from '../../interface/awd'
 import {
     openSuccessSnackbar,
     openErrorSnackbar
@@ -379,6 +405,8 @@ import {
 export default {
     data : () => ({
         flag_types: ['DEFAULT', '文件flag', '模板指令', '环境变量'],
+        nodes : [],
+        current_node : '',
         dialog_switch : {
             game_start_date_picker: false,
             game_start_time_picker: false,
@@ -402,6 +430,7 @@ export default {
                 date : '',
                 time : ''
             },
+            subnet : ''
         },
         subject : {
             id : 0,
@@ -507,7 +536,7 @@ export default {
             this.dialog_switch.subject_editor_dialog = true
         },
         async getGame() {
-            const { data } = await api_competition_awd_game_get(this.game.id)
+            const { data } = await api_inspect_awd_game(this.game.id)
             if (data && data['res'] == 0) {
                 this.game.description = data['data']['game']['description']
                 this.game.name = data['data']['game']['name']
@@ -518,6 +547,8 @@ export default {
                 this.game.start_time.time = start_time.getHours() + ':' + start_time.getMinutes()
                 this.game.end_time.date = end_time.getFullYear() + '-' + (end_time.getMonth() + 1) + '-' + end_time.getDate()
                 this.game.end_time.time = end_time.getHours() + ':' + end_time.getMinutes()
+
+                this.current_node = data['data']['node_id']
                 openSuccessSnackbar('加载成功')
             } else {
                 openErrorSnackbar(data ? data['err'] : '获取比赛信息失败')
@@ -530,12 +561,27 @@ export default {
                 this.update()
             }
         },
+        async selectNode() {
+            const { data } = await api_awd_game_set_node(this.game.id, this.current_node)
+            if (data && data['res'] == 0) {
+                openSuccessSnackbar('设置成功')
+            } else {
+                openErrorSnackbar(data ? data['err'] : '设置节点失败')
+            }
+        },
+        async loadNodes() {
+            const { data } = await api_get_docker_nodes()
+            if(data && data['res'] == 0){
+                this.nodes = data['data']
+            }
+        },
         async create() {
             const { data } = await api_competition_awd_game_create(
                 this.game.name,
                 this.game_start_time,
                 this.game_end_time,
-                this.game.description
+                this.game.description,
+                this.game.subnet
             )
             if (data && data['res'] == 0) {
                 openSuccessSnackbar('创建成功')
@@ -549,7 +595,8 @@ export default {
                 this.game.name,
                 this.game_start_time,
                 this.game_end_time,
-                this.game.description
+                this.game.description,
+                this.game.subnet
             )
             if (data && data['res'] == 0) {
                 openSuccessSnackbar('更新成功')
@@ -650,6 +697,9 @@ export default {
             this.game.id = game_id
             await this.getGame()
             await this.loadSubjects()
+            this.loadNodes()
+        } else {
+            this.$router.back()
         }
     },
 }

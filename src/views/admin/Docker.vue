@@ -1,8 +1,82 @@
 <template>
     <v-row>
         <v-col :cols="12">
+            <v-card>
+                <v-card-title>
+                    Kisara 节点状态
+                </v-card-title>
+                <v-card-text>
+                    <v-row>
+                        <v-col :cols="6" v-for="(i, k) in nodes" :key="k" class="px2 py2">
+                            <v-row>
+                                <v-col :cols="12">
+                                    <div class="px2">
+                                        节点 : {{ i.Client.client_id }}
+                                    </div>
+                                    <div class="px2">
+                                        地址 : {{ i.Client.client_ip }} : {{ i.Client.client_port }}
+                                    </div>
+                                    <div class="px2">
+                                        运行中的容器 : {{ i.Status.container_num }}
+                                    </div>
+                                </v-col>
+                                <v-col :cols="12">
+                                    <v-divider></v-divider>
+                                </v-col>
+                                <v-col :cols="6" :sm="6" :md="4" :lg="3" :xl="2">
+                                    <v-progress-circular
+                                        :size="100"
+                                        :color="getColor(i.Status.cpu_usage)"
+                                        :value="i.Status.cpu_usage"
+                                    >
+                                        CPU %{{ (i.Status.cpu_usage).toFixed(2) }}
+                                    </v-progress-circular>
+                                </v-col>
+                                <v-col>
+                                    <div class="px2 py2">
+                                        <v-progress-linear
+                                            height="20"
+                                            :value="i.Status.memory_usage"
+                                            :color="getColor(i.Status.memory_usage)"
+                                        >
+                                            <span class="caption">
+                                                内存占用率 {{ i.Status.memory_usage }}%
+                                            </span>
+                                        </v-progress-linear>
+                                    </div>
+                                    <div class="px2 py2">
+                                        <v-progress-linear
+                                            height="20"
+                                            :value="i.Status.disk_usage"
+                                            :color="getColor(i.Status.disk_usage)"
+                                        >
+                                            <span class="caption">
+                                                硬盘占用率 {{ i.Status.disk_usage }}%
+                                            </span>
+                                        </v-progress-linear>
+                                    </div>
+                                    <div class="px2 py2">
+                                        <v-progress-linear
+                                            height="20"
+                                            :value="i.Status.container_usage * 100"
+                                            :color="getColor(i.Status.container_usage * 100)"
+                                        >
+                                            <span class="caption">
+                                                容器占用率 {{ i.Status.container_usage * 100 }}%
+                                            </span>
+                                        </v-progress-linear>
+                                    </div>
+                                </v-col>
+                                <v-col :cols="12">
+                                    <v-divider></v-divider>
+                                </v-col>
+                            </v-row>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+            </v-card>
             <v-card-title>
-                Docker容器状态
+                Irina 容器状态
             </v-card-title>
             <v-card>
                 <v-simple-table>
@@ -30,7 +104,6 @@
                                 <td>{{ new Date(i.time * 1000).formatDate('M-D h:m:s') }}</td>
                                 <td>
                                     <v-btn color="error" small icon @click="stop(i.id)">停止</v-btn>
-                                    <v-btn color="success" small icon>延期</v-btn>
                                 </td>
                             </tr>
                         </tbody>
@@ -143,17 +216,23 @@ import {
     api_docker_sync_check,
     api_docker_container_history
 } from '../../interface/api'
+import {
+    api_get_docker_nodes
+} from '../../interface/docker'
+
 import { sleep } from '../../util'
 
 export default {
     data : () => ({
         containers : [],
         container_history : [],
+        nodes : [],
         container_history_page : 1,
         images : [],
         syncing : false,
         syncing_message : '',
-        syncing_dialog : false
+        syncing_dialog : false,
+        node_timer : null
     }),
     watch : {
         container_history_page() {
@@ -161,6 +240,32 @@ export default {
         }
     },
     methods : {
+        getColor(val) {
+            var one = (255+255) / 100;  
+            var r=0;
+            var g=0;
+            var b=0;
+        
+            if ( val < 50 ) { 
+                r = one * val;
+                g=180;
+            }
+            if ( val >= 50 ) {
+                g =  255 - ( (val - 50 ) * one) ;
+                r = 255;
+            }
+            r = parseInt(r);// 取整
+            g = parseInt(g);// 取整
+            b = parseInt(b);// 取整
+        
+            return "rgb("+r+","+g+","+b+")";
+        },
+        async loadNodes() {
+            const { data } = await api_get_docker_nodes()
+            if(data && data['res'] == 0){
+                this.nodes = data['data']
+            }
+        },
         async loadHistory() {
             const { data:history } = await api_docker_container_history(this.container_history_page, 15)
             if(history && history['res'] == 0){
@@ -241,6 +346,13 @@ export default {
     },
     mounted() {
         this.load()
+        this.loadNodes()
+        this.node_timer = setInterval(() => {
+            this.loadNodes()
+        }, 10000)
+    },
+    beforeDestroy() {
+        clearInterval(this.node_timer)
     }
 }
 </script>

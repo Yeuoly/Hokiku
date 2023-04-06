@@ -2,6 +2,14 @@
     <v-row class="px5 py5">
         <v-dialog v-model="apply_join_dialog.org" width="500">
             <v-card class="px5 py5">
+                <v-card-text>
+                    请注意：
+                    <ul>
+                        <li>当您加入到某一组织后，组织管理者将有权查看您的训练状态，包括但不限于flag提交记录，在线状态等</li>
+                        <li>是否通过需要等待管理员同意</li>
+                        <li>管理员有权修改您在组织内的相关信息</li>
+                    </ul>
+                </v-card-text>
                 <v-text-field
                     label="组织ID"
                     v-model.number="apply_join_org.id"
@@ -91,6 +99,15 @@
                 hide-default-footer
                 :items-per-page="1000"
             >
+                <template v-slot:item.name="{ item }">
+                    <v-text-field
+                        v-model="item.name"
+                    >
+                        <template v-slot:append>
+                            <v-btn small color="primary" @click="renameMember(item.gid, item.uid, item.name)">修改</v-btn>
+                        </template>
+                    </v-text-field>
+                </template>
                 <template v-slot:item.is_manager="{ item }">
                     {{ isOrganizationManager(item.flag) ? '管理员' : '普通成员'}}
                 </template>
@@ -118,7 +135,7 @@
                     </v-btn>
                     <v-btn small color="success" 
                         v-if="isOrganizationManager(item.flag)"
-                        @click="to('/teacher-terminal')"
+                        @click="to('/teacher')"
                     >教师后台</v-btn>
                 </template> 
             </v-data-table>
@@ -127,9 +144,21 @@
 </template>
 
 <script>
-import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
-import { api_organization_apply_join, api_organization_manage_appoint, api_organization_manage_cancel, api_organization_manage_list_member, api_organization_manage_list_orgs, api_organization_my, api_organization_new, api_organization_remove_member } from '../../interface/api'
+import { openErrorMessageBox, openErrorSnackbar, openInfoMessageBox, openSuccessSnackbar } from '../../concat/bus'
+import { 
+    api_organization_apply_join, 
+    api_organization_manage_appoint, 
+    api_organization_manage_cancel, 
+    api_organization_manage_list_member, 
+    api_organization_manage_list_orgs, 
+    api_organization_my, 
+    api_organization_new, 
+    api_organization_remove_member 
+} from '../../interface/api'
 import { isOrganizationManager } from '../../util/index'
+import {
+    api_organization_member_rename
+} from '../../interface/organization'
 
 export default {
     data : () => ({
@@ -189,6 +218,18 @@ export default {
         },
         isOrganizationManager(flag){
             return isOrganizationManager(flag)
+        },
+        async renameMember(gid, uid, name) {
+            const { data } = await api_organization_member_rename(gid, uid, name)
+            if(!data){
+                openErrorSnackbar('请检查网络连接')
+            }else{
+                if(data['res'] != 0){
+                    openErrorSnackbar(data['err'])
+                }else{
+                    openSuccessSnackbar('修改成功')
+                }
+            }
         },
         async applyJoinOrg(){
             const { data } = await api_organization_apply_join(

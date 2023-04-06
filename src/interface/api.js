@@ -547,13 +547,13 @@ export const api_prodesign_vm_overtime = () => api_base('prodesign/vm/overtime',
  * 
  */
 
-export const api_competition_awd_game_create = (name, start_time, end_time, description) => api_base('comp/awd/game/create', 'post', stringify({ name, start_time, end_time, description }))
+export const api_competition_awd_game_create = (name, start_time, end_time, description, subnet) => api_base('comp/awd/game/create', 'post', stringify({ name, start_time, end_time, description, subnet }))
 
 export const api_competition_awd_game_list = () => api_base('comp/awd/game/list', 'get', '')
 
 export const api_competition_awd_game_delete = (game_id) => api_base('comp/awd/game/delete', 'post', stringify({ game_id }))
 
-export const api_competition_awd_game_update = (game_id, name, start_time, end_time, description) => api_base('comp/awd/game/update', 'post', stringify({ game_id, name, start_time, end_time, description }))
+export const api_competition_awd_game_update = (game_id, name, start_time, end_time, description, subnet) => api_base('comp/awd/game/update', 'post', stringify({ game_id, name, start_time, end_time, description, subnet }))
 
 export const api_competition_awd_game_get = (game_id) => api_base('comp/awd/game/get', 'get', stringify({ game_id }))
 
