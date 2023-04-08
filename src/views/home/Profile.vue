@@ -178,7 +178,7 @@ export default {
       const hour = Math.floor(total / 3600)
       const minute = Math.floor((total - hour * 3600) / 60)
       const second = total - hour * 3600 - minute * 60
-      return `${hour}时 ${minute}钟 ${second}秒`
+      return `${hour}时 ${minute}分 ${second}秒`
     }
   },
   mounted() {
