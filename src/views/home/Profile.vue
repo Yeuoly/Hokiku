@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="px5">
     <v-row class="px5">
       <v-col cols="11" style="padding-top: 20px" class="pl5">
         <v-avatar size="72" class="mr5">
@@ -14,30 +14,21 @@
           </template>
         </v-text-field>
       </v-col>
-      <v-col cols="12">
-        <v-divider></v-divider>
-      </v-col>
       <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
         <NormalInfoCard title="可用金币" :content="profile.coin.value.toString() + '￥'" />
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
-        <NormalInfoCard title="冻结金币" :content="profile.coin.freeze.toString() + '￥'" />
+        <NormalInfoCard title="冻结金币" :content="profile.coin.freeze.toString() + '￥'" icon="mdi-lock" />
       </v-col>
-      <v-col cols="12">
-        <v-divider></v-divider>
+      <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
+        <NormalInfoCard title="累计在线时长" :content="total_living_time" icon="mdi-clock" />
       </v-col>
-      <v-col cols="12" sm="12" md="12" lg="6" xl="6" class="px4">
-        <v-sheet height="550">
-          <v-calendar ref="calendar" :event-overlap-threshold="30" locale="zh-cn" :events="profile.signins"></v-calendar>
-        </v-sheet>
-      </v-col>
-      <v-col cols="12">
-        <div class="text-center">
-          <v-btn @click="singin" color="green" dark :disabled="isSigned">
-            <v-icon>mdi-check</v-icon>
-            签到
-          </v-btn>
-        </div>
+      <v-col cols="12" style="height: 400px">
+        <today-date-value-smooth-chart
+          title="今日在线时间"
+          subtext="今天你卷了多久呢？"
+          :model="living_continus_list"
+        ></today-date-value-smooth-chart>
       </v-col>
       <v-col cols="12">
         <span class="text-grey text-14"> 储存空间: {{ percent_text }} </span>
@@ -63,16 +54,20 @@
 </template>
 
 <script>
-import { openErrorMessageBox, openErrorSnackbar, openSuccessSnackbar } from '../../concat/bus'
-import { api_signin, api_signin_list, api_user_profile, api_user_change_avatar } from '../../interface/api'
+import { openErrorMessageBox, openErrorSnackbar } from '../../concat/bus'
+import { api_user_profile, api_user_change_avatar } from '../../interface/api'
 import { isAvaliableNameFormat, visitableMemberSpace } from '../../util/index'
+import {
+  api_user_living_continus_list
+} from '../../interface/user'
 
 import NormalInfoCard from '../../components/common/NormalInfoCard.vue'
 import UploadImage from '../../components/common/UploadImage.vue'
+import TodayDateValueSmoothChart from '../../components/charts/TodayDateValueSmoothChart.vue'
 
 export default {
   name: 'Profile',
-  components: { NormalInfoCard, UploadImage },
+  components: { NormalInfoCard, UploadImage, TodayDateValueSmoothChart },
   data: () => ({
     profile: {
       id: '',
@@ -88,7 +83,11 @@ export default {
         value: 0,
         freeze: 0,
       },
-      signins: [],
+      living : {
+        total : 0,
+        logs : [],
+        page : 1
+      },
     },
     dialog: {
       changeAvatar: false,
@@ -110,16 +109,6 @@ export default {
     applyChangeName() {
       /* TODO */
     },
-    async singin() {
-      const { data } = await api_signin()
-      if (data && data['res'] == 0) {
-        openSuccessSnackbar('签到成功')
-        this.loadSignin()
-        this.loadProfile()
-      } else {
-        openErrorSnackbar(data ? data['err'] : '签到失败')
-      }
-    },
     async loadProfile() {
       const { data } = await api_user_profile()
       if (!data) {
@@ -132,24 +121,20 @@ export default {
           this.profile.resource.current_space = data['data']['r_resource']['current']
           this.profile.coin.value = data['data']['r_trade_coin']['value']
           this.profile.coin.freeze = data['data']['r_trade_coin']['freeze']
+          this.profile.living.total = data['data']['r_living_time']
         }
       }
     },
-    async loadSignin() {
-      const { data } = await api_signin_list()
-      if (data && data['res'] == 0) {
-        if (data['data']['logs']) {
-          this.profile.signins = data['data']['logs'].map((item) => {
-            return {
-              name: '签到',
-              start: new Date(item['time'] * 1000),
-              color: 'green',
-              timed: true,
-            }
-          })
-        }
+    async loadLivingTime() {
+      const { data } = await api_user_living_continus_list(this.profile.living.page, 50)
+      if (!data) {
+        openErrorMessageBox('错误', '获取个人信息失败')
       } else {
-        openErrorSnackbar(data ? data['err'] : '签到失败')
+        if (data['res'] != 0) {
+          openErrorMessageBox('错误', data['err'])
+        } else if (data['data']) {
+          this.profile.living.logs = [...this.profile.living.logs, ...data['data']['users']]
+        }
       }
     },
     uploadAvatar() {
@@ -171,21 +156,30 @@ export default {
     percent_text() {
       return `${visitableMemberSpace(this.profile.resource.current_space)} \\ ${visitableMemberSpace(this.profile.resource.max_space)}`
     },
-    isSigned() {
-      let result = false
-      for (let i = 0; i < this.profile.signins.length; i++) {
-        const item = this.profile.signins[i]
-        if (
-          item.start.getFullYear() == new Date().getFullYear() &&
-          item.start.getMonth() == new Date().getMonth() &&
-          item.start.getDate() == new Date().getDate()
-        ) {
-          result = true
-          break
+    living_continus_list() {
+      const list = {
+        time : [],
+        value : []
+      }
+      for (let i = 0; i < this.profile.living.logs.length; i++) {
+        const item = this.profile.living.logs[i]
+        const start_time = item.created_at
+        const end_time = item.updated_at
+        console.log(start_time, end_time)
+        for (let j = start_time; j <= end_time; j += 60) {
+          list.time.push(j)
+          list.value.push(1)
         }
       }
-      return result
+      return list
     },
+    total_living_time() {
+      const total = this.profile.living.total
+      const hour = Math.floor(total / 3600)
+      const minute = Math.floor((total - hour * 3600) / 60)
+      const second = total - hour * 3600 - minute * 60
+      return `${hour}时 ${minute}钟 ${second}秒`
+    }
   },
   mounted() {
     this.profile.id = this.$store.getters.getUserName
@@ -193,7 +187,7 @@ export default {
     this.profile.avatar = this.$store.getters.getUserAvatar
 
     this.loadProfile()
-    this.loadSignin()
+    this.loadLivingTime()
   },
 }
 </script>

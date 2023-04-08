@@ -3,6 +3,9 @@
              :options="polar"
              theme="theme"
              autoresize
+             :style="{
+                height: `${height}px`
+             }"
     />
 </template>
 
@@ -123,6 +126,10 @@
                 default : '时间-数据平滑折线',
                 type : String
             },
+            height : {
+                default : 400,
+                type : Number
+            }
         }
     }
 </script>

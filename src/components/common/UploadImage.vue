@@ -52,6 +52,7 @@ export default {
                 }else{
                     this.src = data['data']['extra']
                     this.$emit('change', data['data']['id'])
+                    this.$emit('src', data['data']['extra'])
                 }
             }
         }

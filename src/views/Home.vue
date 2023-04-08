@@ -69,6 +69,9 @@ export default {
         }, {
             text : '交易',
             path : 'trade'
+        }, {
+            text : '签到',
+            path : 'signin'
         }]
     }),
     computed : {

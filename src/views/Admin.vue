@@ -54,6 +54,9 @@ export default {
             text : 'docker',
             path : 'docker'
         }, {
+            text : '公告',
+            path : 'boardcast'
+        }, {
             text : '课程',
             path : 'course'
         }, {

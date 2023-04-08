@@ -17,7 +17,6 @@ import store from './store'
 import EchartsTheme from './style/echarts_theme.json'
 
 import VueEcharts from 'vue-echarts'
-
 import { disableHeader, disableSideMenu, launchHeader, launchSideMenu } from './concat/bus'
 
 (async function(){
@@ -54,7 +53,7 @@ import { disableHeader, disableSideMenu, launchHeader, launchSideMenu } from './
       }
     }
   }else{
-    axios.defaults.baseURL = "http://iotshield.srmxy.cn:8080"
+    axios.defaults.baseURL = "http://api.irina.srmxy.cn"
   }
   axios.defaults.withCredentials = true
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'

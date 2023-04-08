@@ -2,13 +2,13 @@
     <div class="normal-info-card">
         <div class="normal-info-card-top">
             <div class="normal-info-card-name">
-                <v-icon>
-                    mdi-account
+                <v-icon size="18" class="px2">
+                    {{ icon }}
                 </v-icon>
                 {{ title }}
             </div>
         </div>
-        <div class="normal-info-card-value">
+        <div class="normal-info-card-value px2">
             {{ content }}
         </div>
     </div>
@@ -25,6 +25,10 @@ export default {
             type : String,
             default : '内容'
         },
+        icon : {
+            type : String,
+            default : 'mdi-account'
+        }
     }
 }
 </script>
@@ -51,6 +55,9 @@ export default {
 .normal-info-card-name {
     display: flex;
     align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: gray;
 }
 
 .normal-info-card-name > v-icon {

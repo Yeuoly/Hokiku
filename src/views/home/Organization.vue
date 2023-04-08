@@ -116,6 +116,7 @@
                 </template>
                 <template v-slot:item.action="{ item }">
                     <v-btn small color="primary" 
+                        text
                         :disabled="!current_own || item.uid == $store.getters.getUserUid"
                         @click="() => {
                             if(isOrganizationManager(item.flag)){
@@ -128,15 +129,27 @@
                         {{ isOrganizationManager(item.flag) ? '取消' : '任命' }}管理员
                     </v-btn>
                     <v-btn small color="error" 
+                        text
                         :disabled="!((current_own || !isOrganizationManager(item.flag)) && item.uid != $store.getters.getUserUid)"
                         @click="removeMember(item.gid, item.uid)"    
                     >
                         移除
                     </v-btn>
                     <v-btn small color="success" 
+                        text
                         v-if="isOrganizationManager(item.flag)"
                         @click="to('/teacher')"
                     >教师后台</v-btn>
+                    <v-btn small color="primary" 
+                        text
+                        v-if="isOrganizationManager(item.flag)"
+                        @click="to(`/teacher/monitor/members/living/${item.gid}`)"
+                    >在线监控</v-btn>
+                    <v-btn small color="primary" 
+                        text
+                        v-if="isOrganizationManager(item.flag)"
+                        @click="to(`/teacher/monitor/members/train-check/${item.gid}`)"
+                    >防作弊检测</v-btn>
                 </template> 
             </v-data-table>
         </v-col>
@@ -187,9 +200,6 @@ export default {
             text : '名称',
             value : 'name'
         }, {
-            text : 'uid',
-            value : 'uid'
-        },{
             text : '加入时间',
             value : 'time'
         }, {

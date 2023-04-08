@@ -81,7 +81,6 @@ export default {
         style(){
             const style = {
                 backgroundImage : '',
-                height : '100%',
                 width: this.width + 'px',
                 backgroundSize :'50%',
                 backgroundPosition : '10%'

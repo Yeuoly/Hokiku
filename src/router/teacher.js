@@ -28,6 +28,14 @@ export default [{
     name: 'teacher-sheet-edit',
     component: () => import('@/views/teacher/CourseSheetEdit.vue'),
 }, {
+    path: '/teacher/monitor/members/living/:gid',
+    name: 'teacher-monitor-members-living',
+    component: () => import('@/views/teacher/MembersLivingContinus.vue'),
+}, {
+    path: '/teacher/monitor/members/train-check/:gid',
+    name: 'teacher-monitor-members-train-check',
+    component: () => import('@/views/teacher/CheckTrainCommit.vue'),
+}, {
     path: '/teacher/',
     redirect: '/teacher/publish-homework'
 }]
