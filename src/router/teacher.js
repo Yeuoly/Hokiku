@@ -36,6 +36,10 @@ export default [{
     name: 'teacher-monitor-members-train-check',
     component: () => import('@/views/teacher/CheckTrainCommit.vue'),
 }, {
+    path : '/teacher/orgs',
+    name : 'teacher-orgs',
+    component : () => import('@/views/teacher/Organization.vue'),
+},{
     path: '/teacher/',
     redirect: '/teacher/publish-homework'
 }]

@@ -15,6 +15,9 @@
                                 link 
                                 @click="$router.push(`/admin/${i.path}`)"
                             >
+                                <v-icon class="px3" color="primary">
+                                    {{ i.icon }}
+                                </v-icon> 
                                 {{ i.text }}
                             </v-btn>
                         </v-btn-toggle>
@@ -49,22 +52,32 @@ export default {
     data : () => ({
         navs : [ {
             text : '服务器',
-            path : 'server'
+            path : 'server',
+            icon : 'mdi-server'
         }, {
             text : 'docker',
-            path : 'docker'
+            path : 'docker',
+            icon : 'mdi-docker'
         }, {
             text : '公告',
-            path : 'boardcast'
+            path : 'boardcast',
+            icon : 'mdi-bullhorn'
         }, {
             text : '课程',
-            path : 'course'
+            path : 'course',
+            icon : 'mdi-book-open-page-variant'
         }, {
             text : '课程集',
-            path : 'course-sheet'
+            path : 'course-sheet',
+            icon : 'mdi-book-open-page-variant'
+        }, {
+            text : '用户',
+            path : 'user',
+            icon : 'mdi-account'
         }, {
             text : '交易',
-            path : 'trade'
+            path : 'trade',
+            icon : 'mdi-cash-multiple'
         }]
     }),
     computed : {

@@ -16,6 +16,9 @@
                                 link 
                                 @click="$router.push(`/message/${i.path}`)"
                             >
+                                <v-icon class="px3" color="primary">
+                                    {{ i.icon }}
+                                </v-icon> 
                                 {{ i.text }}
                             </v-btn>
                         </v-btn-toggle>
@@ -50,7 +53,8 @@ export default {
     data : () => ({
         navs : [{
             text : '系统消息',
-            path : 'system'
+            path : 'system',
+            icon : 'mdi-message-text'
         }],
     }),
     computed : {

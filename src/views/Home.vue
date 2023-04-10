@@ -16,12 +16,18 @@
                                 link 
                                 @click="$router.push(`/home/${i.path}`)"
                             >
+                                <v-icon class="px3" color="primary">
+                                    {{ i.icon }}
+                                </v-icon> 
                                 {{ i.text }}
                             </v-btn>
                             <v-btn
                                 link 
                                 @click="$router.push(`/repassword`)"
                             >
+                                <v-icon class="px3" color="primary">
+                                    mdi-lock-reset
+                                </v-icon>
                             重置密码
                             </v-btn>
                         </v-btn-toggle>
@@ -56,22 +62,28 @@ export default {
     data : () => ({
         navs : [{
             text : '个人',
-            path : 'profile'
+            path : 'profile',
+            icon : 'mdi-account'
         }, {
             text : '作业',
-            path : 'homework'
+            path : 'homework',
+            icon : 'mdi-book-open-page-variant'
         }, {
             text : '收集表',
-            path : 'collection'
+            path : 'collection',
+            icon : 'mdi-file-document-minus-outline'
         }, {
-            text : '组织',
-            path : 'org'
+            text : '班级',
+            path : 'org',
+            icon : 'mdi-account-group'
         }, {
             text : '交易',
-            path : 'trade'
+            path : 'trade',
+            icon : 'mdi-cash-multiple'
         }, {
             text : '签到',
-            path : 'signin'
+            path : 'signin',
+            icon : 'mdi-calendar-check'
         }]
     }),
     computed : {

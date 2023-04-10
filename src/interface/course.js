@@ -54,3 +54,7 @@ export const api_course_sheet_list_unit = (sheet_id, page, page_size) => api_bas
 export const api_course_subcribe_sheet = (sheet_id) => api_base('course/sheet/subcribe', 'post', stringify({
 	sheet_id
 }))
+
+export const api_course_challenge_check = (unit_id) => api_base('course/challenge/check', 'get', stringify({
+	unit_id
+}))

@@ -55,6 +55,13 @@
                                     >
                                         删除
                                     </v-btn>
+                                    <v-btn
+                                        color="success"
+                                        text
+                                        @click="checkChallenge(unit)"
+                                    >
+                                        习题检查
+                                    </v-btn>
                                 </td>
                             </tr>
                         </tbody>
@@ -155,6 +162,9 @@ export default {
         },
         openUploadCoverDialog() {
             this.dialog.upload_cover = true
+        },
+        checkChallenge(item) {
+            this.$router.push(`/knowledge/course/challenge/check/${item.id}`)
         }
     },
     mounted() {

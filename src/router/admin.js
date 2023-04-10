@@ -27,6 +27,14 @@ export const admin_pages = [
     path : '/admin/boardcast',
     component : AdminBoardcast
 }, {
+    name : 'admin-user',
+    path : '/admin/user',
+    component : () => import('../views/admin/User.vue')
+}, {
+    name : 'admin-docker-build-image',
+    path : '/admin/docker/build-image',
+    component : () => import('../views/admin/BuildImage.vue')
+}, {
     name : 'admin-trade',
     path : '/admin/trade',
     component : AdminTrade,

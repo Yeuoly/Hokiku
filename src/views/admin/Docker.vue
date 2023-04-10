@@ -3,6 +3,16 @@
         <v-col :cols="12">
             <v-card>
                 <v-card-title>
+                    Docker 基础操作
+                </v-card-title>
+                <v-card-text>
+                    <v-btn color="success" @click="buildImage">编译镜像</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-col>
+        <v-col :cols="12">
+            <v-card>
+                <v-card-title>
                     Kisara 节点状态
                 </v-card-title>
                 <v-card-text>
@@ -240,6 +250,9 @@ export default {
         }
     },
     methods : {
+        buildImage() {
+            this.$router.push('/admin/docker/build-image')
+        },
         getColor(val) {
             var one = (255+255) / 100;  
             var r=0;

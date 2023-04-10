@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 100%">
         <editor v-model="code" :lang="language" theme="monokai" height="528" ref="coder"></editor>
     </div>
 </template>

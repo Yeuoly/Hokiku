@@ -16,6 +16,9 @@
                                 link 
                                 @click="$router.push(`/acm/${i.path}`)"
                             >
+                                <v-icon class="px3" color="primary">
+                                    {{ i.icon }}
+                                </v-icon> 
                                 {{ i.text }}
                             </v-btn>
                         </v-btn-toggle>
@@ -60,19 +63,23 @@ export default {
         navs : [{
             text : '我的',
             path : 'user/home',
-            sa : false
+            sa : false,
+            icon : 'mdi-account'
         },{
             text : '管理',
             path : 'admin',
-            sa : true
+            sa : true,
+            icon : 'mdi-account-settings'
         },{
             text : '练习',
             path : 'user/problem',
-            sa : false
+            sa : false,
+            icon : 'mdi-book-open-page-variant'
         },{
             text : '考试',
             path : 'user/exam',
-            sa : false
+            sa : false,
+            icon : 'mdi-book-open-page-variant'
         }],
         score : 0,
         selected_link : 1,

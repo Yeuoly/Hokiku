@@ -16,6 +16,9 @@
                                 link 
                                 @click="$router.push(`/teacher/${i.path}`)"
                             >
+                                <v-icon class="px3" color="primary">
+                                    {{ i.icon }}
+                                </v-icon> 
                                 {{ i.text }}
                             </v-btn>
                         </v-btn-toggle>
@@ -51,22 +54,32 @@ export default {
         text : null,
         navs : [{
             text : '发布作业',
-            path : 'publish-homework'
+            path : 'publish-homework',
+            icon : 'mdi-file-document-edit-outline'
         }, {
             text : '查看作业',
-            path : 'check-homework'
+            path : 'check-homework',
+            icon : 'mdi-file-document-check-outline'
         }, {
             text : '发布收集表',
-            path : 'publish-coll'
+            path : 'publish-coll',
+            icon : 'mdi-file-document-arrow-right-outline'
         }, {
             text : '发布课程',
-            path : 'publish-course'
+            path : 'publish-course',
+            icon : 'mdi-human-male-board-poll'
         }, {
             text : '我的课程',
-            path : 'courses'
+            path : 'courses',
+            icon : 'mdi-math-integral-box'
+        }, {
+            text : '班级',
+            path : 'orgs',
+            icon : 'mdi-account-group'
         }, {
             text : '课程集',
-            path : 'course/sheet'
+            path : 'course/sheet',
+            icon : 'mdi-unfold-less-vertical'
         }],
     }),
     computed : {

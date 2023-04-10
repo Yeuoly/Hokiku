@@ -3,7 +3,8 @@
         <v-row class="px5 pt5">
             <v-col :cols="12" v-for="(i, k) in users" :key="k" class="px2 py2">
                 <div class="living-continus-item">
-                    {{ i.member.name }}
+                    {{ i.member.name }} <br>
+                    累计在线{{ (i.total.living_continus / 3600).toFixed(2) }}小时
                 </div>
                 <div class="living-continus-chart">
                     <today-date-value-smooth-chart
@@ -79,7 +80,7 @@ export default {
     margin: 8px;
     float: left;
     width: 184px;
-    line-height: 200px;
+    line-height: 100px;
     text-align: center;
     font-size: 18px;
     color: white;

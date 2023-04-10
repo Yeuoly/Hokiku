@@ -14,7 +14,7 @@
         {{ new Date(item.time * 1000).formatDate("Y-M-D h:m:s") }}
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-btn small @click="toEdit(item)">编辑</v-btn>
+        <v-btn small text color="primary" @click="toEdit(item)">详情</v-btn>
       </template>
       <template v-slot:expanded-item="{ headers }">
         <td :colspan="headers.length">
