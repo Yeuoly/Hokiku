@@ -2,262 +2,315 @@
   <div class="file-manager-editor">
     <div class="file-manager">
       <v-treeview
-            v-model="tree"
-            :open="initiallyOpen"
-            :items="files"
-            activatable
-            item-key="name"
-            open-on-click
-            dense
-        >
-            <template v-slot:prepend="{ item, open }">
-                <v-icon v-if="!item.file">
-                    {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
-                </v-icon>
-                <v-icon v-else>
-                    {{ file_icons[item.file] }}
-                </v-icon>
+        v-model="tree"
+        :open="initiallyOpen"
+        :items="files"
+        activatable
+        item-key="name"
+        open-on-click
+        dense
+      >
+        <template v-slot:prepend="{ item, open }">
+          <v-icon v-if="!item.file">
+            {{ open ? "mdi-folder-open" : "mdi-folder" }}
+          </v-icon>
+          <v-icon v-else>
+            {{ file_icons[item.file] }}
+          </v-icon>
+        </template>
+        <template v-slot:label="{ item }">
+          <span v-if="item.file" @click="selectFile(item)">{{
+            item.name
+          }}</span>
+          <span v-else @drop="appendFile($event, item)" @dragover.prevent>{{
+            item.name
+          }}</span>
+        </template>
+        <template v-slot:append="{ item }">
+          <v-menu
+            v-if="!item.file"
+            bottom
+            origin="center center"
+            transition="scale-transition"
+            :close-on-content-click="false"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                v-if="!item.file"
+                icon
+              >
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
             </template>
-            <template v-slot:label="{ item }">
-                <span v-if="item.file" @click="selectFile(item)">{{ item.name }}</span>
-                <span v-else>{{ item.name }}</span>
-            </template>
-        </v-treeview>
+            <v-list>
+              <v-list-item>
+                <v-text-field
+                  v-model="newFileName"
+                  label="文件名"
+                  prepend-icon="mdi-file"
+                >
+                  <template v-slot:append>
+                    <v-btn
+                      color="primary"
+                      dark
+                      @click="createFolder(item, newFileName)"
+                    >
+                      创建
+                    </v-btn>
+                  </template>
+                </v-text-field>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-icon @click="deleteFile(item)" v-else>
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-treeview>
     </div>
     <div class="editor">
-      <CodeEditor v-if="selectedFile" :language="getLanguage(selectedFile.name)" v-model="selectedFile.content" />
+      <CodeEditor
+        v-if="selectedFile"
+        :language="getLanguage(selectedFile.name)"
+        v-model="selectedFile.content"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import CodeEditor from './CodeEditor.vue'
-import JSZip from 'jszip'
+import CodeEditor from "./CodeEditor.vue";
+import JSZip from "jszip";
 
 export default {
-  name: 'FileManagerEditor',
+  name: "FileManagerEditor",
   components: {
-    CodeEditor
+    CodeEditor,
   },
   props: {
+    zipFile() {
+        return {
+            type: Object | File | Blob,
+        }
+    },
+  },
+  watch: {
     zipFile: {
-      type: Object,
-    }
+      handler: function (newVal) {
+        if (newVal) {
+          // unzip file and overwrite files
+          const zip = new JSZip();
+          this.files = [];
+          zip.loadAsync(this.zipFile).then((zip) => {
+            zip.forEach((relativePath, file) => {
+              if (file.dir) {
+                return;
+              }
+              file.async("string").then((content) => {
+                const path = relativePath.split("/");
+                const name = path.pop();
+                let current = this.files;
+                
+                path.forEach((dir) => {
+                  let found = false;
+                  current.forEach((item) => {
+                    if (item.name === dir) {
+                      found = true;
+                      current = item.children;
+                    }
+                  });
+                  if (!found) {
+                    const newDir = {
+                      name: dir,
+                      children: [],
+                    };
+                    current.push(newDir);
+                    current = newDir.children;
+                  }
+                });
+
+                current.push({
+                  name,
+                  file: this.getFileType(name),
+                  content,
+                });
+              });
+            });
+          });
+        }
+      },
+      immediate: true,
+    },
+    files: {
+      handler: function () {
+        //check if root changed, if so, commit zip to parent
+        const zip = new JSZip();
+        //cycle through files
+        const walker = (files, path) => {
+          files.forEach((file) => {
+            if (file.file) {
+              zip.file(path + file.name, file.content);
+            } else {
+              walker(file.children, path + file.name + "/");
+            }
+          });
+        };
+        walker(this.files, "");
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          this.$emit("change", content);
+        });
+      },
+      deep: true,
+    },
   },
   data() {
     return {
       selectedFile: null,
-      initiallyOpen : [],
+      initiallyOpen: [],
+      newFileName: "",
       files: [
         {
-          name: '.git',
-        },
-        {
-          name: 'node_modules',
-        },
-        {
-          name: 'public',
-          children: [
-            {
-              name: 'static',
-              children: [{
-                name: 'logo.png',
-                file: 'png',
-              }],
-            },
-            {
-              name: 'favicon.ico',
-              file: 'png',
-            },
-            {
-              name: 'index.html',
-              file: 'html',
-              content: '<!DOCTYPE html>\n' +
-                '<html lang="en">\n' +
-                '<head>\n' +
-                '  <meta charset="UTF-8">\n' +
-                '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
-                '  <meta http-equiv="X-UA-Compatible" content="ie=edge">\n' +
-                '  <title>Document</title>\n' +
-                '</head>\n' +
-                '<body>\n' +
-                '  <div id="app"></div>\n' +
-                '</body>\n' +
-                '</html>',
-            },
-          ],
-        },
-        {
-          name: '.gitignore',
-          file: 'txt',
-          content: 'node_modules/\n'
-        },
-        {
-          name: 'babel.config.js',
-          file: 'js',
-          content: 'module.exports = {\n' +
-            '  presets: [\n' +
-            '    \'@vue/cli-plugin-babel/preset\'\n' +
-            '  ]\n' +
-            '}\n'
-        },
-        {
-          name: 'package.json',
-          file: 'json',
-          content: '{\n' +
-            '  "name": "vue-cli3",\n' +
-            '  "version": "0.1.0",\n' +
-            '  "private": true,\n' +
-            '  "scripts": {\n' +
-            '    "serve": "vue-cli-service serve",\n' +
-            '    "build": "vue-cli-service build",\n' +
-            '    "lint": "vue-cli-service lint"\n' +
-            '  },\n' +
-            '  "dependencies": {\n' +
-            '    "core-js": "^3.6.5",\n' +
-            '    "vue": "^2.6.11",\n' +
-            '    "vue-router": "^3.2.0"\n' +
-            '  },\n' +
-            '  "devDependencies": {\n' +
-            '    "@vue/cli-plugin-babel": "^4.5.0",\n' +
-            '    "@vue/cli-plugin-eslint": "^4.5.0",\n' +
-            '    "@vue/cli-service": "^4.5.0",\n' +
-            '    "@vue/eslint-config-prettier": "^6.0.0",\n' +
-            '    "babel-eslint": "^10.1.0",\n' +
-            '    "eslint": "^6.7.2",\n' +
-            '    "eslint-plugin-prettier": "^3.1.3",\n' +
-            '    "eslint-plugin-vue": "^6.2.2",\n' +
-            '    "prettier": "^2.0.5",\n' +
-            '    "sass": "^1.26.10",\n' +
-            '    "sass-loader": "^8.0.2",\n' +
-            '    "vue-template-compiler": "^2.6.11"\n' +
-            '  },\n' +
-            '  "browserslist": [\n' +
-            '    "> 1%",\n' +
-            '    "last 2 versions",\n' +
-            '    "not ie <= 8"\n' +
-            '  ]\n' +
-            '}\n'
-        },
-        {
-          name: 'README.md',
-          file: 'md',
-            content: '# vue-cli3\n' +
-                '\n' +
-                '## Project setup\n' +
-                '```\n' +
-                'yarn install\n' +
-                '```\n' +
-                '\n' +
-                '### Compiles and hot-reloads for development\n' +
-                '```\n' +
-                'yarn serve\n' +
-                '```\n' +
-                '\n' +
-                '### Compiles and minifies for production\n' +
-                '```\n' +
-                'yarn build\n' +
-                '```\n' +
-                '\n' +
-                '### Lints and fixes files\n' +
-                '```\n' +
-                'yarn lint\n' +
-                '```\n' +
-                '\n' +
-                '### Customize configuration\n' +
-                'See [Configuration Reference](https://cli.vuejs.org/config/).\n'
-        },
-        {
-          name: 'vue.config.js',
-          file: 'js',
-            content: 'module.exports = {\n' +
-                '  css: {\n' +
-                '    loaderOptions: {\n' +
-                '      sass: {\n' +
-                '        prependData: `@import "@/assets/scss/_variables.scss";`\n' +
-                '      }\n' +
-                '    }\n' +
-                '  }\n' +
-                '}\n'
-        },
-        {
-          name: 'yarn.lock',
-          file: 'txt',
-            content: '# THIS IS AN AUTOGENERATED FILE. DO NOT EDIT THIS FILE DIRECTLY.\n' +
-                '# yarn lockfile v1\n' +
-                '\n' +
-                '\n' +
-                'ansi-regex@^2.0.0:\n'
+          name: "root",
         },
       ],
       tree: [],
       file_icons: {
-        html: 'mdi-language-html5',
-        js: 'mdi-nodejs',
-        json: 'mdi-code-json',
-        md: 'mdi-language-markdown',
-        pdf: 'mdi-file-pdf',
-        png: 'mdi-file-image',
-        txt: 'mdi-file-document-outline',
-        xls: 'mdi-file-excel',
+        html: "mdi-language-html5",
+        js: "mdi-nodejs",
+        json: "mdi-code-json",
+        md: "mdi-language-markdown",
+        pdf: "mdi-file-pdf",
+        png: "mdi-file-image",
+        txt: "mdi-file-document-outline",
+        xls: "mdi-file-excel",
+        sql: "mdi-database",
+        binary: "mdi-file",
+        php: "mdi-language-php",
       },
-    }
-  },
-  mounted() {
+    };
   },
   methods: {
-    selectFile(item) {
-        this.selectedFile = item
-    },
-    unzipFiles() {
-      const zip = new JSZip()
-      zip.loadAsync(this.zipFile).then(zip => {
-        Object.keys(zip.files).forEach(filename => {
-          const file = zip.files[filename]
-          if (!file.dir) {
-            file.async('string').then(content => {
-              this.files.push({ name: filename, size: file._data.uncompressedSize, content })
-            })
+    deleteFile(item) {
+      const walker = (files, path) => {
+        files.forEach((file, index) => {
+          if (file.file) {
+            if (file === item) {
+              files.splice(index, 1);
+            }
+          } else {
+            walker(file.children, path + file.name + "/");
           }
-        })
-      })
+        });
+      };
+      walker(this.files, "");
     },
-    getFileSize(size) {
-      if (size < 1024) {
-        return size + 'B'
-      } else if (size < 1024 * 1024) {
-        return (size / 1024).toFixed(2) + 'KB'
-      } else {
-        return (size / 1024 / 1024).toFixed(2) + 'MB'
+    appendFile(event, item) {
+      event.preventDefault();
+      const files = event.dataTransfer.files;
+      // check if item has children, if not, add it
+      if (!item.children) {
+        this.$set(item, "children", []);
+      }
+      // loop through files
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileItem = {
+          name: file.name,
+          file: this.getFileType(file.name),
+          children: [],
+        };
+        // read file content
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          fileItem.content = e.target.result;
+          item.children.push(fileItem);
+        };
+        reader.readAsText(file);
       }
     },
+    selectFile(item) {
+      this.selectedFile = item;
+    },
     getLanguage(fileName) {
-      const ext = fileName.split('.').pop().toLowerCase()
+      const ext = fileName.split(".").pop().toLowerCase();
       switch (ext) {
-        case 'js':
-          return 'javascript'
-        case 'html':
-          return 'html'
-        case 'css':
-          return 'css'
+        case "js":
+          return "javascript";
+        case "html":
+          return "html";
+        case "css":
+          return "css";
+        case "json":
+          return "json";
+        case "md":
+          return "markdown";
+        case "sql":
+          return "sql";
+        case "php":
+          return "php";
         default:
-          return ''
+          return "";
+      }
+    },
+    getFileType(fileName) {
+      const ext = fileName.split(".").pop().toLowerCase();
+      switch (ext) {
+        case "js":
+          return "js";
+        case "html":
+        case "htm":
+        case "xhtml":
+          return "html";
+        case "css":
+          return "css";
+        case "json":
+          return "json";
+        case "md":
+          return "md";
+        case "sql":
+          return "sql";
+        case "php":
+        case "php3":
+        case "php4":
+        case "php5":
+        case "phtml":
+          return "php";
+        case "png":
+        case "jpg":
+        case "jpeg":
+        case "gif":
+        case "ico":
+        case "svg":
+          return "png";
+        case "pdf":
+          return "pdf";
+        case "xls":
+          return "xls";
+        case "txt":
+          return "txt";
+        default:
+          return "binary";
       }
     },
     openFile(file) {
-      this.selectedFile = file
+      this.selectedFile = file;
     },
-    createFolder() {
-      if (this.newFolderName) {
-        const folderName = this.newFolderName.trim()
-        if (!this.files.find(f => f.name === folderName)) {
-          this.files.push({ name: folderName, size: 0, content: null, type: 'folder' })
-          this.newFolderName = ''
-        }
+    createFolder(item, name) {
+      // check if item has children, if not, add it
+      if (!item.children) {
+        this.$set(item, "children", []);
       }
-    }
-  }
-}
+      item.children.push({
+        name: name,
+        children: [],
+      });
+    },
+  },
+};
 </script>
 
 <style>

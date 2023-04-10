@@ -14,6 +14,7 @@ require('brace/mode/markdown')
 require('brace/mode/css')
 require('brace/mode/python')
 require('brace/mode/golang')
+require('brace/mode/php')
 require('brace/mode/java')
 require('brace/theme/monokai')
 require('brace/snippets/javascript') //snippet
@@ -24,6 +25,7 @@ require('brace/snippets/markdown') //snippet
 require('brace/snippets/python') //snippet
 require('brace/snippets/golang') //snippet
 require('brace/snippets/java') //snippet
+require('brace/snippets/php') //snippet
 
 export default {
     components : { 

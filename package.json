@@ -21,6 +21,7 @@
     "material-design-icons-iconfont": "^6.7.0",
     "md5": "^2.3.0",
     "node-rsa": "^1.1.1",
+    "raw-loader": "^4.0.2",
     "showdown": "^2.1.0",
     "vue": "^2.6.11",
     "vue-axios": "^3.2.4",
@@ -46,7 +47,8 @@
     "sass-loader": "^10.0.0",
     "vue-cli-plugin-vuetify": "~2.4.1",
     "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.7.0"
+    "vuetify-loader": "^1.7.0",
+    "webpack-cli": "^5.0.1"
   },
   "eslintConfig": {
     "root": true,
