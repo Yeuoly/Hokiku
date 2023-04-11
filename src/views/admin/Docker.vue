@@ -7,6 +7,7 @@
                 </v-card-title>
                 <v-card-text>
                     <v-btn color="success" @click="buildImage">编译镜像</v-btn>
+                    <v-btn color="primary" @click="listImage">本地镜像</v-btn>
                 </v-card-text>
             </v-card>
         </v-col>
@@ -252,6 +253,9 @@ export default {
     methods : {
         buildImage() {
             this.$router.push('/admin/docker/build-image')
+        },
+        listImage() {
+            this.$router.push('/admin/docker/list-image')
         },
         getColor(val) {
             var one = (255+255) / 100;  
