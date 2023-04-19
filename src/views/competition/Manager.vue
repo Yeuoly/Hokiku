@@ -210,6 +210,7 @@ import {
     api_competition_train_attachemnt_list,
     api_competition_train_attachemnt_upload
 } from '../../interface/api'
+
 import { isFlagDynamic, sleep } from '../../util'
 import UploadAttachment from '../../components/common/UploadAttachment.vue'
 

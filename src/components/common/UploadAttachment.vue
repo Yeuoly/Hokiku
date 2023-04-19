@@ -16,7 +16,9 @@
 
 <script>
 import { openErrorMessageBox } from '../../concat/bus'
-import { api_resource_upload_any } from '../../interface/api'
+import {
+    api_resource_upload_any_private
+} from '../../interface/resource'
 export default {
     props : {
         size : {
@@ -42,7 +44,7 @@ export default {
         },
         async commit(){
             const file = this.$refs.ipt.files[0]
-            const { data } = await api_resource_upload_any(file)
+            const { data } = await api_resource_upload_any_private(file)
             if(!data){
                 openErrorMessageBox('错误', '请检查网络连接')
             }else{

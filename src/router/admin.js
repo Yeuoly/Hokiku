@@ -34,11 +34,15 @@ export const admin_pages = [
     name : 'admin-docker-build-image',
     path : '/admin/docker/build-image',
     component : () => import('../views/admin/BuildImage.vue')
-},{
+}, {
     name : 'admin-docker-list-image',
     path : '/admin/docker/list-image',
     component : () => import('../views/admin/Images.vue')
-}, {
+},{
+    name : 'admin-docker-edit-service',
+    path : '/admin/docker/edit-service',
+    component : () => import('../views/admin/EditService.vue')
+},  {
     name : 'admin-trade',
     path : '/admin/trade',
     component : AdminTrade,

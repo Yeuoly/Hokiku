@@ -131,7 +131,7 @@
                         <v-card-text>
                             <v-row>
                                 <v-col :cols="3" v-for="(i, k) in attachments" :key="k">
-                                    <v-card color="green" dark :title="i.r_resource.extra" class="clickable" @click="downloadAttachment(i.r_resource.extra)">
+                                    <v-card color="green" dark :title="i" class="clickable" @click="downloadAttachment(i)">
                                         <v-card-text>
                                             <!-- final 10 chars -->
                                             附件{{k + 1}}
@@ -140,10 +140,14 @@
                                 </v-col>
                             </v-row>
                         </v-card-text>
+                        <v-btn color="primary" v-if="!opened" @click="openEnvironment()">
+                            开启环境
+                        </v-btn>
                         <v-text-field
                             class="px5"
                             label="flag"
                             v-model="flag"
+                            v-if="opened"
                         >
                             <template
                                 v-slot:append
@@ -166,8 +170,8 @@
                             indeterminate
                             color="cyan"
                         ></v-progress-linear>
-                        <v-btn @click="run" :disabled="tm_info.host_port != ''">启动</v-btn>
-                        <v-btn @click="shutdown" :disabled="tm_info.host_port == ''" type="error">关闭</v-btn>
+                        <v-btn v-if="opened" @click="run" :disabled="tm_info.host_port != ''">启动</v-btn>
+                        <v-btn v-if="opened" @click="shutdown" :disabled="tm_info.host_port == ''" type="error">关闭</v-btn>
                         <v-btn @click="toSolvedList">查看排行榜</v-btn>
                         <v-btn @click="toNote">编写笔记</v-btn>
                     </v-card>
@@ -229,8 +233,10 @@ import {
     api_competition_train_id_search,
     api_competition_train_wp_list,
     api_competition_train_wp_get,
-    api_competition_train_attachemnt_list
 } from '../../interface/api'
+import {
+    api_competition_train_attachement_request
+} from '../../interface/train'
 import { loadCompetitions } from '../../store/index'
 import { sleep } from '../../util'
 import InnerHTML from '../../components/common/InnerHTML.vue'
@@ -282,20 +288,25 @@ export default {
             content : '',
             type : 0
         },
-        attachments : []
+        attachments : [],
+        opened : false
     }),
     methods : {
         async loadAttachments(train_id) {
-            const { data } = await api_competition_train_attachemnt_list(train_id)
+            const { data } = await api_competition_train_attachement_request(train_id)
             if(data && data['res'] == 0) {
-                if (data['data'] != null ){
-                    this.attachments = data['data']
+                if (data['data']['attachments']){
+                    this.attachments = data['data']['attachments']
                 } else {
                     this.attachments = []
                 }
             }else {
                 openErrorMessageBox('错误', data ? data['err'] : '未知错误')
             }
+        },
+        async openEnvironment() {
+            this.opened = true
+            this.loadAttachments(this.trains[this.current_index].id)
         },
         toSolvedList() {
             this.$router.push(`/competition/train/solved/${this.trains[this.current_index].id}`)
@@ -310,10 +321,9 @@ export default {
         openDialog(index){
             this.dialog_open = true
             this.current_index = index
+            this.opened = false
             if (this.tab == 1) {
                 this.loadWpList()
-            } else {
-                this.loadAttachments(this.trains[index].id)
             }
         },
         openWp(id) {
@@ -476,6 +486,14 @@ export default {
             handler(v){
                 if (v == 1) {
                     this.loadWpList()
+                }
+            },
+            immediate : true
+        },
+        dialog_open : {
+            handler(v){
+                if (!v) {
+                    this.attachments = []
                 }
             },
             immediate : true

@@ -8,6 +8,7 @@
                 <v-card-text>
                     <v-btn color="success" @click="buildImage">编译镜像</v-btn>
                     <v-btn color="primary" @click="listImage">本地镜像</v-btn>
+                    <v-btn color="success" @click="editService">服务拓扑</v-btn>
                 </v-card-text>
             </v-card>
         </v-col>
@@ -256,6 +257,9 @@ export default {
         },
         listImage() {
             this.$router.push('/admin/docker/list-image')
+        },
+        editService() {
+            this.$router.push('/admin/docker/edit-service')
         },
         getColor(val) {
             var one = (255+255) / 100;  
