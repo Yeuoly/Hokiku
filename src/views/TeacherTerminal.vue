@@ -21,6 +21,31 @@
                                 </v-icon> 
                                 {{ i.text }}
                             </v-btn>
+                            <v-menu
+                                left
+                                bottom
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        link
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    >
+                                        <v-icon class="px3" color="primary">mdi-book-open-page-variant</v-icon>
+                                        题库
+                                    </v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item
+                                        v-for="(o, k) in orgs"
+                                        :key="k"
+                                        link
+                                        @click="$router.push(`/teacher/question/${o.id}`)"
+                                    >
+                                        <v-list-item-title>{{o.name}}</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
                         </v-btn-toggle>
                     </v-card>
                 </v-col>
@@ -48,9 +73,14 @@
 </template>
 
 <script>
+import { openErrorMessageBox } from '../concat/bus';
+import {
+    api_organization_manage_list_orgs,
+} from "../interface/api";
 
 export default {
     data : () => ({
+        orgs: [],
         text : null,
         navs : [{
             text : '发布作业',
@@ -86,7 +116,24 @@ export default {
         isMobile(){
             return !this.$vuetify.breakpoint.mdAndUp
         }
-    }
+    },
+    methods : {
+        async loadOrganizations() {
+            const { data } = await api_organization_manage_list_orgs();
+            if (!data) {
+                    openErrorMessageBox("错误", "网络异常");
+            } else {
+                if (data["res"] != 0) {
+                    openErrorMessageBox("错误", data["err"]);
+                } else {
+                    this.orgs = data["data"];
+                }
+            }
+        },
+    },
+    mounted() {
+        this.loadOrganizations();
+    },
 }
 </script>
 

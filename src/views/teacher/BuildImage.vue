@@ -4,6 +4,7 @@
       <v-col :cols="12">
         <v-text-field
             v-model="image_name"
+            placeholder="镜像名称:版本"
         ></v-text-field>
       </v-col>
       <v-col :cols="12">
@@ -61,11 +62,11 @@
 
 <script>
 import FileManager from "../../components/common/FileManager.vue";
-import { pwn_ubuntu20_template, awd_php7_template, awd_php7_mysql_template, php7_template, php7_mysql } from "./images";
+import { pwn_ubuntu20_template, awd_php7_template, awd_php7_mysql_template, php7_template, php7_mysql } from "../admin/images";
 import {
-    api_docker_native_service_image_build,
-    api_docker_native_service_image_build_check
-} from '../../interface/docker'
+    api_organization_train_build,
+    api_organization_train_build_check,
+} from '../../interface/organization'
 import { openErrorMessageBox, openErrorSnackbar, openSuccessSnackbar } from '../../concat/bus';
 import {
   sleep
@@ -74,9 +75,10 @@ import {
 export default {
   components: { FileManager },
   data: () => ({
+    gid: 0,
     zip: null,
     real_zip: null,
-    image_name: "pwn:v1",
+    image_name: "",
     default_images: [
       {
         name: "pwn-ubuntu20",
@@ -109,7 +111,7 @@ export default {
   methods: {
     async compile() {
         const dockerzip = new Blob([this.real_zip], { type: "application/zip" });
-        const { data } = await api_docker_native_service_image_build(this.image_name, dockerzip);
+        const { data } = await api_organization_train_build(this.gid, this.image_name, dockerzip);
         this.dialog.title = `编译镜像 ${this.image_name}`;
         if (!data || data.res != 0) {
             openErrorSnackbar(data ? data['err'] : '请检查网络');
@@ -122,7 +124,7 @@ export default {
 
         let condition = true;
         while(condition) {
-            const { data } = await api_docker_native_service_image_build_check(message_response_id, status_response_id);
+            const { data } = await api_organization_train_build_check(message_response_id, status_response_id);
             if (!data || data.res != 0) {
                 openErrorSnackbar(data ? data['err'] : '请检查网络');
                 return
@@ -190,6 +192,12 @@ export default {
       input.remove();
     },
   },
+  mounted() {
+    this.gid = parseInt(this.$route.params.gid);
+    if (!this.gid) {
+        this.$router.back()
+    }
+  }
 };
 </script>
 

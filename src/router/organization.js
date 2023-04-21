@@ -1,0 +1,17 @@
+export const organization_routes = [{
+    name: 'organization-train',
+    path: '/org/train/:gid',
+    component: () => import('../views/organization/Train.vue'),
+}, {
+    name: 'organization-train-sheet',
+    path: '/org/sheet/:gid',
+    component: () => import('../views/organization/Sheet.vue'),
+}, {
+    name: 'organization-train-sheet-detail',
+    path: '/org/sheet/:gid/:sid',
+    component: () => import('../views/organization/SheetTrain.vue'),
+}, {
+    name: 'organization-train-sheet-rank',
+    path: '/org/sheet/:gid/:sid/rank',
+    component: () => import('../views/organization/SheetRank.vue'),
+}]

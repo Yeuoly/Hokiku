@@ -19,6 +19,7 @@ const AcmIndex = () => import('../views/acm/Index.vue')
 const ToolsIndex = () => import('../views/tools/Index.vue')
 const AwdGameIndex = () => import('../views/awd/Index.vue')
 const BlogIndex = () => import('../views/blog/Index.vue')
+const AnyRouter = () => import('../views/AnyRouter.vue')
 
 import teacher from './teacher'
 import { tools_pages } from './tool'
@@ -33,6 +34,7 @@ import { message_pages } from './message'
 import { collection_pages } from './collection'
 import { redirect_pages } from './redirect'
 import { bigscreen_pages } from './bigscreen'
+import { organization_routes } from './organization'
 
 const generateRoute = (name, path, component, meta_in_nav, meta_icon, meta_title, meta_required_online, meta_required_teacher, meta_required_offline, children) => {
     return {
@@ -75,5 +77,6 @@ export default [
     generateRoute('awd', '/awd', AwdGameIndex, false, 'mdi-security', 'AWD', true, false, false, awd_pages),
     generateRoute('repassword', '/repassword', Repassword, false, '', '', false, false, false),
     generateRoute('bs', '/bs', BigScreen, false, '', '', true, false, false, bigscreen_pages),
+    generateRoute('organization', '/org', AnyRouter, false, '', '', true, false, false, organization_routes),
     ...redirect_pages
 ]

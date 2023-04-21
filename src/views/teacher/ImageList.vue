@@ -23,15 +23,26 @@
                     small
                     class="mr-2"
                     @click="deleteImageConfirm(item.Id)"
+                    title="删除镜像"
                 >
                     mdi-delete
                 </v-icon>
                 <v-icon
                     small
                     class="mr-2"
-                    @click="push((item.RepoTags && item.RepoTags.length > 0) ? item.RepoTags[0] : '无')"
+                    @click="push(item.Id)"
+                    title="推送镜像"
                 >
                     mdi-upload
+                </v-icon>
+                <v-icon
+                    small
+                    class="mr-2"
+                    :disabled="!item.RepoTags || item.RepoTags.length == 0"
+                    @click="pull(item.RepoTags[0])"
+                    title="同步镜像"
+                >
+                    mdi-sync
                 </v-icon>
             </template>
         </v-data-table>
@@ -63,11 +74,13 @@
 <script>
 import { openErrorMessageBox, openErrorSnackbar, openInfoMessageBox, openSuccessSnackbar } from '../../concat/bus';
 import {
-    api_docker_native_service_image_list,
-    api_docker_native_service_image_delete,
-    api_docker_native_service_image_push,
-    api_docker_native_service_image_push_check
-} from '../../interface/docker'
+    api_organization_train_image_list,
+    api_organization_train_image_delete,
+    api_organization_train_push,
+    api_organization_train_push_check,
+    api_organization_train_image_pull,
+    api_organization_train_image_pull_check
+} from '../../interface/organization'
 import { sleep } from '../../util';
 
 export default {
@@ -77,6 +90,7 @@ export default {
             title : '',
             content : '',
         },
+        gid: 0,
         images: [],
         table_headers : [
             { text: '镜像ID', value: 'id' },
@@ -87,9 +101,10 @@ export default {
         ],
     }),
     methods: {
-        async push(image_name) {
-            const { data } = await api_docker_native_service_image_push(image_name);
+        async push(image_id) {
+            const { data } = await api_organization_train_push(this.gid, image_id);
             this.dialog.title = `上传镜像`;
+            this.dialog.content = '';
             if (!data || data.res != 0) {
                 openErrorSnackbar(data ? data['err'] : '请检查网络');
                 return
@@ -101,9 +116,49 @@ export default {
 
             let condition = true;
             while(condition) {
-                const { data } = await api_docker_native_service_image_push_check(message_response_id, status_response_id);
+                const { data } = await api_organization_train_push_check(message_response_id, status_response_id);
                 if (!data || data.res != 0) {
-                    openErrorSnackbar(data ? data['err'] : '请检查网络');
+                    openErrorMessageBox(data ? data['err'] : '请检查网络');
+                    return
+                }
+                const message = data['data']['message'];
+                const finished = data['data']['finished'];
+                const error = data['data']['error'];
+                if (message) {
+                    this.dialog.content += message;
+                }
+                if (finished) {
+                    condition = false;
+                    if (error) {
+                        openErrorMessageBox('错误', error)
+                        condition = false;
+                    } else {
+                        openSuccessSnackbar('编译成功')
+                    }
+                    break;
+                }
+
+                await sleep(1000)
+            }
+        },
+        async pull(image_name) {
+            const { data } = await api_organization_train_image_pull(this.gid, image_name);
+            this.dialog.title = `同步镜像`;
+            this.dialog.content = '';
+            if (!data || data.res != 0) {
+                openErrorSnackbar(data ? data['err'] : '请检查网络');
+                return
+            }
+
+            const message_response_id = data['data']['message_response_id'];
+            const status_response_id = data['data']['status_response_id'];
+            this.dialog.show = true;
+
+            let condition = true;
+            while(condition) {
+                const { data } = await api_organization_train_image_pull_check(message_response_id, status_response_id);
+                if (!data || data.res != 0) {
+                    openErrorMessageBox(data ? data['err'] : '请检查网络');
                     return
                 }
                 const message = data['data']['message'];
@@ -127,7 +182,7 @@ export default {
             }
         },
         async getImages() {
-            const { data } = await api_docker_native_service_image_list();
+            const { data } = await api_organization_train_image_list(this.gid);
             if(!data || data['res'] != 0) {
                 openErrorSnackbar(data ? data['err'] : '请检查网络');
             } else {
@@ -135,7 +190,7 @@ export default {
             }
         },
         async deleteImage(image_id) {
-            const { data } = await api_docker_native_service_image_delete(image_id);
+            const { data } = await api_organization_train_image_delete(this.gid, image_id);
             if(!data || data['res'] != 0) {
                 openErrorSnackbar(data ? data['err'] : '请检查网络');
             } else {
@@ -150,6 +205,10 @@ export default {
         },
     },
     mounted() {
+        this.gid = parseInt(this.$route.params.gid);
+        if(!this.gid) {
+            this.$router.back();
+        }
         this.getImages();
     }
 }

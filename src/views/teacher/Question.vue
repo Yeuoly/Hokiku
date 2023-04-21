@@ -13,9 +13,9 @@
                                 v-for="(i, k) in navs"
                                 :key="k" 
                                 link 
-                                @click="$router.push(`/admin/${i.path}`)"
+                                @click="$router.push(`/teacher/question/${gid}/${i.path}`)"
                             >
-                                <v-icon class="px3" color="primary">
+                                <v-icon class="px3" color="orange">
                                     {{ i.icon }}
                                 </v-icon> 
                                 {{ i.text }}
@@ -29,7 +29,7 @@
                            v-for="(i, k) in navs"
                             :key="k" 
                             link 
-                            @click="$router.push(`/admin/${i.path}`)"
+                            @click="$router.push(`/teacher/question/${gid}/${i.path}`)"
                         >
                             <span>{{ i.text }}</span>
                         </v-btn>
@@ -51,42 +51,41 @@
 export default {
     data : () => ({
         navs : [ {
-            text : '服务器',
-            path : 'server',
+            text : '编译',
+            path : 'build',
             icon : 'mdi-server'
         }, {
-            text : 'docker',
-            path : 'docker',
-            icon : 'mdi-docker'
+            text : '镜像',
+            path : 'images',
+            icon : 'mdi-image'
         }, {
-            text : '公告',
-            path : 'boardcast',
-            icon : 'mdi-bullhorn'
-        }, {
-            text : '课程',
-            path : 'course',
+            text : '题库',
+            path : 'question',
             icon : 'mdi-book-open-page-variant'
         }, {
-            text : '课程集',
-            path : 'course-sheet',
-            icon : 'mdi-book-open-page-variant'
-        }, {
-            text : '用户',
-            path : 'user',
-            icon : 'mdi-account'
-        }, {
-            text : '班级',
-            path : 'org',
-            icon : 'mdi-account-group'
-        }, {
-            text : '交易',
-            path : 'trade',
-            icon : 'mdi-cash-multiple'
-        }]
+            text : '题集',
+            path : 'sheet',
+            icon : 'mdi-book-open-variant'
+        }],
+        gid : 0
     }),
     computed : {
         isMobile(){
             return !this.$vuetify.breakpoint.mdAndUp
+        }
+    },
+    watch : {
+        '$route.params.gid' : function(){
+            this.gid = parseInt(this.$route.params.gid)
+            if(!this.gid) {
+                this.$router.back()
+            }
+        }
+    },
+    mounted(){
+        this.gid = parseInt(this.$route.params.gid)
+        if(!this.gid) {
+            this.$router.back()
         }
     }
 }

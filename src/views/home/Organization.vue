@@ -64,7 +64,16 @@
                         <div class="class_detail-img" :style="{
                             backgroundImage : 'url(' + require('../../assets/hacker.jpg') + ')'
                         }">
-                            <div class="class_detail-mask" @click="to">练习环境</div>
+                            <div class="class_detail-mask" @click="to(`/org/train/${current_org.id}`)">练习环境</div>
+                        </div>
+                    </div>
+                </v-col>
+                <v-col :cols="6" :sm="6" :md="4" :lg="4" :xl="3">
+                    <div class="class_detail-enter px3 py3 clickable">
+                        <div class="class_detail-img" :style="{
+                            backgroundImage : 'url(' + require('../../assets/aqua.png') + ')'
+                        }">
+                            <div class="class_detail-mask" @click="to(`/org/sheet/${current_org.id}`)">题单</div>
                         </div>
                     </div>
                 </v-col>

@@ -36,3 +36,11 @@ export const api_docker_native_service_image_build = (image_name, dockerzip) => 
 export const api_docker_native_service_image_build_check = (message_response_id, status_response_id) => api_base('docker/admin/native-service/image/build/check', 'get', stringify({
     message_response_id, status_response_id
 }))
+
+export const api_docker_native_service_image_push = (image_name) => api_base('docker/admin/native-service/image/push', 'post', stringify({
+    image_name
+}))
+
+export const api_docker_native_service_image_push_check = (message_response_id, status_response_id) => api_base('docker/admin/native-service/image/push/check', 'get', stringify({
+    message_response_id, status_response_id
+}))

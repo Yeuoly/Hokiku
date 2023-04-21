@@ -1,3 +1,7 @@
+import {
+    teacher_question
+} from './teacher_question'
+
 export default [{
     path: '/teacher/publish-homework',
     name: 'publish-homework',
@@ -39,7 +43,12 @@ export default [{
     path : '/teacher/orgs',
     name : 'teacher-orgs',
     component : () => import('@/views/teacher/Organization.vue'),
-},{
+}, {
+    path : '/teacher/question/:gid',
+    name : 'teacher-question',
+    component : () => import('@/views/teacher/Question.vue'),
+    children: teacher_question
+}, {
     path: '/teacher/',
     redirect: '/teacher/publish-homework'
 }]

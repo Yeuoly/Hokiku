@@ -19,6 +19,10 @@ export const admin_pages = [
     path : '/admin/server',
     component : AdminServer
 }, {
+    name : 'admin-org',
+    path : '/admin/org',
+    component : () => import('../views/admin/Organization.vue')
+}, {
     name : 'admin-docker',
     path : '/admin/docker',
     component : AdminDocker
