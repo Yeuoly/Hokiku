@@ -80,6 +80,15 @@
                 <v-col :cols="6" :sm="6" :md="4" :lg="4" :xl="3">
                     <div class="class_detail-enter px3 py3 clickable">
                         <div class="class_detail-img" :style="{
+                            backgroundImage : 'url(' + require('../../assets/learn.png') + ')'
+                        }">
+                            <div class="class_detail-mask" @click="to(`/org/course/${current_org.id}`)">课程</div>
+                        </div>
+                    </div>
+                </v-col>
+                <v-col :cols="6" :sm="6" :md="4" :lg="4" :xl="3">
+                    <div class="class_detail-enter px3 py3 clickable">
+                        <div class="class_detail-img" :style="{
                             backgroundImage : 'url(' + require('../../assets/hacker-man.jpg') + ')'
                         }">
                             <div class="class_detail-mask" @click="to">我的学习状态</div>

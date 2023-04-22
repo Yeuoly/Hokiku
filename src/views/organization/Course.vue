@@ -44,11 +44,12 @@
 import { openErrorMessageBox } from '../../concat/bus'
 import { api_course_detail, api_course_subscribe } from '../../interface/api'
 import {
-    api_course_subscribe_list
-} from '../../interface/knowledge'
+    api_organization_course_list
+} from '../../interface/organization'
 
 export default {
     data : () => ({
+        gid : 0,
         list : [],
         dialog : {
             id : 0,
@@ -64,7 +65,7 @@ export default {
     }),
     methods : {
         async load(){
-            const { data } = await api_course_subscribe_list()
+            const { data } = await api_organization_course_list(this.gid)
             if(!data){
                 openErrorMessageBox('错误', '网络错误')
             }else{
@@ -117,6 +118,10 @@ export default {
         }
     },
     mounted() {
+        this.gid = parseInt(this.$route.params.gid)
+        if(!this.gid) {
+            this.$router.back()
+        }
         this.load()
     }
 }

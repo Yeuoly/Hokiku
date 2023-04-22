@@ -113,3 +113,19 @@ export const api_organization_train_sheet_list = (gid) => api_base('org/train/sh
 export const api_organization_train_sheet_detail = (gid, sid) => api_base('org/train/sheet/detail', 'get', stringify({
     gid, sid
 }))
+
+export const api_organization_course_list = (gid) => api_base('org/course/list', 'get', stringify({
+    gid
+}))
+
+export const api_organization_manage_course_bind_list = (cid) => api_base('org/manage/course/bind/list', 'get', stringify({
+    cid
+}))
+
+export const api_organization_manage_course_bind = (cid, gid) => api_base('org/manage/course/bind', 'post', stringify({
+    cid, gid
+}))
+
+export const api_organization_manage_course_unbind = (cid, gid) => api_base('org/manage/course/unbind', 'post', stringify({
+    cid, gid
+}))

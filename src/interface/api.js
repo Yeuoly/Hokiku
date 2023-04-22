@@ -203,7 +203,7 @@ export const api_course_detail = cid => api_base('course/detail', 'get', stringi
 
 export const api_course_get = cid => api_base('course/get', 'get', stringify({ cid }))
 
-export const api_course_update = (cid, title, desc, cover_rid) => api_base('course/update', 'post', stringify({ cid, title, desc, cover_rid }))
+export const api_course_update = (cid, title, desc, cover_rid, _public) => api_base('course/update', 'post', stringify({ cid, title, desc, cover_rid, public : _public }))
 
 export const api_course_subscribe = cid => api_base('course/subscribe', 'post', stringify({ cid }))
 

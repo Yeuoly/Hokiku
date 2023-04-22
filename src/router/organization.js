@@ -11,6 +11,10 @@ export const organization_routes = [{
     path: '/org/sheet/:gid/:sid',
     component: () => import('../views/organization/SheetTrain.vue'),
 }, {
+    name: 'organization-course',
+    path: '/org/course/:gid',
+    component: () => import('../views/organization/Course.vue'),
+}, {
     name: 'organization-train-sheet-rank',
     path: '/org/sheet/:gid/:sid/rank',
     component: () => import('../views/organization/SheetRank.vue'),

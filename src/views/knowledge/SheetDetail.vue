@@ -16,8 +16,8 @@
         >
             <v-card class="clickable" @click="openDetail(i)">
                 <v-card-title>{{ i.title }}</v-card-title>
-                <v-img :src="i.r_cover.url"></v-img>
-                <v-card-text class="text-12 text-grey" style="height: 70px">
+                <v-img height="200" :src="i.r_cover.url"></v-img>
+                <v-card-text class="text-12 text-grey" style="height: 90px">
                     {{ i.desc }}
                 </v-card-text>
             </v-card>
