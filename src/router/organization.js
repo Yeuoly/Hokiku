@@ -18,4 +18,8 @@ export const organization_routes = [{
     name: 'organization-train-sheet-rank',
     path: '/org/sheet/:gid/:sid/rank',
     component: () => import('../views/organization/SheetRank.vue'),
+}, {
+    name : 'organization-service',
+    path : '/org/service/:gid',
+    component : () => import('../views/organization/Service.vue'),
 }]

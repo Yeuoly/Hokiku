@@ -2,6 +2,10 @@ import {
     teacher_question
 } from './teacher_question'
 
+import {
+    teacher_service
+} from './teacher_service'
+
 export default [{
     path: '/teacher/publish-homework',
     name: 'publish-homework',
@@ -48,6 +52,11 @@ export default [{
     name : 'teacher-question',
     component : () => import('@/views/teacher/Question.vue'),
     children: teacher_question
+}, {
+    path : '/teacher/service/:gid',
+    name : 'teacher-service',
+    component : () => import('@/views/teacher/Service.vue'),
+    children: teacher_service
 }, {
     path: '/teacher/',
     redirect: '/teacher/publish-homework'

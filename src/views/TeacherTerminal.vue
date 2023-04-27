@@ -46,6 +46,31 @@
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
+                            <v-menu
+                                left
+                                bottom
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        link
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    >
+                                        <v-icon class="px3" color="primary">mdi-web</v-icon>
+                                        渗透测试
+                                    </v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item
+                                        v-for="(o, k) in orgs"
+                                        :key="k"
+                                        link
+                                        @click="$router.push(`/teacher/service/${o.id}`)"
+                                    >
+                                        <v-list-item-title>{{o.name}}</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
                         </v-btn-toggle>
                     </v-card>
                 </v-col>

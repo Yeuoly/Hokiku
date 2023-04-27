@@ -91,7 +91,7 @@
                         <div class="class_detail-img" :style="{
                             backgroundImage : 'url(' + require('../../assets/hacker-man.jpg') + ')'
                         }">
-                            <div class="class_detail-mask" @click="to">我的学习状态</div>
+                            <div class="class_detail-mask" @click="to(`/org/service/${current_org.id}`)">渗透场景</div>
                         </div>
                     </div>
                 </v-col>
@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { openErrorMessageBox, openInfoMessageBox } from '../../concat/bus'
+import { openErrorMessageBox, openErrorSnackbar, openInfoMessageBox } from '../../concat/bus'
 import { 
     api_organization_apply_join, 
     api_organization_my, 
@@ -138,6 +138,10 @@ export default {
     }),
     methods : {
         to(path) {
+            if(this.current_org.id == 0) {
+                openErrorSnackbar('请先选择班级')
+                return
+            }
             this.$router.push(path)
         },
         selectOrg(org) {

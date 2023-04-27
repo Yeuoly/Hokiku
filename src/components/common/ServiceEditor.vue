@@ -29,17 +29,44 @@
               v-model="dailog.current_container.image_name"
               label="镜像"
             ></v-text-field>
-            <v-text-field
-              v-model="dailog.current_container.flag_command"
-              label="flag"
-            ></v-text-field>
+            <v-divider class="py2"></v-divider>
+            <v-btn color="success" @click="addFlag(dailog.current_container)">
+              添加flag
+            </v-btn>
+            <div
+              v-for="(flag, index) in dailog.current_container.flags"
+              :key="'flag' + index"
+            >
+              <v-row>
+                <v-col :cols="4">
+                  <v-text-field v-model="flag.flag_uuid" label="flag id"></v-text-field>
+                </v-col>
+                <v-col :cols="4">
+                  <v-text-field v-model="flag.flag_command" label="flag command"></v-text-field>
+                </v-col>
+                <v-col :cols="4">
+                  <v-text-field v-model.number="flag.flag_score" label="flag分值">
+                    <template v-slot:append>
+                      <v-btn
+                        small
+                        color="red"
+                        dark
+                        @click="deleteFlag(dailog.current_container, index)"
+                      >
+                        删除
+                      </v-btn>
+                    </template>
+                  </v-text-field>
+                </v-col>
+              </v-row>
+            </div>
             <v-divider class="py2"></v-divider>
             <v-btn color="success" @click="addSubnet(dailog.current_container)">
               添加网络
             </v-btn>
             <div
               v-for="(network, index) in dailog.current_container.networks"
-              :key="index"
+              :key="'network' + index"
             >
               <v-row>
                 <v-col :cols="12">
@@ -67,19 +94,15 @@
               :key="index"
             >
               <v-row>
-                <v-col :cols="4">
-                    <v-select
-                        v-model="port.subnet"
-                        :items="networks"
-                        label="子网"
-                    ></v-select>
+                <v-col :cols="6">
+                  <v-select
+                    label="协议"
+                    :items="['tcp', 'udp']"
+                    v-model="port.protocol"
+                  ></v-select>
                 </v-col>
-                <v-col :cols="4">
-                  <v-text-field v-model="port.protocol" label="协议">
-                  </v-text-field>
-                </v-col>
-                <v-col :cols="4">
-                  <v-text-field v-model="port.port" label="容器端口">
+                <v-col :cols="6">
+                  <v-text-field v-model.number="port.port" label="容器端口">
                     <template v-slot:append>
                       <v-btn
                         small
@@ -116,6 +139,7 @@
 
 <script>
 import { Network } from "vue-vis-network";
+import { getUuid } from '../../util/uuid'
 import Vue from "vue";
 Vue.component("network", Network);
 import "vue-vis-network/node_modules/vis-network/dist/vis-network.css";
@@ -227,7 +251,7 @@ export default {
       this.containers.push({
         id: id,
         name: "Service " + id,
-        flag_command: "echo $flag > /tmp/flag",
+        flags : [],
         image_name: "<none>:<none>",
         networks: [],
         ports: [],
@@ -250,6 +274,16 @@ export default {
         subnet: "",
       });
     },
+    addFlag(container) {
+      container.flags.push({
+        flag_uuid : getUuid(),
+        flag_command : "echo $flag > /tmp/flag",
+        flag_score : 100,
+      })
+    },
+    deleteFlag(container, index) {
+      container.flags.splice(index, 1);
+    },
     deletePort(container, index) {
       container.ports.splice(index, 1);
     },
@@ -257,7 +291,6 @@ export default {
       container.ports.push({
         port: "",
         protocol: "",
-        subnet : ""
       });
     },
     deleteContainer(container) {
