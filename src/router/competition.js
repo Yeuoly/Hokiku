@@ -8,7 +8,8 @@ const CompetitionTrainSolved = () => import('../views/competition/TrainSolved.vu
 const CompetitionTrainNote = () => import('../views/competition/Note.vue')
 const CompetitionGameEditor = () => import('../views/game/Editor.vue')
 const AwdGameList = () => import('../views/awd/List.vue')
-
+const CompetitionService = () => import('../views/competition/Service.vue')
+const CompetitionServiceRank = () => import('../views/competition/ServiceRank.vue')
 
 export const competition_pages = [{
     name : 'competition-game',
@@ -46,6 +47,14 @@ export const competition_pages = [{
     name : 'competition-game-edit',
     path : '/competition/game/edit/:competition_id',
     component : CompetitionGameEditor
+}, {
+    name : 'competition-service',
+    path : '/competition/service',
+    component : CompetitionService
+}, {
+    name : 'competition-service/rank',
+    path : '/competition/service/rank/:sid',
+    component : CompetitionServiceRank
 }, {
     name : 'competition-awd',
     path : '/competition/awd',

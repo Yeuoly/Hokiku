@@ -89,7 +89,12 @@ export default {
             path : '/awd/admin',
             sa : true,
             icon : 'mdi-shield-bug-outline'
-        },{
+        }, {
+            text : '渗透',
+            path : '/competition/service',
+            sa : false,
+            icon : 'mdi-server-network'
+        }, {
             text : '排名',
             path : '/competition/rank',
             sa : false,

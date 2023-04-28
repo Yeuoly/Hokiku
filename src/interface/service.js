@@ -61,5 +61,9 @@ export const api_comp_service_stop_check = (finish_response_id) => api_base('/co
     finish_response_id
 }))
 
+export const api_comp_service_flag_commit = (flags) => api_base('/comp/service/flag/commit', 'post', stringify({
+    flags
+}))
+
 export const api_comp_service_list_running = () => api_base('/comp/service/list/running', 'get')
 
