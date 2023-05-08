@@ -67,3 +67,26 @@ export const api_comp_service_flag_commit = (flags) => api_base('/comp/service/f
 
 export const api_comp_service_list_running = () => api_base('/comp/service/list/running', 'get')
 
+export const api_comp_service_writeup_list = (sid) => api_base('/comp/service/writeup/list', 'get', stringify({
+    sid
+}))
+
+export const api_comp_service_writeup_buy = (wid) => api_base('/comp/service/writeup/buy', 'post', stringify({
+    wid
+}))
+
+export const api_comp_service_writeup_get = (wid) => api_base('/comp/service/writeup/get', 'get', stringify({
+    wid
+}))
+
+export const api_comp_service_writeup_create = (sid, content, price) => api_base('/comp/service/writeup/create', 'post', stringify({
+    sid, content, price
+}))
+
+export const api_comp_service_writeup_update = (wid, content, price) => api_base('/comp/service/writeup/update', 'post', stringify({
+    wid, content, price
+}))
+
+export const api_comp_service_writeup_vote = (wid, score) => api_base('/comp/service/writeup/vote', 'post', stringify({
+    wid, score
+}))

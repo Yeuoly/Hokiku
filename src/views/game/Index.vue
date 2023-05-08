@@ -10,7 +10,7 @@
             >
                 <v-layout>
                     <v-col cols="3">
-                        <v-img :src="i.cover" contain lazy-src="https://yeuoly.oss-cn-beijing.aliyuncs.com/iotshield/upload/2022/08/08/6321d5419bcb8546fa0247c611dff1f8.jpg">
+                        <v-img :height="200" :src="i.cover" contain lazy-src="https://yeuoly.oss-cn-beijing.aliyuncs.com/iotshield/upload/2022/08/08/6321d5419bcb8546fa0247c611dff1f8.jpg">
                             <template v-slot:placeholder>
                                 <v-row
                                 class="fill-height ma-0"
@@ -40,7 +40,7 @@
                         >
                             进入详情页
                         </v-btn>
-                        <v-btn color="primary" style="float: right" @click="openSignUpDialog(i.id)">
+                        <v-btn color="primary" style="float: right" @click="openSignUpDialog(i.id)" :disabled="i.signup_end_time < Date.now() / 1000">
                             报名
                         </v-btn>
                         <br>

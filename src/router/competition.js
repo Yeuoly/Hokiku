@@ -10,6 +10,7 @@ const CompetitionGameEditor = () => import('../views/game/Editor.vue')
 const AwdGameList = () => import('../views/awd/List.vue')
 const CompetitionService = () => import('../views/competition/Service.vue')
 const CompetitionServiceRank = () => import('../views/competition/ServiceRank.vue')
+const CompetitionServiceWriteupEditor = () => import('../views/competition/ServiceWriteupEditor.vue')
 
 export const competition_pages = [{
     name : 'competition-game',
@@ -59,6 +60,10 @@ export const competition_pages = [{
     name : 'competition-awd',
     path : '/competition/awd',
     component : AwdGameList,
+}, {
+    name : 'competition-service-writeup-editor',
+    path : '/competition/service/writeup/:sid/:wid',
+    component : CompetitionServiceWriteupEditor
 }, {
     path : '/competition/',
     redirect : '/competition/game'

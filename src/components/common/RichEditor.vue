@@ -58,7 +58,11 @@ export default {
             const file = files[0]
             openLoadingOverlay()
             const url = await uploadImage(file)
-            insert(url)
+            try {
+                insert(url)
+            } catch {
+                console.log('insert image failed')
+            }
             closeLoadingOverlay()
         }
 
@@ -161,28 +165,16 @@ export default {
         editor.config.onUploadAttachmentEnd(() => {
             closeLoadingOverlay()
         })
-        let active = false
-        let timer_over = true
-        let current_html = ''
         //延时更新
-        const timer = () => {
-            if(timer_over){
-                timer_over = false
-                setTimeout(() => {
-                    timer_over = true
-                    if(!active){
-                        this.$emit('change', current_html)
-                    }else{
-                        active = false
-                        timer()
-                    }
-                }, 300)
-            }
-        }
+        let timer = null
         const change = html => {
-            active = true
-            current_html = html
-            timer()
+            if(timer){
+                clearTimeout(timer)
+            }
+            timer = setTimeout(() => {
+                this.$emit('change', html)
+                timer = null
+            }, 500)
         }
         editor.config.onchange = html => change(html)
         this.editor = editor
