@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-btn color="primary" @click="addNode()"> 新建节点 </v-btn>
+    <v-btn color="primary" @click="convertCompose()"> 转换DockerComopose </v-btn>
     <div
       :style="{
         height: height + 'px',
@@ -144,6 +145,61 @@ import Vue from "vue";
 Vue.component("network", Network);
 import "vue-vis-network/node_modules/vis-network/dist/vis-network.css";
 
+import {
+  api_comp_service_compose_convert
+} from '../../interface/service'
+import { openErrorSnackbar, openSuccessSnackbar } from '../../concat/bus';
+
+const parse_service_to_front_config = (servicex) => {
+    console.log(servicex.containers)
+    const containers = []
+    let index = 0
+    for(const container of servicex.containers) {
+        const container_obj = {
+            id : index,
+            name : 'Service ' + index++,
+            image_name : container.image,
+            flags : [],
+            ports : [],
+            networks : []
+        }
+        if (container.flags) {
+            for (const flag of container.flags) {
+                const flag_obj = {
+                    flag_command : flag.flag_command,
+                    flag_score : flag.flag_score,
+                    flag_uuid : flag.flag_uuid
+                }
+                container_obj.flags.push(flag_obj)
+            }
+        }
+        if (container.ports) {
+            for (const port of container.ports) {
+                const port_obj = {
+                    port : port.port,
+                    protocol : port.protocol
+                }
+                container_obj.ports.push(port_obj)
+            }
+        }
+        if (container.networks) {
+            for (const network of container.networks) {
+                const network_obj = {
+                    subnet : network.subnet
+                }
+                container_obj.networks.push(network_obj)
+            }
+        }
+        containers.push(container_obj)
+    }
+    return {
+        total_score : servicex.total_score,
+        network_count : servicex.network_count,
+        container_count : servicex.container_count,
+        containers
+    }
+}
+
 export default {
   props: {
     height: {
@@ -246,6 +302,27 @@ export default {
     };
   },
   methods: {
+    async convertCompose() {
+      // open a selector to select the compose file and read it
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".yml,.yaml";
+      input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const text = await file.text();
+        const { data } = await api_comp_service_compose_convert(text);
+        if (data && data['res'] == 0) {
+          openSuccessSnackbar('转换完成')
+          const service = data['data']['Config']
+          const config = parse_service_to_front_config(service)
+          this.containers = config.containers
+        } else {
+          openErrorSnackbar(data ? data['err'] : '转换失败')
+        }
+      };
+      input.click();
+    },
     addNode() {
       const id = new Date().getTime();
       this.containers.push({

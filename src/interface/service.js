@@ -90,3 +90,7 @@ export const api_comp_service_writeup_update = (wid, content, price) => api_base
 export const api_comp_service_writeup_vote = (wid, score) => api_base('/comp/service/writeup/vote', 'post', stringify({
     wid, score
 }))
+
+export const api_comp_service_compose_convert = (compose) => api_base('/comp/service/convert/compsoe', 'post', stringify({
+    compose
+}))
