@@ -4,7 +4,6 @@
             :headers="table_headers"
             :items="images"
             :items-per-page="25"
-            class="elevation-1"
         >
             <template v-slot:item.id="{ item }">
                 {{ item.Id }}

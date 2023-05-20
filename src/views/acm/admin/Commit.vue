@@ -10,7 +10,6 @@
                         :headers="testing_headers"
                         :items="testings"
                         :items-per-page="99999"
-                        class="elevation-1"
                         hide-default-footer
                     >
                         <template v-slot:item.action="{ item }">

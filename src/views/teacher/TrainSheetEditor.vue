@@ -52,7 +52,6 @@
                     <v-data-table
                         :headers="train_headers"
                         :items="sheet_items"
-                        class="elevation-1"
                     >
                         <template v-slot:item.action="{ item }">
                             <v-btn

@@ -13,27 +13,29 @@
                         :headers="game_headers"
                         :items="games"
                         :items-per-page="999999"
-                        class="elevation-1"
                     >
                         <template v-slot:item.action="{ item }">
                             <v-btn
+                                text
                                 color="primary"
                                 @click="editGame(item)"
                             >
                                 编辑
                             </v-btn>
                             <v-btn
+                                text
                                 color="error"
                                 @click="deleteGame(item)"
                             >
                                 删除
                             </v-btn>
                             <v-btn
+                                text
                                 color="green"
                                 @click="enterMonitor(item)"
                                 dark
                             >
-                                势态
+                                监控
                             </v-btn>
                         </template>
                         <template v-slot:item.start_time="{ item }">

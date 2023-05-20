@@ -154,17 +154,55 @@
                     </v-col>
                     <v-card-title>节点选择</v-card-title>
                     <v-col :cols="12">
+                        <ul>
+                            <li>注意，对于刚新建的比赛，请等待大约1~2分钟系统将比赛自动加载进缓存</li>
+                            <li>如果节点列表为空，请检查节点连接状态，请确保节点连接正常</li>
+                            <li>比赛结束后请移除对应网络</li>
+                        </ul>
+                    </v-col>
+                    <v-col :cols="12">
                         <v-radio-group v-model="current_node" row>
                             <v-radio
                                 v-for="n in nodes"
                                 :key="n.Client.client_id"
                                 :label="`Node ${n.Client.client_ip} - ${n.Client.client_id.slice(0, 8)}`"
                                 :value="n.Client.client_id"
+                                @click="selectNode()"
                             ></v-radio>
                         </v-radio-group>
                     </v-col>
+                    <v-card-title>
+                        网络状态 - 
+                        <v-btn text color="primary" @click="createSubnet()">创建</v-btn>
+                        <v-btn text color="red" @click="removeSubnet()">移除</v-btn> 
+                    </v-card-title>
                     <v-col :cols="12">
-                        <v-btn @click="selectNode()" color="primary">选择节点</v-btn>
+                        <ul>
+                            <li>请在比赛开始前确保网络已经被正确创建</li>
+                            <li>只需要设置子网范围即可，如192.168.13.0/24，对于AWD，建议使用B段范围</li>
+                        </ul>
+                    </v-col>
+                    <v-col :cols="12">
+                        <v-simple-table>
+                            <template v-slot:default>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">子网</th>
+                                        <th class="text-left">Name</th>
+                                        <th class="text-left">Driver</th>
+                                        <th class="text-left">Scope</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(network, index) in networks" :key="index">
+                                        <td>{{ network.subnet }}</td>
+                                        <td>{{ network.name }}</td>
+                                        <td>{{ network.driver }}</td>
+                                        <td>{{ network.scope }}</td>
+                                    </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
                     </v-col>
                     <v-card-title>题目</v-card-title>
                     <v-col :cols="12">
@@ -174,21 +212,39 @@
                         <v-data-table
                             :headers="subject_header"
                             :items="subjects"
-                            class="elevation-1"
                         >
                             <template v-slot:item.action="{ item }">
-                                <v-icon small @click="editSubject(item)">
-                                    mdi-pencil
-                                </v-icon>
-                                <v-icon small @click="deleteSubject(item.id)">
-                                    mdi-delete
-                                </v-icon>
+                                <v-btn @click="editSubject(item)" color="green" text>
+                                    <v-icon>
+                                        mdi-pencil
+                                    </v-icon>
+                                    编辑
+                                </v-btn>
+                                <v-btn @click="deleteSubject(item.id)" color="red" text>
+                                    <v-icon>
+                                        mdi-delete
+                                    </v-icon>
+                                    删除
+                                </v-btn>
+                                <v-btn @click="relaunchSubject(item.id)" color="orange" text>
+                                    <v-icon>
+                                        mdi-restart
+                                    </v-icon>
+                                    重启
+                                </v-btn>
                             </template>
                             <template v-slot:item.start_time="{ item }">
                                 {{ new Date(item.start_time * 1000).toLocaleString() }}
                             </template>
                             <template v-slot:item.end_time="{ item }">
                                 {{ new Date(item.end_time * 1000).toLocaleString() }}
+                            </template>
+                            <template v-slot:item.status="{ item }">
+                                <v-chip dark color="grey" v-if="(item.flag & 2) == 2">未启动</v-chip>
+                                <v-chip dark color="green" v-else-if="(item.flag & 4) == 4">启动中</v-chip>
+                                <v-chip dark color="blue" v-else-if="(item.flag & 8) == 8">运行中</v-chip>
+                                <v-chip dark color="red" v-else-if="(item.flag & 16) == 16">停止中</v-chip>
+                                <v-chip dark color="red" v-else-if="(item.flag & 32) == 32">已停止</v-chip>
                             </template>
                         </v-data-table>
                     </v-col>
@@ -395,7 +451,11 @@ import {
 } from '../../interface/docker'
 import {
     api_inspect_awd_game,
-    api_awd_game_set_node
+    api_awd_game_set_node,
+    api_awd_game_subnet_create,
+    api_awd_game_subnet_inspect,
+    api_awd_game_subnet_remove,
+    api_awd_game_subject_relaunch
 } from '../../interface/awd'
 import {
     openSuccessSnackbar,
@@ -406,6 +466,7 @@ export default {
     data : () => ({
         flag_types: ['DEFAULT', '文件flag', '模板指令', '环境变量'],
         nodes : [],
+        networks : [],
         current_node : '',
         dialog_switch : {
             game_start_date_picker: false,
@@ -463,9 +524,6 @@ export default {
             text : '题目名称',
             value : 'name',
         }, {
-            text : '题目描述',
-            value : 'comment',
-        }, {
             text : '攻击方初始分数',
             value : 'attack_initial_score',
         }, {
@@ -481,11 +539,49 @@ export default {
             text : '镜像',
             value : 'docker_image',
         }, {
+            text : '状态',
+            value : 'status',
+        }, {
             text : '操作',
             value : 'action',
         }]
     }),
     methods : {
+        async relaunchSubject(id) {
+            const { data } = await api_awd_game_subject_relaunch(id)
+            if(data && data['res'] == 0) {
+                openSuccessSnackbar('重启成功')
+                this.loadSubjects()
+            } else {
+                openErrorSnackbar(data['err'])
+            }
+        },
+        async loadSubnet() {
+            const { data } = await api_awd_game_subnet_inspect(this.game.id)
+            if(data && data['res'] == 0) {
+                this.networks = [data['data']['network']]
+            } else {
+                this.networks = []
+            }
+        },
+        async createSubnet() {
+            const { data } = await api_awd_game_subnet_create(this.game.id)
+            if(data && data['res'] == 0) {
+                openSuccessSnackbar('创建成功')
+                this.loadSubnet()
+            } else {
+                openErrorSnackbar(data['err'])
+            }
+        },
+        async removeSubnet() {
+            const { data } = await api_awd_game_subnet_remove(this.game.id)
+            if(data && data['res'] == 0) {
+                openSuccessSnackbar('删除成功')
+                this.loadSubnet()
+            } else {
+                openErrorSnackbar(data['err'])
+            }
+        },
         commitSubject() {
             if (this.isSubjectNew) {
                 this.createSubject()
@@ -540,6 +636,7 @@ export default {
             if (data && data['res'] == 0) {
                 this.game.description = data['data']['game']['description']
                 this.game.name = data['data']['game']['name']
+                this.game.subnet = data['data']['game']['subnet']
                 // game is timestamp, need to convert to date and time
                 const start_time = new Date(data['data']['game']['start_time'] * 1000)
                 const end_time = new Date(data['data']['game']['end_time'] * 1000)
@@ -698,8 +795,7 @@ export default {
             await this.getGame()
             await this.loadSubjects()
             this.loadNodes()
-        } else {
-            this.$router.back()
+            this.loadSubnet()
         }
     },
 }

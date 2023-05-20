@@ -69,7 +69,6 @@
                             :headers="table.headers"
                             :items="table.data"
                             :items-per-page="500000"
-                            class="elevation-1"
                             hide-default-footer
                         >
                         </v-data-table>

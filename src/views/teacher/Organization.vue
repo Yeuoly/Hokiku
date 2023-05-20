@@ -119,6 +119,33 @@
         </v-data-table>
       </v-col>
     </v-row>
+    <v-dialog
+      v-model="dialog.open"
+      persistent
+      max-width="600px"
+      @keydown.esc="dialog.open = false"
+    >
+      <v-card>
+        <v-card-title>创建新班级</v-card-title>
+        <v-card-text>
+          <v-text-field
+            label="班级名称"
+            v-model="dialog.org_name"
+            :rules="[(v) => !!v || '班级名称不能为空']"
+          ></v-text-field>
+          <v-textarea
+            label="班级描述"
+            v-model="dialog.org_desc"
+            :rules="[(v) => !!v || '班级描述不能为空']"
+          ></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="dialog.open = false">取消</v-btn>
+          <v-btn color="primary" @click="commitOrganization">创建</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -157,6 +184,11 @@ export default {
             value : 'action'
         }],
         current_members : [],
+        dialog : {
+            open : false,
+            org_name : '',
+            org_desc : ''
+        }
     }),
     watch : {
         current_org_idx : {

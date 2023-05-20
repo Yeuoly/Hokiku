@@ -12,7 +12,6 @@
                 <v-data-table
                     :headers="problem_headers"
                     :items="problems"
-                    class="elevation-1"
                 >
                     <template v-slot:item.action="{ item }">
                         <v-btn

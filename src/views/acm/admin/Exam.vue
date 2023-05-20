@@ -12,7 +12,6 @@
                 <v-data-table
                     :headers="exams_headers"
                     :items="exams"
-                    class="elevation-1"
                 >
                     <template v-slot:item.action="{ item }">
                         <v-btn

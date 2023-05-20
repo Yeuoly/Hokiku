@@ -6,7 +6,7 @@
             </v-avatar>
         </div>
         <div class="service-card-header">
-            <div class="service-card_title text-25 text-primary">
+            <div class="service-card_title text-25 text-primary clickable" @click="dialog = true" >
                 <span>
                     {{ name }}
                 </span>

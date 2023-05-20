@@ -159,7 +159,6 @@
                                 :headers="problem_headers"
                                 :items="exam.problems"
                                 :items-per-page="50"
-                                class="elevation-1"
                                 hide-default-footer
                             >
                                 <template v-slot:item.action="{ item }">

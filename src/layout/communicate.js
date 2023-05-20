@@ -6,9 +6,9 @@ import {
 
 let global_style_info = {
     width : document.body.clientWidth,
-    sider_width : parseInt(document.body.clientWidth * 0.2),
-    header_width : parseInt(document.body.clientWidth * 0.8),
-    scope : true,
+    sider_width : parseInt(document.body.clientWidth * 0),
+    header_width : parseInt(document.body.clientWidth * 1),
+    scope : false,
     ratio : 0.2
 }
 
@@ -33,9 +33,9 @@ ui_trans_bus.$on('change-navigation-status', () => {
 })
 
 // listen to page resize
-window.addEventListener('resize', () => {
-    refreshStyle();
-})
+// window.addEventListener('resize', () => {
+//     refreshStyle();
+// })
 
 export const getSiderWidth = () => {
     return global_style_info.sider_width;

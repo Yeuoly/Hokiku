@@ -39,7 +39,6 @@
                     :items-per-page="9999"
                     :expanded.sync="expanded"
                     item-key="rid"
-                    class="elevation-1"
                     show-expand
                 >
                     <template v-slot:item.actions="{ item }">

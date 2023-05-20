@@ -16,7 +16,6 @@
                 :headers="coin_headers"
                 :items="coins"
                 :search="search"
-                class="elevation-1"
                 hide-default-footer
             >
                 <template v-slot:item.apply="{ item }" >

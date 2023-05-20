@@ -27,7 +27,7 @@
               <v-list-item-group>
                 <v-list-item v-for="(item, index) in userItems" :key="index" @click="$router.push(item.to)">
                   <v-list-item-icon>
-                    <v-icon>{{ item.icon }}</v-icon>
+                    <v-icon color="primary">{{ item.icon }}</v-icon>
                   </v-list-item-icon>
                   <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
@@ -44,7 +44,7 @@
               <v-list-item-group>
                 <v-list-item v-for="(item, index) in noticeItems" :key="index">
                   <v-list-item-icon>
-                    <v-icon>mdi-newspaper</v-icon>
+                    <v-icon color="primary">mdi-newspaper</v-icon>
                   </v-list-item-icon>
                   <v-list-item-title>{{ item.content }}</v-list-item-title>
                 </v-list-item>
@@ -64,7 +64,7 @@
               <v-list-item-group>
                 <v-list-item v-for="(item, index) in newsItems" :key="index">
                   <v-list-item-icon>
-                    <v-icon>{{ item.icon }}</v-icon>
+                    <v-icon color="primary">{{ item.icon }}</v-icon>
                   </v-list-item-icon>
                   <v-list-item-title>{{ item.content }}</v-list-item-title>
                 </v-list-item>

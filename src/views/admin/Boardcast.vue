@@ -18,7 +18,6 @@
                     :items-per-page="10"
                     :server-items-length="99999999"
                     :options.sync="carousel_options"
-                    class="elevation-1"
                 >
                     <template v-slot:item.title="{ item }">
                         <v-text-field
@@ -67,7 +66,6 @@
                     :items-per-page="10"
                     :server-items-length="99999999"
                     :options.sync="newsposts_options"
-                    class="elevation-1"
                 >
                     <template v-slot:item.content="{ item }">
                         <v-text-field
@@ -114,7 +112,6 @@
                     :items-per-page="10"
                     :server-items-length="99999999"
                     :options.sync="updatelogs_options"
-                    class="elevation-1"
                 >
                     <template v-slot:item.content="{ item }">
                         <v-text-field

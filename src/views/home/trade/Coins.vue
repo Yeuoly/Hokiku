@@ -4,7 +4,6 @@
             <v-data-table
                 :headers="coin_headers"
                 :items="coins"
-                class="elevation-1"
                 hide-default-footer
             >
                 <template v-slot:item.from="{ item }" >
