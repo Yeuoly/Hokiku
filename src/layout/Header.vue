@@ -9,10 +9,13 @@
     >
         <!-- <v-app-bar-nav-icon @click.stop="changeNavigationStatus"></v-app-bar-nav-icon> -->
         <v-btn text depressed dark @click="to('/index')">
-            <v-icon class="pr3">
-                mdi-menu
-            </v-icon>
-            IrinaGame
+            <v-img
+                :width="50"
+                :src="require('../assets/irina-1.png')"
+            ></v-img>
+            <span class="pl5">
+                IrinaGame
+            </span>
         </v-btn>
         <v-menu
             offset-y
@@ -46,7 +49,9 @@
                     </v-btn>
                 </v-list-item>
                 <v-list-item style="padding: 0" v-if="this.$store.getters.getUserOnlineState">
-                    <v-btn class="w100" text>
+                    <v-btn class="w100" text
+                        @click="logout()"
+                    >
                         <v-icon class="pr3" color="red">
                             mdi-exit-to-app
                         </v-icon>
@@ -204,37 +209,26 @@
         <v-btn text depressed dark>
             {{ $store.getters.getUserName }}
         </v-btn>
-        <v-btn icon dark>
-            <v-icon>
-                mdi-bell
-            </v-icon>
+        <v-btn icon dark
+            @click="to('/message')"
+            v-if="this.$store.getters.getUserOnlineState"
+        >
+            <v-badge
+                color="pink"
+                overlap
+                :content="hash_new_message.count"
+                :value="hash_new_message.count"
+            >
+                <v-icon>
+                    mdi-bell-outline
+                </v-icon>
+            </v-badge>
         </v-btn>
         <v-btn icon>
-            <v-avatar size="32">
+            <v-avatar size="36">
                 <v-img :src="$store.getters.getUserAvatar"></v-img>
             </v-avatar>
         </v-btn>
-        <v-menu
-            left
-            bottom
-        >
-            <template v-slot:activator="{ on, attrs }">
-            <v-btn
-                icon
-                v-bind="attrs"
-                v-on="on"
-                dark
-            >
-                <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-            </template>
-
-            <v-list>
-                <!-- <v-list-item>
-                    <v-list-item-title>退出</v-list-item-title>
-                </v-list-item> -->
-            </v-list>
-        </v-menu>
     </v-app-bar>
 </template>
 
@@ -242,19 +236,34 @@
 
 import { isTeacher, isSA } from '../util/index'
 
-import { applyChangeNavigationStatus, ui_trans_bus } from '../concat/bus'
+import { applyChangeNavigationStatus, ui_trans_bus, openInfoMessageBox } from '../concat/bus'
 import {
     getHeaderWidth,
-    eventBus
+    eventBus,
 } from './communicate'
+import { setAuthToken } from '../util/auth'
+
+import {
+    api_message_has_new
+} from '../interface/message'
 
 export default {
     data : () => ({
         avaliable : false,
         width : getHeaderWidth(),
-        hovers : [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,]
+        hash_new_message : {
+            has_new : false,
+            count : 0
+        }
     }),
     methods : {
+        async load_new_message() {
+            const { data } = await api_message_has_new()
+            if(data && data['res'] == 0) {
+                this.hash_new_message.has_new = data['data']['yes']
+                this.hash_new_message.count = data['data']['count']
+            }
+        },
         changeNavigationStatus() {
             applyChangeNavigationStatus()
         },
@@ -266,6 +275,11 @@ export default {
         },
         to(path) {
             this.$router.push(path)
+        },
+        async logout(){
+            setAuthToken('')
+            await openInfoMessageBox('消息', '登出成功', '确定')
+            window.location.href = '/'
         }
     },
     mounted(){
@@ -279,6 +293,13 @@ export default {
         eventBus.$on('resize::header', (width) => {
             this.width = width
         })
+        ui_trans_bus.$on('refresh-new-message', () => {
+            this.load_new_message()
+        })
+
+        if (this.$store.getters.getUserOnlineState) {
+            this.load_new_message()
+        }
     },
     destroyed(){
         ui_trans_bus.$off('launch-header')

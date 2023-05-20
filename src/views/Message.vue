@@ -49,6 +49,13 @@
 
 <script>
 
+import {
+    api_message_new_flush
+} from '../interface/message'
+import {
+    refreshNewMessage
+} from '../concat/bus'
+
 export default {
     data : () => ({
         navs : [{
@@ -61,6 +68,15 @@ export default {
         isMobile(){
             return !this.$vuetify.breakpoint.mdAndUp
         }
+    },
+    methods : {
+        async flush(){
+            await api_message_new_flush()
+            refreshNewMessage()
+        }
+    },
+    mounted(){
+        this.flush()
     }
 }
 </script>

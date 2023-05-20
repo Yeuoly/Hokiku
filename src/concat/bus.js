@@ -49,3 +49,7 @@ export const openSuccessSnackbar = (message) => {
 export const openErrorSnackbar = (message) => {
     openSnackbar(message, 'error');
 }
+
+export const refreshNewMessage = () => {
+    ui_trans_bus.$emit('refresh-new-message');
+}
