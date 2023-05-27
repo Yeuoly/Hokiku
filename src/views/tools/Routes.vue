@@ -3,15 +3,6 @@
         <v-layout>
             <v-row>
                 <v-col :cols="12">
-                    <v-card-title>
-                        <v-icon>
-                            mdi-tools
-                        </v-icon>
-                        <h2 class="headline mb-0">Tools</h2>
-                    </v-card-title>
-                    <v-divider></v-divider>
-                </v-col>
-                <v-col :cols="12">
                     <div v-for="(i, k) in tools" :key="k">
                         <v-row>
                             <v-col :cols="12">
@@ -47,14 +38,6 @@
 export default {
     data : () => ({
         tools : [{
-            module: 'shell',
-            name: '加壳防护',
-            comment : '你可以为你的Linux、Windows、Android程序加上一个外壳让它们变得难以破解',
-            sub : [{
-                name: 'Kurumi/x86_Linux',
-                path: '/tools/kurumi'
-            }]
-        }, {
             module: 'en/decode',
             name : '编码解码',
             comment : '一些常见的编码解码操作，当然，需要不断完善',
@@ -73,6 +56,9 @@ export default {
             }, {
                 name: '莫斯电码',
                 path: '/tools/morse'
+            }, {
+                name: 'ASCII',
+                path: '/tools/ascii'
             }]
         }, {
             module : 'en/encrypt',

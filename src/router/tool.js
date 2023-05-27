@@ -19,9 +19,17 @@ export const tools_pages = [{
     path : '/tools/01',
     component : () => import('../views/tools/01.vue')
 }, {
+    name : 'tools-time',
+    path : '/tools/time',
+    component : () => import('../views/tools/Timestamp.vue')
+}, {
     name : 'tools-url',
     path : '/tools/url',
     component : () => import('../views/tools/Url.vue')
+}, {
+    name : 'tools-ascii',
+    path : '/tools/ascii',
+    component : () => import('../views/tools/Ascii.vue')
 }, {
     name : 'tools-morse',
     path : '/tools/morse',
