@@ -1,5 +1,5 @@
 <template>
-    <div :style="style">
+    <div>
         <v-dialog
             v-model="dialog"
             width="500"
@@ -57,7 +57,6 @@
 
 <script>
 import { ui_trans_bus } from '../concat/bus'
-import { index_background_lg_and_up } from '../resouce'
 import {
     getHeaderWidth,
     eventBus
@@ -78,18 +77,7 @@ export default {
         width : getHeaderWidth()
     }),
     computed : {
-        style(){
-            const style = {
-                backgroundImage : '',
-                width: this.width + 'px',
-                backgroundSize :'50%',
-                backgroundPosition : '10%'
-            }
-            if(['login', 'reg'].includes(this.$route.name) && this.$vuetify.breakpoint.mdAndUp){
-                style.backgroundImage = `url(${index_background_lg_and_up})`
-            }
-            return style
-        }
+        
     },
     watch : {
         dialog : {

@@ -15,13 +15,69 @@
         </v-text-field>
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
-        <NormalInfoCard title="可用金币" :content="profile.coin.value.toString() + '￥'" />
+        <NormalInfoCard title="UID" :content="profile.uid.toString()" icon="mdi-card-account-details-outline" />
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
-        <NormalInfoCard title="冻结金币" :content="profile.coin.freeze.toString() + '￥'" icon="mdi-lock" />
+        <NormalInfoCard title="注册时间" :content="new Date(profile.regtime * 1000).toLocaleDateString()" icon="mdi-calendar-range" />
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
-        <NormalInfoCard title="累计在线时长" :content="total_living_time" icon="mdi-clock" />
+        <NormalInfoCard title="邮箱" :content="profile.email" icon="mdi-email-outline" />
+      </v-col>
+      <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
+        <NormalInfoCard title="可用金币" :content="profile.coin.value.toString() + '￥'" icon="mdi-currency-btc" />
+      </v-col>
+      <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
+        <NormalInfoCard title="冻结金币" :content="profile.coin.freeze.toString() + '￥'" icon="mdi-lock-outline" />
+      </v-col>
+      <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5">
+        <NormalInfoCard title="累计在线时长" :content="total_living_time" icon="mdi-clock-outline" />
+      </v-col>
+      <v-col :cols="12">
+        <v-divider></v-divider>
+      </v-col>
+      <v-col :cols="12">
+        <v-card-text class="blue--text" style="font-weight: 600;">
+          <v-icon color="blue">
+            mdi-account-multiple
+          </v-icon>
+          第三方账号绑定
+        </v-card-text>
+      </v-col>
+      <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5" style="padding-top: 0%;">
+        <v-card>
+          <v-card-text @click="bindGithub()" class="clickable">
+              <v-icon size="60" class="pr3 left" :color="profile.bind.github.id ? 'primary' : 'grey'">
+                mdi-github
+              </v-icon>
+              <div class="left pt3">
+                <span class="text-primary text-12"> {{ profile.bind.github.id ? '已绑定' : '未绑定' }} </span><br>
+                <span class="text-grey text-12"> {{ profile.bind.github.id ? 'Github账户' + profile.bind.github.name : '' }} </span>
+              </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5" style="padding-top: 0%;">
+        <v-card>
+          <v-card-text>
+              <v-icon size="60" class="pr3" :color="profile.bind.wechat.id ? 'green' : 'grey'">
+                mdi-wechat
+              </v-icon>
+              {{ profile.bind.wechat.id || '未绑定' }}
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="12" md="6" lg="4" xl="3" class="px5" style="padding-top: 0%;">
+        <v-card>
+          <v-card-text>
+              <v-icon size="60" class="pr3" :color="profile.bind.qq.id ? 'green' : 'grey'">
+                mdi-qqchat
+              </v-icon>
+              {{ profile.bind.qq.id || '未绑定' }}
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col :cols="12">
+        <v-divider></v-divider>
       </v-col>
       <v-col cols="12" style="height: 400px">
         <today-date-value-smooth-chart
@@ -88,6 +144,22 @@ export default {
         logs : [],
         page : 1
       },
+      regtime: 0,
+      email : '',
+      bind : {
+        github : {
+          id : '',
+          name : '',
+        },
+        wechat : {
+          id : '',
+          name : '',
+        },
+        qq : {
+          id : '',
+          name : '',
+        }
+      }
     },
     dialog: {
       changeAvatar: false,
@@ -122,6 +194,13 @@ export default {
           this.profile.coin.value = data['data']['r_trade_coin']['value']
           this.profile.coin.freeze = data['data']['r_trade_coin']['freeze']
           this.profile.living.total = data['data']['r_living_time']
+          this.profile.regtime = data['data']['r_user']['regtime']
+          this.profile.email = data['data']['r_user']['email']
+
+          if (data['data']['account_bind']['github']) {
+            this.profile.bind.github.id = data['data']['account_bind']['github']['github_id']
+            this.profile.bind.github.name = data['data']['account_bind']['github']['github_name']
+          }
         }
       }
     },
@@ -146,6 +225,25 @@ export default {
         location.href = '/home/profile'
       } else {
         openErrorSnackbar(data ? data['err'] : '上传失败')
+      }
+    },
+    bindGithub() {
+      if (this.profile.bind.github.id) {
+        location.href = 'https://github.com/' + this.profile.bind.github.name
+      } else {
+        let redirect_uri = ''
+        if (process.env.NODE_ENV == 'development') {
+          redirect_uri = encodeURIComponent('http://iotshield.dev.fe.srmxy.cn/redirect?method=bind&type=github')
+        } else {
+          redirect_uri = encodeURIComponent('http://iotshield.srmxy.cn/redirect?method=bind&type=github')
+        }
+        
+        console.log(redirect_uri)
+        if (process.env.NODE_ENV == 'development') {
+          location.href = 'https://github.com/login/oauth/authorize?client_id=ccc253ed568ac83adce5&redirect_uri=' + redirect_uri
+        } else {
+          location.href = 'https://github.com/login/oauth/authorize?client_id=233a2340b9410297d6a2&redirect_uri=' + redirect_uri
+        }
       }
     },
   },

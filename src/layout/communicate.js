@@ -9,7 +9,7 @@ let global_style_info = {
     sider_width : parseInt(document.body.clientWidth * 0),
     header_width : parseInt(document.body.clientWidth * 1),
     scope : false,
-    ratio : 0.2
+    ratio : 0
 }
 
 export const eventBus = new Vue();
@@ -32,10 +32,9 @@ ui_trans_bus.$on('change-navigation-status', () => {
     refreshStyle();
 })
 
-// listen to page resize
-// window.addEventListener('resize', () => {
-//     refreshStyle();
-// })
+window.addEventListener('resize', () => {
+    refreshStyle();
+})
 
 export const getSiderWidth = () => {
     return global_style_info.sider_width;

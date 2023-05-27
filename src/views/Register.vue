@@ -2,11 +2,9 @@
     <v-container fill-height>
         <v-flex>
             <v-row>
-                <v-col cols="1" sm="1" md="8" lg="8" xl="8"></v-col>
-                <v-col cols="10" sm="10" md="4" lg="4" xl="4">
-                    <v-card>
+                    <v-card class="irina-reg">
                         <v-card color="primary">
-                        <v-card-title class="text-white">注册</v-card-title>
+                        <v-card-title class="text-white">IrinaGame注册</v-card-title>
                         </v-card>
                         <v-form 
                             v-model="valid"
@@ -87,7 +85,6 @@
                             </v-container>
                         </v-form>
                     </v-card>
-                </v-col>
             </v-row>
         </v-flex>
     </v-container>
@@ -191,5 +188,11 @@ export default {
 .img-catpcha {
     width: 150px;
     height: 47px;
+}
+
+.irina-reg {
+    margin: 0 auto;
+    margin-top: 3%;
+    margin-bottom: 3%;
 }
 </style>

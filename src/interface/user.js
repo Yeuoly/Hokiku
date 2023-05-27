@@ -49,3 +49,11 @@ export const api_user_admin_import_excel = file => new Promise(resolve => {
         }
     })()
 })
+
+export const api_user_login_github = code => api_base('auth/login/github', 'post', stringify({
+    code
+}))
+
+export const api_user_bind_github = code => api_base('auth/bind/github', 'post', stringify({
+    code
+}))

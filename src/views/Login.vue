@@ -2,68 +2,103 @@
     <v-container fill-height>
         <v-flex>
             <v-row>
-                <v-col cols="1" sm="1" md="8" lg="8" xl="8"></v-col>
-                <v-col cols="10" sm="10" md="4" lg="4" xl="4">
-                    <v-card>
-                        <v-card color="primary">
-                            <v-card-title class="text-white">登录</v-card-title>
-                        </v-card>
-                        <v-form 
-                            v-model="valid"
-                        >
-                            <v-container>
-                                <v-text-field
-                                    v-model="user.email"
-                                    :counter="64"
-                                    label="邮箱"
-                                    required
-                                    :rules="regx.email"
-                                ></v-text-field>
-
-                                <v-text-field
-                                    type="password"
-                                    v-model="user.password"
-                                    :counter="64"
-                                    label="密码"
-                                    @keypress.enter="login"
-                                    required
-                                    :rules="regx.password"
-                                ></v-text-field>
-
-                                <v-text-field
-                                    v-model="captcha"
-                                    :counter="64"
-                                    label="数学验证码"
-                                    @keypress.enter="login"
-                                    required
-                                    :rules="regx.captcha"
-                                >
-                                    <template v-slot:append-outer>
-                                        <img :src="captcha_image_b64" class="img-catpcha" @click="refreshCaptcha" />
-                                    </template>
-                                </v-text-field>
-
-                                <v-spacer></v-spacer>
-                                <v-row>
-                                    <v-col cols="1" sm="1" lg="2" md="2" xl="4"></v-col>
-                                    <v-col cols="10" sm="10" lg="4" md="4" xl="2">
-                                        <v-btn @click="login" block color="primary" :disabled="!valid">登录</v-btn>
-                                    </v-col>
-                                    <v-col v-if="$vuetify.breakpoint.smAndDown" cols="1" sm="1"></v-col>
-                                    <v-col v-if="$vuetify.breakpoint.smAndDown" cols="1" sm="1"></v-col>
-                                    <v-col cols="10" sm="10" lg="4" md="4" xl="2">
-                                        <v-btn @click="toRegister" block >注册</v-btn>
-                                    </v-col>
-                                    <v-col cols="1" sm="1" lg="2" md="2" xl="4"></v-col>
-                                    <v-col :cols="12">
-                                        <v-divider></v-divider>
-                                        <v-btn text small color="primary" @click="$router.push('/repassword')">忘记密码</v-btn>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
-                        </v-form>
+                <v-card class="irina-login">
+                    <v-card color="primary">
+                        <v-card-title class="text-white">IrinaGame登录</v-card-title>
                     </v-card>
-                </v-col>
+                    <v-form 
+                        v-model="valid"
+                    >
+                        <v-container>
+                            <v-text-field
+                                v-model="user.email"
+                                :counter="64"
+                                label="邮箱"
+                                required
+                                :rules="regx.email"
+                            ></v-text-field>
+                            <v-text-field
+                                type="password"
+                                v-model="user.password"
+                                :counter="64"
+                                label="密码"
+                                @keypress.enter="login"
+                                required
+                                :rules="regx.password"
+                            ></v-text-field>
+                            <v-text-field
+                                v-model="captcha"
+                                :counter="64"
+                                label="数学验证码"
+                                @keypress.enter="login"
+                                required
+                                :rules="regx.captcha"
+                            >
+                                <template v-slot:append-outer>
+                                    <img :src="captcha_image_b64" class="img-catpcha" @click="refreshCaptcha" />
+                                </template>
+                            </v-text-field>
+                            <v-spacer></v-spacer>
+                            <v-row>
+                                <v-col>
+                                    <v-btn @click="login" block color="primary" :disabled="!valid">登录</v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-btn @click="toRegister" block >注册</v-btn>
+                                </v-col>
+                                <v-col :cols="12">
+                                    <v-divider></v-divider>
+                                    <v-btn class="right mt-2" text small color="primary" @click="$router.push('/repassword')">忘记密码</v-btn>
+                                    <!-- github -->
+                                    <v-btn text small class="mt-2" color="primary">第三方登录</v-btn> <br>
+                                    <v-btn
+                                        text
+                                        small
+                                        color="primary"
+                                        class="mt-2"
+                                        @click="github()"
+                                    >
+                                        <v-avatar
+                                            size="24"
+                                            tile
+                                        >
+                                            <v-icon size="24">mdi-github</v-icon>
+                                        </v-avatar>
+                                    </v-btn>
+                                    <!-- qq -->
+                                    <v-btn
+                                        text
+                                        small
+                                        color="primary"
+                                        class="mt-2"
+                                        disabled
+                                    >
+                                        <v-avatar
+                                            size="24"
+                                            tile
+                                        >
+                                            <v-icon size="24">mdi-qqchat</v-icon>
+                                        </v-avatar>
+                                    </v-btn>
+                                    <v-btn
+                                        text
+                                        small
+                                        color="primary"
+                                        class="mt-2"
+                                        disabled
+                                    >
+                                        <v-avatar
+                                            size="24"
+                                            tile
+                                        >
+                                            <v-icon size="24">mdi-wechat</v-icon>
+                                        </v-avatar>
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-form>
+                </v-card>
             </v-row>
         </v-flex>
     </v-container>
@@ -126,6 +161,20 @@ export default {
                 window.location.href = '/home'
             }
             this.refreshCaptcha();
+        },
+        github() {
+            let redirect_uri = ''
+            if (process.env.NODE_ENV == 'development') {
+                redirect_uri = encodeURIComponent('http://iotshield.dev.fe.srmxy.cn/redirect?method=login&type=github')
+            } else {
+                redirect_uri = encodeURIComponent('http://iotshield.srmxy.cn/redirect?method=login&type=github')
+            }
+
+            if (process.env.NODE_ENV == "development") {
+                window.location.href = 'https://github.com/login/oauth/authorize?client_id=ccc253ed568ac83adce5&redirect_uri=' + redirect_uri
+            } else {
+                window.location.href = 'https://github.com/login/oauth/authorize?client_id=233a2340b9410297d6a2&redirect_uri=' + redirect_uri
+            }
         }
     },
     created(){
@@ -138,5 +187,11 @@ export default {
 .img-catpcha {
     width: 150px;
     height: 47px;
+}
+
+.irina-login {
+    margin: 0 auto;
+    margin-top: 10%;
+    margin-bottom: 10%;
 }
 </style>

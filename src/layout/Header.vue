@@ -49,6 +49,17 @@
                     </v-btn>
                 </v-list-item>
                 <v-list-item style="padding: 0" v-if="this.$store.getters.getUserOnlineState">
+                    <v-btn 
+                        class="w100" text 
+                        @click="to('/blog')"
+                    >
+                        <v-icon class="pr3" color="primary">
+                            mdi-message-processing-outline
+                        </v-icon>
+                        博客
+                    </v-btn>
+                </v-list-item>
+                <v-list-item style="padding: 0" v-if="this.$store.getters.getUserOnlineState">
                     <v-btn class="w100" text
                         @click="logout()"
                     >
