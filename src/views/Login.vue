@@ -163,18 +163,8 @@ export default {
             this.refreshCaptcha();
         },
         github() {
-            let redirect_uri = ''
-            if (process.env.NODE_ENV == 'development') {
-                redirect_uri = encodeURIComponent('http://iotshield.dev.fe.srmxy.cn/redirect?method=login&type=github')
-            } else {
-                redirect_uri = encodeURIComponent('http://iotshield.srmxy.cn/redirect?method=login&type=github')
-            }
-
-            if (process.env.NODE_ENV == "development") {
-                window.location.href = 'https://github.com/login/oauth/authorize?client_id=ccc253ed568ac83adce5&redirect_uri=' + redirect_uri
-            } else {
-                window.location.href = 'https://github.com/login/oauth/authorize?client_id=233a2340b9410297d6a2&redirect_uri=' + redirect_uri
-            }
+            const redirect_uri = encodeURIComponent(`http://${process.env.VUE_APP_FRONTEND_BASE_URL}/redirect?method=login&type=github`)
+            window.location.href = `https://github.com/login/oauth/authorize?client_id=${process.env.VUE_APP_GITHUB_CLIENT_ID}&redirect_uri=` + redirect_uri
         }
     },
     created(){

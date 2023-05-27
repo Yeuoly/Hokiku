@@ -43,30 +43,22 @@ import { disableHeader, disableSideMenu, launchHeader, launchSideMenu } from './
 
   //初始化axios
   if(process.env.NODE_ENV == "development"){
-    axios.defaults.baseURL = "http://iotshield.dev.be.srmxy.cn"
     XMLHttpRequest.prototype.__open = XMLHttpRequest.prototype.open
     XMLHttpRequest.prototype.open = function(method, url){
       if(url.slice(0, 34) == "http://127.0.0.1:8080/sockjs-node/"){
-        this.__open(method, "http://iotshield.dev.fe.srmxy.cn/sockjs-node/" + url.slice(34))
+        this.__open(method, `http://${process.env.VUE_APP_FRONTEND_BASE_URL}/sockjs-node/` + url.slice(34))
       }else{
         this.__open(method, url)
       }
     }
-  }else{
-    axios.defaults.baseURL = "http://api.irina.srmxy.cn"
   }
+
+  axios.defaults.baseURL = `http://${process.env.VUE_APP_BACKEND_BASE_URL}`
   axios.defaults.withCredentials = true
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   Vue.use(VueAxios, axios)
 
-  //初始化用户认证，初始化csrf_token
   try{
-    // 2022.8.6 remove csrf logic
-    // if(!getCsrftoken()){
-    //   await api_get_csrftoken()
-    //   setCsrftoken(VueCookie.get('irina_jct'))
-    // }
-
     const { data } = await api_auth_check()
     if (data['res'] > 0) {
       api_user_heartbeat()
