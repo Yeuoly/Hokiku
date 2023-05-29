@@ -103,6 +103,22 @@ export const tools_pages = [{
     path : '/tools/hmac',
     component : () => import('../views/tools/HMAC.vue')
 }, {
+    name : 'tools-md5file',
+    path : '/tools/md5file',
+    component : () => import('../views/tools/MD5File.vue')
+} , {
+    name : 'tools-sha1file',
+    path : '/tools/sha1file',
+    component : () => import('../views/tools/SHA1File.vue')
+}, {
+    name : 'tools-sha256file',
+    path : '/tools/sha256file',
+    component : () => import('../views/tools/SHA256File.vue')
+}, {
+    name : 'tools-convertcase',
+    path : '/tools/convertcase',
+    component : () => import('../views/tools/CaseSwitch.vue')
+}, {
     path : '/tools/',
     redirect : '/tools/routes'
 }]
