@@ -20,6 +20,9 @@
         <v-menu
             offset-y
             bottom
+            open-on-hover
+            open-delay="100"
+            
         >
             <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -60,6 +63,17 @@
                     </v-btn>
                 </v-list-item>
                 <v-list-item style="padding: 0" v-if="this.$store.getters.getUserOnlineState">
+                    <v-btn 
+                        class="w100" text 
+                        @click="to('/home/org')"
+                    >
+                        <v-icon class="pr3" color="primary">
+                            mdi-account-multiple-plus-outline
+                        </v-icon>
+                        班级
+                    </v-btn>
+                </v-list-item>
+                <v-list-item style="padding: 0" v-if="this.$store.getters.getUserOnlineState">
                     <v-btn class="w100" text
                         @click="logout()"
                     >
@@ -95,6 +109,9 @@
         <v-menu
             offset-y
             bottom
+            open-on-hover
+            open-delay="100"
+            
         >
             <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -175,6 +192,9 @@
             offset-y
             bottom
             v-if="isTeacher()"
+            open-on-hover
+            open-delay="100"
+            
         >
             <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -196,7 +216,7 @@
                     <v-btn class="w100" text
                         @click="to('/teacher')"
                     >
-                        <v-icon class="pr3">
+                        <v-icon class="pr3" color="red">
                             mdi-human-male-board
                         </v-icon>
                         教师
@@ -206,7 +226,7 @@
                     <v-btn class="w100" text depressed
                         @click="to('/admin')"
                     >
-                        <v-icon>
+                        <v-icon class="pr3" color="red">
                             mdi-image-filter-center-focus-strong-outline
                         </v-icon>
                         总控

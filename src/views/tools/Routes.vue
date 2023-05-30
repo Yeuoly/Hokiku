@@ -80,6 +80,21 @@ export default {
                 path: '/tools/convertcase'
             }]
         },{
+            module: 'penetration',
+            name : '渗透测试',
+            comment : '渗透常用工具，如反弹Shell编码解码，常用Shellcode',
+            sub : [{
+                icon: 'mdi-powershell',
+                name: '反弹Shell',
+                path: '/tools/reshell',
+                color: 'orange'
+            }, {
+                icon: 'mdi-code-greater-than',
+                name: 'Shellcode',
+                path: '/tools/shellcode',
+                color: 'orange'
+            }]
+        },{
             module : 'hash',
             name : '哈希函数',
             comment : '一些常见的哈希函数，当然，需要不断完善',

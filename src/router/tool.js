@@ -119,6 +119,14 @@ export const tools_pages = [{
     path : '/tools/convertcase',
     component : () => import('../views/tools/CaseSwitch.vue')
 }, {
+    name : 'tools-reshell',
+    path : '/tools/reshell',
+    component : () => import('../views/tools/ReShell.vue')
+}, {
+    name : 'tools-shellcode',
+    path : '/tools/shellcode',
+    component : () => import('../views/tools/Shellcode.vue')
+}, {
     path : '/tools/',
     redirect : '/tools/routes'
 }]

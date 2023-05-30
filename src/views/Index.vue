@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <!-- 走马灯 -->
     <v-carousel>
     <v-carousel-item v-for="(item, i) in carouselItems" :key="i">
@@ -19,7 +19,7 @@
     </v-carousel-item>
   </v-carousel>
     <!-- 用户信息 -->
-    <v-row justify="center" class="my-6">
+    <v-row justify="center" class="my-1">
       <v-col cols="12" sm="12" md="6" lg="3" xl="3">
         <v-card class="elevation-3">
           <v-card-text>
@@ -55,7 +55,7 @@
       </v-col>
     </v-row>
     <!-- 最新动态 -->
-    <v-row justify="center" class="my-6">
+    <v-row justify="center" class="my-1">
       <v-col cols="12">
         <v-card class="elevation-3">
           <v-card-title>最新动态</v-card-title>
