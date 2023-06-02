@@ -10,12 +10,15 @@
       :items-per-page="10"
     >
       <template v-slot:item.actions="{ item }">
-        <v-icon small @click="homeworkCommits(item)">
+        <v-icon small @click="homeworkCommits(item)" color="primary">
           mdi-chart-box-outline
         </v-icon>
       </template>
       <template v-slot:item.send="{ item }">
-        <v-icon small @click="republishHomework(item.id)"> mdi-send </v-icon>
+        <v-icon small @click="republishHomework(item.id)" color="green"> mdi-send </v-icon>
+      </template>
+      <template v-slot:item.export="{ item }">
+        <v-icon small @click="exportHomeWork(item.id)" color="success"> mdi-export </v-icon>
       </template>
       <template v-slot:item.time="{ item }">
         {{ new Date(item.time * 1000).formatDate("Y-M-D h:m:s") }}
@@ -32,6 +35,13 @@ import {
   api_homework_publish_list,
   api_homework_republish,
 } from "../../interface/api";
+import {
+  api_homework_export
+} from '../../interface/homework'
+import {
+  api_download_file
+} from '../../interface/download'
+
 import {
   closeLoadingOverlay,
   openErrorMessageBox,
@@ -70,11 +80,18 @@ export default {
       {
         text: "提交情况",
         value: "actions",
+        align: "center",
       },
       {
         text: "再次推送",
         value: "send",
+        align: "center",
       },
+      {
+        text: "导出成绩",
+        value: "export",
+        align: "center",
+      }
     ],
     homework_table_options: {},
     homework_table_data: [],
@@ -116,6 +133,21 @@ export default {
           openErrorSnackbar(data["err"]);
         } else {
           openSuccessSnackbar("重新推送成功");
+        }
+      }
+      closeLoadingOverlay();
+    },
+    async exportHomeWork(hid) {
+      openLoadingOverlay();
+      const { data } = await api_homework_export(hid);
+      if (!data) {
+        openErrorSnackbar("网络异常");
+      } else {
+        if (data["res"] != 0) {
+          openErrorSnackbar(data["err"]);
+        } else {
+          openSuccessSnackbar("导出成功");
+          api_download_file(data["data"]["url"])
         }
       }
       closeLoadingOverlay();
