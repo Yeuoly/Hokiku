@@ -43,10 +43,24 @@
                                 </span>
                             </v-card>
                             <v-card flat v-else-if="i.type === 3">
-                                <strong> {{ i.r_info.r_homework.r_organization.name }} </strong>
-                                发布了新的作业 <strong>{{ i.r_info.r_homework.title }}</strong>
-                                (id <strong>{{ i.r_info.hid }}</strong>)
-                                请注意截止日期 <strong>{{ new Date(i.r_info.r_homework.endtime * 1000).formatDate('Y-M-D h:m:s') }}</strong>
+                                <span v-if="i.r_info.r_homework.type == 0">
+                                    <strong> {{ i.r_info.r_homework.r_organization.name }} </strong>
+                                    发布了新的作业 <strong>{{ i.r_info.r_homework.title }}</strong>
+                                    (id <strong>{{ i.r_info.hid }}</strong>)
+                                    请注意截止日期 <strong>{{ new Date(i.r_info.r_homework.endtime * 1000).formatDate('Y-M-D h:m:s') }}</strong>，该作业为<strong>普通文字</strong>类型作业，提交请到
+                                    <a :href="`/homework/${i.r_info.r_homework.id}`">
+                                        {{ i.r_info.r_homework.r_organization.name }} -> {{ i.r_info.r_homework.title }}
+                                    </a>
+                                </span>
+                                <span v-if="i.r_info.r_homework.type == 1">
+                                    <strong> {{ i.r_info.r_homework.r_organization.name }} </strong>
+                                    发布了新的作业 <strong>{{ i.r_info.r_homework.title }}</strong>
+                                    (id <strong>{{ i.r_info.hid }}</strong>)
+                                    请注意截止日期 <strong>{{ new Date(i.r_info.r_homework.endtime * 1000).formatDate('Y-M-D h:m:s') }}</strong>，该作业为<strong>CTF练习题</strong>类型作业，提交请到
+                                    <a :href="`/competition/train?id=${i.r_info.r_homework.extra}`">
+                                        {{ i.r_info.r_homework.r_organization.name }} -> {{ i.r_info.r_homework.title }}
+                                    </a>
+                                </span>
                             </v-card>
                             <v-card flat v-else-if="i.type === 4">
                                 您的账户余额发生变动，变动金额：

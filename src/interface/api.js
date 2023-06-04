@@ -156,7 +156,7 @@ export const api_docker_image_delete = image_id => api_base('docker/delete', 'po
 
 export const api_message_system_list = (page, len) => api_base('message/system/list', 'get', stringify({ page, len }))
 
-export const api_homework_publish = (org, title, endtime, desc) => api_base('homework/publish', 'post', stringify({ org, title, endtime, desc }))
+export const api_homework_publish = (org, title, endtime, desc) => api_base('homework/publish/text', 'post', stringify({ org, title, endtime, desc }))
 
 export const api_homework_republish = (hid) => api_base('homework/republish', 'post', stringify({ hid }))
 

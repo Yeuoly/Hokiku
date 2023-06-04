@@ -15,11 +15,26 @@
             >
                 <template v-slot:item.detail="{ item }">
                     <v-icon
+                        v-if="item.type == 0"
                         small
                         @click="homeworkDetail(item.r_info.text)"
                     >
                         mdi-chart-box-outline
                     </v-icon>
+                    <span v-if="item.type == 1" class="text-grey">
+                        <v-chip color="primary">
+                            <v-icon class="mr3">
+                                mdi-clock-time-eight-outline
+                            </v-icon>
+                            {{ new Date(item.r_info.time * 1000).formatDate('Y-M-D h:m:s') }}
+                        </v-chip>
+                        <v-chip color="primary" class="ml5">
+                            <v-icon class="mr3">
+                                mdi-fraction-one-half
+                            </v-icon>
+                            1 / {{ item.r_info.count }}
+                        </v-chip>
+                    </span>
                 </template> 
                 <template v-slot:item.time="{ item }">
                     {{ new Date(item.time * 1000).formatDate('Y-M-D h:m:s') }}

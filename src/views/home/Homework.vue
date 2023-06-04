@@ -21,7 +21,7 @@
                 </template>
                 <template v-slot:item.submit="{ item }">
                     <v-btn icon small 
-                        @click="toSubmitHomeWork(item.hid)"
+                        @click="toSubmitHomeWork(item)"
                         :disabled="current_time > item.end_at"
                     >
                         <v-icon small>
@@ -104,15 +104,26 @@ export default {
                             end_at : i.r_homework.endtime,
                             owner : i.r_homework.r_owner.name,
                             score : i.score,
-                            flag : i.flag
+                            flag : i.flag,
+                            extra : i.r_homework.extra,
+                            type : i.r_homework.type
                         })
                     }
                 }
                 this.homework_loading = false
             }
         },
-        toSubmitHomeWork(hid){
-            this.$router.push(`/homework/${hid}`)
+        toSubmitHomeWork(homework){
+            if (homework.type == 0) {
+                this.$router.push(`/homework/${homework.id}`)
+            } else if (homework.type == 1) {
+                this.$router.push({
+                    path: `/competition/train`,
+                    query: {
+                        id: homework.extra
+                    }
+                })
+            }
         }
     }
 }

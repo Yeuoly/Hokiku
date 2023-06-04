@@ -9,7 +9,7 @@
       :page.sync="homework_table_page"
       :items-per-page="10"
     >
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:item.detail="{ item }">
         <v-icon small @click="homeworkCommits(item)" color="primary">
           mdi-chart-box-outline
         </v-icon>
@@ -26,6 +26,9 @@
       <template v-slot:item.endtime="{ item }">
         {{ new Date(item.endtime * 1000).formatDate("Y-M-D h:m:s") }}
       </template>
+      <template v-slot:item.actions="{ item }">
+        <v-icon small @click="checkHomework(item.id)" color="green" title="检查作业" :disabled="item.type != 1"> mdi-check-circle-outline </v-icon>
+      </template>
     </v-data-table>
   </v-container>
 </template>
@@ -36,7 +39,8 @@ import {
   api_homework_republish,
 } from "../../interface/api";
 import {
-  api_homework_export
+  api_homework_export,
+  api_homework_check_ctf
 } from '../../interface/homework'
 import {
   api_download_file
@@ -79,7 +83,7 @@ export default {
       },
       {
         text: "提交情况",
-        value: "actions",
+        value: "detail",
         align: "center",
       },
       {
@@ -90,6 +94,11 @@ export default {
       {
         text: "导出成绩",
         value: "export",
+        align: "center",
+      },
+      {
+        text: "操作",
+        value: "actions",
         align: "center",
       }
     ],
@@ -118,6 +127,7 @@ export default {
               owner: i.r_owner.name,
               time: i.time,
               endtime: i.endtime,
+              type: i.type,
             });
           }
         }
@@ -148,6 +158,20 @@ export default {
         } else {
           openSuccessSnackbar("导出成功");
           api_download_file(data["data"]["url"])
+        }
+      }
+      closeLoadingOverlay();
+    },
+    async checkHomework(hid) {
+      openLoadingOverlay();
+      const { data } = await api_homework_check_ctf(hid);
+      if (!data) {
+        openErrorSnackbar("网络异常");
+      } else {
+        if (data["res"] != 0) {
+          openErrorSnackbar(data["err"]);
+        } else {
+          openSuccessSnackbar("检查成功");
         }
       }
       closeLoadingOverlay();
