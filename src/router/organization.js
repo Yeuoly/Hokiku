@@ -22,4 +22,8 @@ export const organization_routes = [{
     name : 'organization-service',
     path : '/org/service/:gid',
     component : () => import('../views/organization/Service.vue'),
+}, {
+    name : 'organization-awd',
+    path : '/org/awd/:gid',
+    component : () => import('../views/organization/Awd.vue'),
 }]

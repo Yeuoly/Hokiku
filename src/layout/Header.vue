@@ -6,6 +6,7 @@
             width : width + 'px',
         }"
         color="primary"
+        collapse
     >
         <!-- <v-app-bar-nav-icon @click.stop="changeNavigationStatus"></v-app-bar-nav-icon> -->
         <v-btn text depressed dark @click="to('/index')">

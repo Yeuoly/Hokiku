@@ -95,6 +95,15 @@
                         </div>
                     </div>
                 </v-col>
+                <v-col :cols="6" :sm="6" :md="4" :lg="4" :xl="3">
+                    <div class="class_detail-enter px3 py3 clickable">
+                        <div class="class_detail-img" :style="{
+                            backgroundImage : 'url(' + require('../../assets/bochii.png') + ')',
+                        }">
+                            <div class="class_detail-mask" @click="to(`/org/awd/${current_org.id}`)">AWD</div>
+                        </div>
+                    </div>
+                </v-col>
             </v-row>
         </v-col>
     </v-row>

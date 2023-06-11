@@ -2,7 +2,7 @@
   <v-app>
     <div style="display: flex; flex-direction: row; flex-flow: row wrap">
       <Sider></Sider>
-      <div style="background-color: rgb(238,240,248)">
+      <div style="background-color: rgb(238,240,248); width: 100%">
         <Header></Header>
         <Body></Body>
         <Footer></Footer>

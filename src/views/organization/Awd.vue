@@ -17,7 +17,7 @@
                     </div>
                     <div class="left">
                         <h3 class="pb3 text-primary" @click="join(i.id)">
-                            {{ ((i.flag & 32) == 32) ? '公开邀请赛' : '公开赛' }} - {{ i.name }}</h3>
+                            {{ ((i.flag & 16) == 16) ? '团队赛' : '公开赛' }} - {{ i.name }}</h3>
                         <div class="pb3">
                             <v-chip dark color="primary" class="mr2" 
                                 v-if="new Date().getTime() > i.start_time * 1000 && new Date().getTime() < i.end_time * 1000"
@@ -151,10 +151,12 @@
 <script>
 import { openErrorMessageBox, openErrorSnackbar, openSuccessSnackbar } from '../../concat/bus'
 import { 
-    api_competition_awd_game_list,
     api_competition_awd_player_get_token,
     api_competition_awd_team_create
 } from '../../interface/api'
+import {
+    api_awd_game_team_list
+} from '../../interface/awd'
 
 export default {
     data : () => ({
@@ -168,7 +170,8 @@ export default {
         signin_code : '',
         current_game : {
             is_invite : false,
-        }
+        },
+        gid : 0
     }),
     methods : {
         join(game_id) {
@@ -220,7 +223,7 @@ export default {
             return res
         },
         async getGames() {
-            let { data } = await api_competition_awd_game_list()
+            let { data } = await api_awd_game_team_list(this.gid)
             if (data && data['res'] == 0) {
                 this.games = data['data']['list']
             } else {
@@ -252,8 +255,14 @@ export default {
         }
     },
     mounted() {
-        this.getGames()
-        this.getMyToken()
+        const gid = parseInt(this.$route.params.gid)
+        if (gid) {
+            this.gid = gid
+            this.getGames()
+            this.getMyToken()
+        } else {
+            this.$router.back()
+        }
     }
 }
 </script>

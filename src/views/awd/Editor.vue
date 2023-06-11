@@ -147,6 +147,29 @@
                             ></v-time-picker>
                         </v-menu>
                     </v-col>
+                    <v-col 
+                        v-if="game.gid == 0"
+                        :cols="12"
+                    >
+                        <v-switch
+                            :disabled="!isNew"
+                            v-model="game.is_invite"
+                            label="是否为邀请赛"
+                        ></v-switch>
+                    </v-col>
+                    <v-col 
+                        v-if="game.is_invite"
+                        :cols="12"
+                    >
+                        <v-text-field
+                            v-model.number="invite_code_count"
+                            label="邀请码数量"
+                        >
+                            <template v-slot:append>
+                                <v-btn small color="primary" @click="generateInviteCode()">生成</v-btn>
+                            </template>
+                        </v-text-field>
+                    </v-col>
                     <v-col :cols="12">
                         <v-btn color="primary" @click="commit">
                             {{ isNew ? '创建' : '更新' }}
@@ -232,6 +255,12 @@
                                     </v-icon>
                                     重启
                                 </v-btn>
+                                <v-btn @click="launchTestSubject(item.id)" color="orange" text>
+                                    <v-icon>
+                                        mdi-alpha-t
+                                    </v-icon>
+                                    测试
+                                </v-btn>
                             </template>
                             <template v-slot:item.start_time="{ item }">
                                 {{ new Date(item.start_time * 1000).toLocaleString() }}
@@ -247,6 +276,36 @@
                                 <v-chip dark color="red" v-else-if="(item.flag & 32) == 32">已停止</v-chip>
                             </template>
                         </v-data-table>
+                    </v-col>
+                    <v-card-title>测试环境</v-card-title>
+                    <v-col :cols="12">
+                        <v-simple-table>
+                            <template v-slot:default>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">题目</th>
+                                        <th class="text-left">镜像</th>
+                                        <th class="text-left">映射</th>
+                                        <th class="text-left">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(container, index) in test_containers" :key="index">
+                                        <td>{{ container.subject.name }}</td>
+                                        <td>{{ container.subject.docker_image }}</td>
+                                        <td>{{ container.container.host_port }}</td>
+                                        <td>
+                                            <v-btn @click="stopTestSubject(container.subject.id)" color="red" text>
+                                                <v-icon>
+                                                    mdi-stop
+                                                </v-icon>
+                                                停止
+                                            </v-btn>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -455,8 +514,15 @@ import {
     api_awd_game_subnet_create,
     api_awd_game_subnet_inspect,
     api_awd_game_subnet_remove,
-    api_awd_game_subject_relaunch
+    api_awd_game_subject_relaunch,
+    api_awd_game_generate_invite_code,
+    api_awd_game_subject_test_launch,
+    api_awd_game_subject_test_stop,
+    api_awd_game_subject_test_list
 } from '../../interface/awd'
+import {
+    api_download_file
+} from '../../interface/download'
 import {
     openSuccessSnackbar,
     openErrorSnackbar
@@ -466,6 +532,7 @@ export default {
     data : () => ({
         flag_types: ['DEFAULT', '文件flag', '模板指令', '环境变量'],
         nodes : [],
+        test_containers : [],
         networks : [],
         current_node : '',
         dialog_switch : {
@@ -491,8 +558,11 @@ export default {
                 date : '',
                 time : ''
             },
-            subnet : ''
+            subnet : '',
+            gid : 0,
+            is_invite : false,
         },
+        invite_code_count : 1,
         subject : {
             id : 0,
             name : '',
@@ -547,6 +617,32 @@ export default {
         }]
     }),
     methods : {
+        async launchTestSubject(id) {
+            const { data } = await api_awd_game_subject_test_launch(id)
+            if(data && data['res'] == 0){
+                openSuccessSnackbar('启动成功')
+                this.listTestSubject()
+            } else {
+                openErrorSnackbar(data['err'])
+            }
+        },
+        async stopTestSubject(id) {
+            const { data } = await api_awd_game_subject_test_stop(id)
+            if(data && data['res'] == 0){
+                openSuccessSnackbar('关闭成功')
+                this.listTestSubject()
+            } else {
+                openErrorSnackbar(data['err'])
+            }
+        },
+        async listTestSubject() {
+            const { data } = await api_awd_game_subject_test_list(this.game.id)
+            if(data && data['res'] == 0){
+                this.test_containers = data['data']['list']
+            } else {
+                openErrorSnackbar('加载失败')
+            }
+        },
         async relaunchSubject(id) {
             const { data } = await api_awd_game_subject_relaunch(id)
             if(data && data['res'] == 0) {
@@ -578,6 +674,16 @@ export default {
             if(data && data['res'] == 0) {
                 openSuccessSnackbar('删除成功')
                 this.loadSubnet()
+            } else {
+                openErrorSnackbar(data['err'])
+            }
+        },
+        async generateInviteCode() {
+            const { data } = await api_awd_game_generate_invite_code(this.game.id, this.invite_code_count)
+            if(data && data['res'] == 0) {
+                openSuccessSnackbar('生成成功')
+                const url = data['data']['url']
+                api_download_file(url)
             } else {
                 openErrorSnackbar(data['err'])
             }
@@ -637,6 +743,7 @@ export default {
                 this.game.description = data['data']['game']['description']
                 this.game.name = data['data']['game']['name']
                 this.game.subnet = data['data']['game']['subnet']
+                this.game.is_invite = (data['data']['game']['flag'] & 32) == 32
                 // game is timestamp, need to convert to date and time
                 const start_time = new Date(data['data']['game']['start_time'] * 1000)
                 const end_time = new Date(data['data']['game']['end_time'] * 1000)
@@ -678,10 +785,15 @@ export default {
                 this.game_start_time,
                 this.game_end_time,
                 this.game.description,
-                this.game.subnet
+                this.game.subnet,
+                this.game.gid,
+                this.game.is_invite
             )
             if (data && data['res'] == 0) {
                 openSuccessSnackbar('创建成功')
+                setTimeout(() => {
+                    this.$router.back()
+                }, 500) 
             } else {
                 openErrorSnackbar(data ? data['err'] : '创建比赛失败')
             }
@@ -736,8 +848,8 @@ export default {
                 openErrorSnackbar(data ? data['err'] : '创建题目失败')
             }
         },
-        async deleteSubject(/*subject_id*/) {
-            api_competition_awd_subject_delete()
+        async deleteSubject(subject_id) {
+            api_competition_awd_subject_delete(subject_id)
         },
         async updateSubject() {
             const { data } = await api_competition_awd_subject_update(
@@ -789,6 +901,11 @@ export default {
         },
     },
     async mounted() {
+        const gid = parseInt(this.$route.query.gid);
+        if (gid) {
+            this.game.gid = gid
+        }
+
         const game_id = parseInt(this.$route.params.game_id);
         if (game_id) {
             this.game.id = game_id
@@ -796,6 +913,7 @@ export default {
             await this.loadSubjects()
             this.loadNodes()
             this.loadSubnet()
+            this.listTestSubject()
         }
     },
 }

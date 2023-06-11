@@ -115,6 +115,22 @@
               @click="to(`/teacher/monitor/members/train-check/${item.gid}`)"
               >防作弊检测</v-btn
             >
+            <v-btn
+              small
+              color="primary"
+              text
+              v-if="isOrganizationManager(item.flag)"
+              @click="to(`/awd/editor/0?gid=${item.gid}`)"
+              >创建AWD</v-btn
+            >
+            <v-btn
+              small
+              color="primary"
+              text
+              v-if="isOrganizationManager(item.flag)"
+              @click="to(`/teacher/awd/list/${item.gid}`)"
+              >管理AWD</v-btn
+            >
           </template>
         </v-data-table>
       </v-col>

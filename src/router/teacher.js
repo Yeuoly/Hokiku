@@ -58,6 +58,10 @@ export default [{
     component : () => import('@/views/teacher/Service.vue'),
     children: teacher_service
 }, {
+    path : '/teacher/awd/list/:gid',
+    name : 'teacher-awd-list',
+    component : () => import('@/views/teacher/AwdList.vue'),
+}, {
     path: '/teacher/',
     redirect: '/teacher/publish-homework'
 }]

@@ -26,3 +26,23 @@ export const api_awd_game_subnet_inspect = game_id => api_base('comp/awd/game/su
 export const api_awd_game_subject_relaunch = subject_id => api_base('comp/awd/subject/relaunch', 'post', stringify({
     subject_id
 }))
+
+export const api_awd_game_team_list = gid => api_base('comp/awd/game/list/team', 'get', stringify({
+    gid
+}))
+
+export const api_awd_game_generate_invite_code = (game_id, count) => api_base('comp/awd/game/invite/gen', 'post', stringify({
+    game_id, count
+}))
+
+export const api_awd_game_subject_test_launch = subject_id => api_base('comp/awd/subject/test/launch', 'post', stringify({
+    subject_id
+}))
+
+export const api_awd_game_subject_test_stop = subject_id => api_base('comp/awd/subject/test/stop', 'post', stringify({
+    subject_id
+}))
+
+export const api_awd_game_subject_test_list = game_id => api_base('comp/awd/subject/test/list', 'get', stringify({
+    game_id
+}))

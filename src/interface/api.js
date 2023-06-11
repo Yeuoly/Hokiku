@@ -547,7 +547,7 @@ export const api_prodesign_vm_overtime = () => api_base('prodesign/vm/overtime',
  * 
  */
 
-export const api_competition_awd_game_create = (name, start_time, end_time, description, subnet) => api_base('comp/awd/game/create', 'post', stringify({ name, start_time, end_time, description, subnet }))
+export const api_competition_awd_game_create = (name, start_time, end_time, description, subnet, gid, is_invite_type) => api_base('comp/awd/game/create', 'post', stringify({ name, start_time, end_time, description, subnet, gid, is_invite_type }))
 
 export const api_competition_awd_game_list = () => api_base('comp/awd/game/list', 'get', '')
 
@@ -603,7 +603,7 @@ export const api_competition_awd_subject_get = (subject_id) => api_base('comp/aw
  * @param {*} players JSON string which is an array , e.g. [{"name":"player1","email":"aaa@xxx.com","uid":123456,"token":"abc"}]
  * @returns 
  */
-export const api_competition_awd_team_create = (game_id, team_name, leader_name, players) => api_base('comp/awd/team/create', 'post', stringify({ game_id, team_name, leader_name, players }))
+export const api_competition_awd_team_create = (game_id, team_name, leader_name, players, code) => api_base('comp/awd/team/create', 'post', stringify({ game_id, team_name, leader_name, players, code }))
 
 export const api_competition_awd_team_get_containers = (game_id) => api_base('comp/awd/team/containers', 'get', stringify({ game_id }))
 
