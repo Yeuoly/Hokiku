@@ -1,125 +1,126 @@
 <template>
-    <v-container>
-        <v-card>
-            <v-card-text>
-                <v-row>
-                    <v-col :cols="3">
-                        <h2 class="pb5 pt5">
-                            {{ game_title }}
-                        </h2>
-                        <div style="height: 300px" class="px4 py4">
-                            <div class="senso-player-frame">
-                                <div v-for="(i, k) in team_info.members" :key="k" class="mb5 pb5">
-                                    <v-row>
-                                        <div class="pl5 pr1">
-                                            <v-progress-circular
-                                                :value="(i.scroe / team_info.score) * 100"
-                                                :size="60"
-                                                :width="3"
-                                                color="blue"
-                                                class="ma-2"
-                                            >
-                                                {{ i.score }}Pt
-                                            </v-progress-circular>
+    <div class="irina-awd">
+        <v-container>
+            <v-card color="transparent">
+                <v-card-text>
+                    <v-row>
+                        <v-col :cols="12" class="my5" style="background-color: rgba(255,255,255,.07);;">
+                            <h2 class="py3 text-white ml5 text-center">
+                                {{ game_title }}
+                            </h2>
+                        </v-col>
+                        <v-col :cols="3" style="background-color: rgba(255,255,255,.07);">
+                            <div style="background-color: rgba(0,0,0,.2);">
+                                <div class="text-primary mx5 text-16 py4">
+                                    队内分数
+                                </div>
+                                <div style="height: 350px" class="px4 py4 text-white">
+                                    <div class="senso-player-frame">
+                                        <div v-for="(i, k) in team_info.members" :key="k" class="mb5 pb5">
+                                            <v-row>
+                                                <div class="pl5 pr1">
+                                                    <v-progress-circular
+                                                        :value="(i.scroe / team_info.score) * 100"
+                                                        :size="60"
+                                                        :width="3"
+                                                        color="rgb(145,221,255)"
+                                                        class="ma-2"
+                                                    >
+                                                        {{ i.score }}Pt
+                                                    </v-progress-circular>
+                                                </div>
+                                                <div class="pr3">
+                                                    <div style="line-height: 68px; font-size: 18px;text-decoration: underline;" class="font-black">
+                                                        {{i.username}} <v-chip v-if="(i.flag & 4) == 4" color="primary" small>队长</v-chip>
+                                                    </div>
+                                                </div>
+                                            </v-row>
                                         </div>
-                                        <div class="pr3">
-                                            <div style="line-height: 68px; font-size: 18px;text-decoration: underline;" class="font-black">
-                                                {{i.username}} <v-chip v-if="(i.flag & 4) == 4" color="primary" small>队长</v-chip>
-                                            </div>
-                                        </div>
-                                    </v-row>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </v-col>
-                    <v-col :cols="9">
-                        <div style="height: 400px" class="px4 py4">
-                            <HorizontalBarCharts title="队伍排名" subtext="实时排名统计" :model="team_rank" />
-                        </div>
-                    </v-col>
-                    <v-col :cols="12">
-                        <v-divider></v-divider>
-                    </v-col>
-                    <v-col :cols="12">
-                        <v-text-field v-model="flag" label="提交flag">
-                            <template v-slot:append>
-                                <v-btn @click="commitFlag" color="primary" small>提交</v-btn>
-                            </template>
-                        </v-text-field>
-                    </v-col>
-                    <v-col :cols="12">
-                        <div>
-                            <v-alert type="info" border="left">
+                        </v-col>
+                        <v-col :cols="9" style="background-color: rgba(255,255,255,.07);">
+                            <div style="background-color: rgba(0,0,0,.2);">
+                                <div style="height: 395px" class="px4 py4">
+                                    <HorizontalBarCharts title="队伍排名" subtext="实时排名统计" :model="team_rank" />
+                                </div>
+                            </div>
+                        </v-col>
+                        <v-col :cols="12" style="background-color: rgba(255,255,255,.07);">
+                            <v-text-field dark v-model="flag" label="提交flag">
+                                <template v-slot:append>
+                                    <v-btn @click="commitFlag" color="primary" small>提交</v-btn>
+                                </template>
+                            </v-text-field>
+                        </v-col>
+                        <v-col :cols="3" style="background-color: rgba(255,255,255,.07);" class="mt5">
+                            <div class='boardcast' style="background-color: rgba(0,0,0,.2)">
+                                <div class="slider">
+                                    <i class="iconfont">&#xe633;</i>
+                                    <p class='content'>
+                                        <span>{{ boardcast.latest }}</span>
+                                    </p>
+                                </div>
+                                <div class="list">
+                                    <span v-html="boardcast.list"></span>
+                                </div>
+                            </div>
+                        </v-col>
+                        <v-col :cols="9" style="background-color: rgba(255,255,255,.07);" class="mt5">
+                            <div class="">
                                 <v-row>
-                                    <span v-if="containers.length == 0">等待放题</span>
-                                    <span v-else>容器列表</span>
+                                    <v-col :cols="6" :sm="6" :md="6" :lg="4" :xl="3" v-for="(i, k) in containers" :key="k">
+                                        <v-card
+                                            class="mx-auto clickable"
+                                            max-width="344"
+                                            outlined
+                                            style="background-color: rgba(0,0,0,.2);"
+                                            @click="openContainer(i.container.id)"
+                                        >
+                                            <v-card-title>
+                                                <div>
+                                                    <div class="headline text-white">{{ i.subject.name }} - {{ i.subject.attack_initial_score }}</div>
+                                                </div>
+                                                </v-card-title>
+                                            <v-card-text class="text-white">
+                                                {{ i.subject.comment }}
+                                            </v-card-text>
+                                        </v-card>
+                                    </v-col>
                                 </v-row>
-                            </v-alert>
-                        </div>
-                    </v-col>
-                    <v-col :cols="9">
-                        <v-row>
-                            <v-col :cols="6" :sm="6" :md="6" :lg="4" :xl="3" v-for="(i, k) in containers" :key="k">
-                                <v-card
-                                    class="mx-auto clickable"
-                                    max-width="344"
-                                    outlined
-                                    @click="openContainer(i.container.id)"
-                                >
-                                    <v-card-title>
-                                        <div>
-                                            <div class="headline">{{ i.subject.name }} - {{ i.subject.attack_initial_score }}</div>
-                                    </div>
-                                        </v-card-title>
-                                    <v-card-text>
-                                        {{ i.subject.comment }}
-                                    </v-card-text>
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                    </v-col>
-                    <v-col :cols="3">
-                        <div class='boardcast'>
-                            <div class="slider">
-                                <i class="iconfont">&#xe633;</i>
-                                <p class='content'>
-                                    <span>{{ boardcast.latest }}</span>
-                                </p>
                             </div>
-                            <div class="list">
-                                <span v-html="boardcast.list"></span>
-                            </div>
-                        </div>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-        </v-card>
-        <v-dialog v-model="current_container.dialog" width="600px">
-            <v-card>
-                <v-card-title>
-                    <div class="headline">{{ current_container.subject.name }}</div>
-                </v-card-title>
-                <v-card-text>
-                    <div>
-                        攻击初始分：{{ current_container.subject.attack_initial_score }}
-                    </div>
-                    <div>
-                        已攻击队伍：{{ current_container.subject.attack_team_count }}
-                    </div>
-                    <div>
-                        {{ current_container.subject.comment }}
-                    </div>
-                    <div>
-                        开放IP及端口：{{ current_container.host_port }}
-                    </div>
-                    <v-divider></v-divider>
-                    <div>
-                        注：若题目开放SSH，对应IP与端口为上方开放IP及端口中的其中一个，默认密码见题目描述
-                    </div>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
             </v-card>
-        </v-dialog>
-    </v-container>
+            <v-dialog v-model="current_container.dialog" width="600px">
+                <v-card>
+                    <v-card-title>
+                        <div class="headline">{{ current_container.subject.name }}</div>
+                    </v-card-title>
+                    <v-card-text>
+                        <div>
+                            攻击初始分：{{ current_container.subject.attack_initial_score }}
+                        </div>
+                        <div>
+                            已攻击队伍：{{ current_container.subject.attack_team_count }}
+                        </div>
+                        <div>
+                            {{ current_container.subject.comment }}
+                        </div>
+                        <div>
+                            开放IP及端口：{{ current_container.host_port }}
+                        </div>
+                        <v-divider></v-divider>
+                        <div>
+                            注：若题目开放SSH，对应IP与端口为上方开放IP及端口中的其中一个，默认密码见题目描述
+                        </div>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </v-container>
+    </div>
 </template>
 
 <script>
@@ -307,9 +308,7 @@ export default {
 
     .boardcast {
         font-size: 16px;
-        color: #353535;
-        box-shadow: 2px 1px 8px 1px rgb(228, 232, 235);
-        background-color: #fff;
+        color: white;
         border-radius: 10px;
         box-sizing: border-box;
 
@@ -365,6 +364,14 @@ export default {
         100% {
         transform: translateX(-100%);
         }
+    }
+
+    .irina-awd {
+        background-image: url('../../assets/game-background.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-attachment: fixed;
     }
 
 </style>

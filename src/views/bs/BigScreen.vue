@@ -189,11 +189,12 @@
 </template>
 
 <script>
-import { openErrorSnackbar } from '../../concat/bus'
+import { openErrorSnackbar, openInfoMessageBox } from '../../concat/bus'
 import { 
     api_competition_awd_game_get,
     api_competition_awd_team_statistics
 } from '../../interface/api'
+import VueCookie from 'vue-cookie'
 
 export default {
     data : () => ({
@@ -315,11 +316,20 @@ export default {
             return max
         }
     },
-    mounted() {
+    async mounted() {
+        // get window width and height
+        // check if user has already changed this page
+        const mark = VueCookie.get('awd-page-init')
+        if (mark != 'marked') {
+            await openInfoMessageBox('提示', '系统检测到这是您第一次访问该页面，请尝试按住CTRL键随后调整滚轮使得页面缩放到合适的大小！或者点击浏览器设置找到“缩放”选项调整到合适大小，点击确定以确保下次不会再次弹窗')
+            VueCookie.set('awd-page-init', 'marked')
+        }
+
         this.game_id = this.$route.params.game_id
         if (!parseInt(this.game_id)) {
             this.$router.back()
         } else {
+
             this.loadGame()
             this.loadRank()
             this.timer.refresh_page = setInterval(() => {

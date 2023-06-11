@@ -249,6 +249,7 @@ export default {
     position: relative;
     background-color: rgba(0,0,0,.2);
     height: 200px;
+    overflow: overlay;
 }
 
 .subject-card-solved {

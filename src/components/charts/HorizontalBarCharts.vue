@@ -49,35 +49,26 @@
                     });
                 });
                 const distance = (max_value - min_value) * 1.3
+                const barWith = (this.model.value.length > 1 && this.model.value[0].length < 5) ? 40 : 0
 
                 this.model.value.forEach((e, i) => {
                     this.$set(this.polar.series, i, {
                         type : 'bar',
                         data : e,
-                        barWidth : 30,
+                        barWidth : barWith,
                         itemStyle:{
                             normal:{
                                 color : function(params){
-                                    function getColorByBaiFenBi(val){
-                                        val = 100 - val;
-                                        var one = (255+255) / 100;  
-                                        var r=0;
-                                        var g=0;
-                                        var b=0;
-                                    
-                                        if ( val < 50 ) { 
-                                            r = one * val;
-                                            g=180;
-                                        }
-                                        if ( val >= 50 ) {
-                                            g =  255 - ( (val - 50 ) * one) ;
-                                            r = 255;
-                                        }
-                                        r = parseInt(r);// 取整
-                                        g = parseInt(g);// 取整
-                                        b = parseInt(b);// 取整
-                                    
-                                        return "rgb("+r+","+g+","+b+")";
+                                    function getColorByBaiFenBi(colorValue){
+                                        const minValue = [41, 50, 62];
+                                        const maxValue = [25, 118, 210];
+                                        const range = 100;
+                                        
+                                        const r = Math.round((maxValue[0] - minValue[0]) * (colorValue / range) + minValue[0]);
+                                        const g = Math.round((maxValue[1] - minValue[1]) * (colorValue / range) + minValue[1]);
+                                        const b = Math.round((maxValue[2] - minValue[2]) * (colorValue / range) + minValue[2]);
+
+                                        return `rgb(${r},${g},${b})`;
                                     }
                                     const value = params.value;
                                     // min -> red, max -> green, use linear interpolation
