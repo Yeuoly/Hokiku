@@ -6,16 +6,16 @@
     <div class="subject-card-header text-center">
         已有{{ resolves }}人解决
     </div>
-    <v-card shaped @click="openDialog">
+    <v-card shaped @click="openDialog" style="background-color: transparent;">
         <!-- title -->
-        <v-card-title>
+        <v-card-text class="text-white text-center w100 text-20">
             {{ title }}
-        </v-card-title>
-        <!-- comment -->
-        <v-card-text>
-            初始分值：{{ origin_score }}
         </v-card-text>
-        <v-card-text>
+        <!-- comment -->
+        <v-card-text class="text-center text-25" style="color: rgb(145,221,255);font-weight: 800;">
+            {{ origin_score }}
+        </v-card-text>
+        <v-card-text class="text-white text-center">
             {{ comment }}
         </v-card-text>
     </v-card>
@@ -245,7 +245,10 @@ export default {
 
 <style>
 .subject-card {
+    color: white;
     position: relative;
+    background-color: rgba(0,0,0,.2);
+    height: 200px;
 }
 
 .subject-card-solved {
@@ -257,19 +260,4 @@ export default {
     top: 5px;
 }
 
-.subject-card-header {
-    position: absolute;
-    width: 70%;
-    height: 29px;
-    margin-left: 15%;
-    top: -9px;
-    color: #4CAF50;
-    font-weight: 600;
-    z-index: 5;
-    box-shadow: 0 10px 20px rgb(0 0 0 / 10%), 0 6px 6px rgb(0 0 0 / 0%);
-    background-color: white;
-    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
-    /* border: solid 1px rgba(0,0,0,0.2); */
-    border-radius: 10px
-}
 </style>

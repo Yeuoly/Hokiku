@@ -3,10 +3,9 @@
         style="flex: none; box-shadow: none; border-bottom: 1px solid rgb(235,237,243) !important;" 
         v-show="avaliable"
         :style="{
-            width : width + 'px',
         }"
         color="primary"
-        collapse
+        hide-on-scroll
     >
         <!-- <v-app-bar-nav-icon @click.stop="changeNavigationStatus"></v-app-bar-nav-icon> -->
         <v-btn text depressed dark @click="to('/index')">

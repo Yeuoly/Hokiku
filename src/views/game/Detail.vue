@@ -1,84 +1,105 @@
 <template>
-    <div>
+    <div class="irina-game">
         <div v-html="html_content"></div>
-        <v-container>
-            <v-card v-if="competition" class="pb5">
+        <v-container dark>
+            <v-card v-if="competition" class="pb5" style="background: transparent;">
                 <v-card-title class="text-center justify-center py-6">
-                    <h1 class="font-weight-bold text-h4 basil--text">
+                    <h1 class="font-weight-bold text-h4 basil--text text-white">
                         {{ competition.title }}
                     </h1>
                 </v-card-title>
-                <div class="px5 py5">
+                <div class="">
                     <p style="text-align: center">
-                        <span style="float: left">
+                        <span style="float: left" class="text-white">
                             进行时间：{{ continue_time }}
                         </span>
-                        <span style="float: right">
+                        <span style="float: right" class="text-white">
                             剩余时间：{{ last_time }}
                         </span>
-                        {{ competition_process.status }}
+                        <span class="text-white">
+                            {{ competition_process.status }}
+                        </span>
                     </p>
                     <v-progress-linear
                         :buffer-value="process_percent"
                         :value="process_percent"
                         stream
-                        color="orange"
+                        color="rgb(145,221,255)"
                     ></v-progress-linear>
                     <p></p>
 
                     <!-- Message boardcast -->
-                    <v-card-text>
                         <v-row>
                             <v-col :cols="6">
-                                <v-card-text>
                                     <div class="game-message">
-                                        【竞赛公示栏】 <br>
-                                        1. 请在竞赛开始前，仔细阅读竞赛规则。 <br>
-                                        2. 禁止一切作弊行为，一经发现，取消竞赛资格。 <br>
-                                        3. 允许查阅资料，但请以自己的思考为主，保持最少的交流。 <br>
-                                        4. 竞赛结束后，将会公布答案，以供大家学习。 <br>
-                                        5. 禁止交换flag，一经发现，取消竞赛资格。 <br>
-                                        6. 选手解题动态将会在右边动态中实时更新。 <br>
-                                        7. 请在竞赛结束后，请将writeup（详细解题过程）以PDF或者WORD的形式在24小时内提交至邮箱admin@srmxy.cn，附件命名为【参赛ID WRITEUP】.docx/pdf，我们会审核writeup，如果writeup质量较高，我们会给予积分奖励，对于不合格的writeup，我们会取消比赛资格。 <br>
-                                        8. 在比赛结束24小时后，我们会公布答案，以供大家学习。 <br>
-                                        9. 对于排名靠前或者writeup质量较高、某一方向突出的选手，我们会给予积分奖励。 <br>
-                                        10. 因为是动态积分制，希望大家积极参与，积极解题，赛后积极交流，积极分享。 <br>
+                                        <div class="pb3">
+                                            【竞赛公示栏】 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            1. 请在竞赛开始前，仔细阅读竞赛规则。 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            2. 禁止一切作弊行为，一经发现，取消竞赛资格。 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            3. 允许查阅资料，但请以自己的思考为主，保持最少的交流。 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            4. 竞赛结束后，将会公布答案，以供大家学习。 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            5. 禁止交换flag，一经发现，取消竞赛资格。 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            6. 选手解题动态将会在右边动态中实时更新。 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            7. 请在竞赛结束后，请将writeup（详细解题过程）以PDF或者WORD的形式在24小时内提交至邮箱admin@srmxy.cn，附件命名为【参赛ID WRITEUP】.docx/pdf，我们会审核writeup，如果writeup质量较高，我们会给予积分奖励，对于不合格的writeup，我们会取消比赛资格。 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            8. 在比赛结束24小时后，我们会公布答案，以供大家学习。 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            9. 对于排名靠前或者writeup质量较高、某一方向突出的选手，我们会给予积分奖励。 <br>
+                                        </div>
+                                        <div class="pb3">
+                                            10. 因为是动态积分制，希望大家积极参与，积极解题，赛后积极交流，积极分享。 <br>
+                                        </div>
                                     </div>
-                                </v-card-text>
                             </v-col>
                             <v-col :cols="6">
-                                <v-card-text>
                                     <div class="game-message">
                                         <div>
                                             【竞赛动态】
                                         </div>
-                                        <div v-for="message in messages" :key="message.id">
+                                        <div v-for="message in messages" :key="message.id" class="pb3">
                                             【 {{ new Date(message.time * 1000).formatDate('Y-M-D h:m:s') }} 】 {{ message.message }}
                                         </div>
                                     </div>
-                                </v-card-text>
                             </v-col>
                         </v-row>
-                    </v-card-text>
 
                     <v-tabs
-                        background-color="transparent"
-                        color="orange"
+                        background-color="rgba(255,255,255,.07)"
                         grow
-                        class="pb5"
+                        class="pb5 pt5"
                         v-model="subject_tab"
+                        dark
                     >
                         <v-tab
                             v-for="item in subjects_tabs"
                             :key="item"
+                            color="rgb(145,221,255)"
                         >
                             {{ item }}
                         </v-tab>
                         <v-tab-item
                             v-for="item in subjects_tabs"
                             :key="item"
+                            style="background-color: rgba(255,255,255,.07)"
+                            class="px2 pb5"
                         >
-                            <v-row class="px2 pt5" v-if="item != 'RANK' && item != 'ALL'"> 
+                            <v-row class="px2 pt5" v-if="item != 'RANK' && item != 'ALL'" > 
                                 <v-col md="3" lg="3" xl="2" sm="2" 
                                     v-for="i in subjects[item]" 
                                     :key="i.id"
@@ -114,6 +135,7 @@
                                 <p></p>
                                 <v-col cols="12">
                                     <v-data-table
+                                        style="background-color: transparent;color:white"
                                         :headers="rank_header"
                                         calculate-widths
                                         :items="rank"
@@ -182,7 +204,7 @@ export default {
         },
         process_percent() {
             return this.competition_process.current_time / this.competition_process.total_time * 100
-        }
+        },
     },
     methods : {
         getTimeText(time) {
@@ -357,22 +379,33 @@ export default {
 
 .game-message {
     padding: 15px;
-    border-radius: 4px;
     height: 300px;
-    font-size: 16px;
-    line-height: 30px;
-    font-weight: bold;
-    /* border: 1px solid #ff9800; */
+    font-size: 14px;
     padding: 15px;
-    box-shadow: 0 2px 2px 20px rgb(255 255 255 / 45%);
-    /* color: #ff7600; */
-    /* font-family: "Open Sans", sans-serif; */
     text-transform: uppercase;
-    /* letter-spacing: 1px; */
-    font-size: 12px;
-    line-height: 24px;
     overflow-y: scroll;
-    color: #37373e;
-    /* background-color: rgb(208 243 255);*/
+    color: white;
+    background-color:rgba(255,255,255,.07);
+    line-height: 20px;
+}
+
+.irina-game {
+    background-image: url('../../assets/game-background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.irina-game .theme--light.v-tabs-items {
+    background: transparent !important;
+}
+
+.irina-game .theme--light.v-data-table > .v-data-table__wrapper > table > tbody > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+    background-color: rgba(255,255,255,.07);
+}
+
+.irina-game .v-data-table-header tr th span {
+    color: white !important;
 }
 </style>
