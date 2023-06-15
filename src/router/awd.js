@@ -4,6 +4,8 @@ const AwdGameList = () => import('../views/awd/List.vue')
 const AwdGameSenso = () => import('../views/awd/Senso.vue')
 const AwdGameMonitor = () => import('../views/awd/Monitor.vue')
 const AwdGameTeamDetail = () => import('../views/awd/TeamDetail.vue')
+const AwdGameChecker = () => import('../views/awd/Checker.vue')
+const AwdGameContext = () => import('../views/awd/Context.vue')
 
 export const awd_pages = [{
     name : 'awd-editor',
@@ -29,6 +31,14 @@ export const awd_pages = [{
     name : 'awd-team-detail',
     path : '/awd/team/:game_id/',
     component : AwdGameTeamDetail,
+}, {
+    name : 'awd-checker',
+    path : '/awd/checker/:game_id',
+    component : AwdGameChecker,
+}, {
+    name : 'awd-context',
+    path : '/awd/context',
+    component : AwdGameContext,
 }, {
     name : 'awd-index',
     path : '/awd/',

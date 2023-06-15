@@ -82,6 +82,10 @@
                                     color="primary" 
                                     @click="editor(i.id)"
                                 >编辑</v-btn>
+                                <v-btn 
+                                    color="primary" 
+                                    @click="toChecker(i.id)"
+                                >Checker</v-btn>
                                 <v-btn color="green" dark  @click="senso(i.id)">进入</v-btn>
                             </div>
                         </div>
@@ -111,6 +115,9 @@ export default {
         },
         editor(game_id) {
             this.$router.push(`/awd/editor/${game_id}`)
+        },
+        toChecker(game_id) {
+            this.$router.push(`/awd/checker/${game_id}`)
         },
         getDuration(time) {
             const now = new Date().getTime()

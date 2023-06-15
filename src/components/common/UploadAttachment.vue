@@ -20,6 +20,7 @@ import {
     api_resource_upload_any_private
 } from '../../interface/resource'
 export default {
+    name : 'UploadAttachment',
     props : {
         size : {
             type : Number,

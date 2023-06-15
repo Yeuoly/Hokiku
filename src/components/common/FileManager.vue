@@ -190,6 +190,7 @@ export default {
         sql: "mdi-database",
         binary: "mdi-file",
         php: "mdi-language-php",
+        py: "mdi-language-python",
       },
     };
   },
@@ -229,7 +230,7 @@ export default {
           fileItem.content = e.target.result;
           item.children.push(fileItem);
         };
-        reader.readAsText(file);
+        reader.readAsArrayBuffer()
       }
     },
     selectFile(item) {
@@ -252,6 +253,8 @@ export default {
           return "sql";
         case "php":
           return "php";
+        case "py":
+          return "python";
         default:
           return "";
       }

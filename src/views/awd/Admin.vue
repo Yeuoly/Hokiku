@@ -20,6 +20,9 @@
                                 color="primary"
                                 @click="editGame(item)"
                             >
+                                <v-icon>
+                                    mdi-pencil
+                                </v-icon>
                                 编辑
                             </v-btn>
                             <v-btn
@@ -27,6 +30,9 @@
                                 color="error"
                                 @click="deleteGame(item)"
                             >
+                                <v-icon>
+                                    mdi-delete
+                                </v-icon>
                                 删除
                             </v-btn>
                             <v-btn
@@ -35,7 +41,21 @@
                                 @click="enterMonitor(item)"
                                 dark
                             >
+                                <v-icon>
+                                    mdi-monitor
+                                </v-icon>
                                 监控
+                            </v-btn>
+                            <v-btn
+                                text
+                                color="green"
+                                @click="toChecker(item)"
+                                dark
+                            >
+                                <v-icon>
+                                    mdi-monitor
+                                </v-icon>
+                                Checker
                             </v-btn>
                         </template>
                         <template v-slot:item.start_time="{ item }">
@@ -103,6 +123,9 @@ export default {
         },
         enterMonitor(game) {
             this.$router.push(`/awd/monitor/${game.id}`)
+        },
+        toChecker(game) {
+            this.$router.push(`/awd/checker/${game.id}`)
         },
         IsGameStarted(flag) {
             return (flag & (1 << 2)) != 0

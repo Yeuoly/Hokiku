@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <div style="display: flex; flex-direction: row; flex-flow: row wrap">
-      <Sider></Sider>
       <div style="background-color: rgb(238,240,248); width: 100%">
         <Header></Header>
         <Body></Body>
@@ -13,7 +12,6 @@
 
 <script>
 import Header from './layout/Header.vue'
-import Sider from './layout/Sider.vue'
 import Body from './layout/Body.vue'
 import Footer from './layout/Footer.vue'
 
@@ -22,7 +20,6 @@ export default {
 
   components: {
     Header,
-    Sider,
     Body,
     Footer
   },

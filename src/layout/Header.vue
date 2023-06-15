@@ -5,7 +5,6 @@
         :style="{
         }"
         color="primary"
-        hide-on-scroll
     >
         <!-- <v-app-bar-nav-icon @click.stop="changeNavigationStatus"></v-app-bar-nav-icon> -->
         <v-btn text depressed dark @click="to('/index')">
